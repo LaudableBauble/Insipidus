@@ -1,0 +1,21 @@
+﻿/// Battle Structure
+
+Every character active in a battle can, when idle, launch an attack on another character. In order for the battle to unfold as smoothly as possible
+the battle coordinator 'chunks' up the battle into short turns. Every turn the coordinator decides which newly launched moves are legit and which are not.
+If a move is valid, both the user and target is informed of this. Before an attack is officialy launched (ie. the coordinator has approved it) its outcome is calculated.
+Depending on the outcome the attack's animation will take on different forms, as well as the final damage calculations to either character.
+If an attack has been launched its battle animation is activated and when it has reached a certain point, ie. finished the build-up sequence, it takes control
+over the target of the attack and performs various animations on it. When the attack is over both character is set back into a state of idleness, ready to launch an
+attack again.
+
+The battle animations are dictated by a set of rules which in turn is placed into a timeline. At the beginning of the move the timeline is started and every time
+it reaches a rule an event is fired. This event is transformed into a battle action that will physically express these rules.
+
+So far all events have a duration during which they need to conclude their business, but what if they do not manage to? For example, what if a simple Slam attack was
+executed and the distance to the target is farther away than the duration of the event permits the user to travel? Or the other way around, what if the attack is
+concluded before the set time? To further complicate matters, what if one event is dependent upon another?
+
+The solution to these problems will be to split the events into two categories; duration-specific and action-specific. Action-specific events happen instantaneously
+at the given starting time, whereas duration-specific events are active during a set duration. If an event is dependent on another (split into start or end-dependent)
+it will only be activated after the source event is triggered. In this case the starting time set onto the dependent event is relative to the source event, not the
+timeline's elapsed time.
