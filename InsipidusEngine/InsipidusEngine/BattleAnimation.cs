@@ -18,7 +18,7 @@ using InsipidusEngine.Imagery;
 namespace InsipidusEngine
 {
     /// <summary>
-    /// A battle animation is what makes battles visible to the naked eye. It is basically a set of rules dicatating what a move will look like
+    /// A battle animation is what makes battles visible to the naked eye. It is basically a set of rules dictating what a move will look like
     /// and a method to play through it.
     /// </summary>
     public class BattleAnimation
@@ -54,10 +54,7 @@ namespace InsipidusEngine
         protected void Initialize(BattleMove move)
         {
             //Initialize the class.
-            _Timeline = new Timeline(this);
-
-            //Subscribe to the timeline's events.
-            _Timeline.EventOccurred += OnEventOccurred;
+            _Timeline = new Timeline(move);
         }
         public void LoadContent(ContentManager content)
         {
@@ -69,11 +66,8 @@ namespace InsipidusEngine
         /// <param name="gametime">The current game time.</param>
         public void Update(GameTime gametime)
         {
-
-        }
-        public void Draw(SpriteBatch spritebatch)
-        {
-
+            //Update the timeline.
+            _Timeline.Update(gametime);
         }
 
         /// <summary>
@@ -81,28 +75,27 @@ namespace InsipidusEngine
         /// </summary>
         public void StartAnimation()
         {
-
-        }
-
-        /// <summary>
-        /// Add a move to the battle animation.
-        /// </summary>
-        /// <param name="move">The move to add.</param>
-        public void SetMove(BattleMove move)
-        {
-            //_Move = move;
-        }
-        /// <summary>
-        /// When a timeline event has occurred, do what it says.
-        /// </summary>
-        /// <param name="eventRule">The event that has occurred.</param>
-        private void OnEventOccurred(TimelineEvent eventRule)
-        {
-
+            _Timeline.Start();
         }
         #endregion
 
         #region Properties
+        /// <summary>
+        /// The user of the battle animation.
+        /// </summary>
+        public Character User
+        {
+            get { return _User; }
+            set { _User = value; }
+        }
+        /// <summary>
+        /// The target of the battle animation.
+        /// </summary>
+        public Character Target
+        {
+            get { return _Target; }
+            set { _Target = value; }
+        }
         #endregion
     }
 }

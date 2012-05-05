@@ -111,8 +111,6 @@
     <Compile Include="BattleCoordinator.cs" />
     <Compile Include="BattleMove.cs" />
     <Compile Include="BattleMoveOld.cs" />
-    <Compile Include="Battle\Actions\BattleAction.cs" />
-    <Compile Include="Battle\Actions\ContactAction.cs" />
     <Compile Include="Battle\Bar.cs" />
     <Compile Include="Battle\Battle.cs" />
     <Compile Include="Battle\BattleHUD.cs" />
@@ -121,6 +119,7 @@
     <Compile Include="Battle\BattleMenu.cs" />
     <Compile Include="Battle\BattleMenuSelectEntry.cs" />
     <Compile Include="Battle\Events\ContactEvent.cs" />
+    <Compile Include="Battle\Events\DamageEvent.cs" />
     <Compile Include="Battle\Events\TimelineEvent.cs" />
     <Compile Include="Battle\ExperienceBar.cs" />
     <Compile Include="Battle\HealthBar.cs" />

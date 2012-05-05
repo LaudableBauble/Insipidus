@@ -12,7 +12,6 @@ using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework.Net;
 using Microsoft.Xna.Framework.Storage;
 
-using InsipidusEngine.Battle.Actions;
 using InsipidusEngine.Imagery;
 
 namespace InsipidusEngine.Battle.Events
@@ -35,7 +34,7 @@ namespace InsipidusEngine.Battle.Events
         #region Events
         public delegate void TimelineEventHandler(TimelineEvent eventRule);
         public event TimelineEventHandler OnStarted;
-        public event TimelineEventHandler OnEnded;
+        public event TimelineEventHandler OnConcluded;
         #endregion
 
         #region Methods
@@ -60,36 +59,33 @@ namespace InsipidusEngine.Battle.Events
             _State = TimelineEventState.Idle;
 
             //If this event is dependent upon someone else, subscribe to it.
-            if (_DependentOn != null) { _DependentOn.OnEnded += OnDependentEnded; }
+            if (_DependentOn != null) { _DependentOn.OnConcluded += OnDependentEnded; }
         }
         /// <summary>
         /// Update the timeline event.
         /// </summary>
         /// <param name="timeline">The timeline that this event belongs to.</param>
-        protected virtual void Update(Timeline timeline)
+        public virtual void Update(Timeline timeline)
         {
-            //If the event is not active, stop here.
-            if (_State != TimelineEventState.Active) { return; }
-
-            //The elapsed time in regard to this event's starting time.
-            float elapsedTime = GetElapsedTime(timeline.ElapsedTime);
-
-            //If the elapsed time is less than 0, quit.
-            if (elapsedTime < 0) { return; }
+            //If the event has been concluded, stop here.
+            if (_State == TimelineEventState.Concluded) { return; }
 
             //Perform the event.
-            switch (_Event)
-            {
-                case AnimationRule.DamageTarget: { break; }
-                case AnimationRule.EndAnimation: { break; }
-                case AnimationRule.MoveToTarget: { break; }
-                case AnimationRule.MoveToUser: { break; }
-                default: { break; }
-            }
+            PerformEvent(GetElapsedTime(timeline.ElapsedTime));
         }
 
         /// <summary>
-        /// Get the elapsed time in relation to this event.
+        /// Perform this event.
+        /// </summary>
+        /// <param name="elapsedTime">The elapsed time since the beginning of this event.</param>
+        protected virtual void PerformEvent(float elapsedTime)
+        {
+            //If the elapsed time is less than 0, quit. Otherwise activate the event.
+            if (_State == TimelineEventState.Concluded || elapsedTime < 0) { return; }
+            else { _State = TimelineEventState.Active; }
+        }
+        /// <summary>
+        /// Get the elapsed time in relation to this event. A negative number indicates that this event has yet to see the light of day.
         /// </summary>
         /// <param name="elapsedTime">The timeline's elapsed time.</param>
         /// <returns>The elapsed time in relation to this event.</returns>
@@ -107,6 +103,17 @@ namespace InsipidusEngine.Battle.Events
 
             //Return the elapsed time since the beginning of this event.
             return elapsedTime - _StartTime;
+        }
+        /// <summary>
+        /// This timeline event has now ended.
+        /// </summary>
+        protected void EventConcludedInvoke()
+        {
+            //The event has now occurred.
+            _State = TimelineEventState.Concluded;
+
+            //If someone has hooked up a delegate to the event, fire it.
+            if (OnConcluded != null) { OnConcluded(this); }
         }
         /// <summary>
         /// Activate this event if the one we have been dependent upon has ended.
@@ -166,6 +173,20 @@ namespace InsipidusEngine.Battle.Events
         {
             get { return _DependentOn; }
             set { _DependentOn = value; }
+        }
+        /// <summary>
+        /// The user of the battle animation.
+        /// </summary>
+        public Character User
+        {
+            get { return _Timeline.User; }
+        }
+        /// <summary>
+        /// The target of the battle animation.
+        /// </summary>
+        public Character Target
+        {
+            get { return _Timeline.Target; }
         }
         #endregion
     }

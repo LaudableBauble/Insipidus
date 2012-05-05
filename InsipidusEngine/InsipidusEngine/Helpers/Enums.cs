@@ -105,7 +105,6 @@ namespace InsipidusEngine
         MoveToTarget,
         MoveToUser,
         DamageTarget,
-        EndAnimation
     }
 
     /// <summary>
@@ -114,7 +113,7 @@ namespace InsipidusEngine
     public enum TimelineEventType
     {
         Duration,
-        Action
+        Direct
     }
     /// <summary>
     /// The state of a timeline event.

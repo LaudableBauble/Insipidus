@@ -23,25 +23,25 @@ namespace InsipidusEngine
     public class Timeline
     {
         #region Fields
-        private BattleAnimation _Battle;
+        private BattleMove _Move;
         private float _ElapsedTime;
         private List<TimelineEvent> _Events;
         private bool _IsRunning;
         #endregion
 
         #region Events
-        public delegate void TimelineEventHandler(TimelineEvent eventRule);
-        public event TimelineEventHandler EventOccurred;
+        public delegate void TimelineEventHandler();
+        public event TimelineEventHandler OnConcluded;
         #endregion
 
         #region Constructors
         /// <summary>
         /// Constructor for a timeline.
         /// </summary>
-        /// <param name="battle">The battle animation to execute.</param>
-        public Timeline(BattleAnimation battle)
+        /// <param name="move">The battle move to execute.</param>
+        public Timeline(BattleMove move)
         {
-            Initialize(battle);
+            Initialize(move);
         }
         #endregion
 
@@ -49,11 +49,11 @@ namespace InsipidusEngine
         /// <summary>
         /// Initialize the timeline.
         /// </summary>
-        /// <param name="battle">The battle animation to execute.</param>
-        private void Initialize(BattleAnimation battle)
+        /// <param name="move">The battle move to execute.</param>
+        private void Initialize(BattleMove move)
         {
             //Initialize the fields.
-            _Battle = battle;
+            _Move = move;
             _ElapsedTime = 0;
             _Events = new List<TimelineEvent>();
             _IsRunning = false;
@@ -70,8 +70,8 @@ namespace InsipidusEngine
             //Get the time since the last update.
             _ElapsedTime += (float)gametime.ElapsedGameTime.TotalSeconds;
 
-            //Get the events that has yet to be activated but should be, and invoke them.
-            _Events.FindAll(item => item.State != TimelineEventState.Active && item.StartTime >= _ElapsedTime).ForEach(item => EventInvoke(item));
+            //Update all events.
+            _Events.ForEach(item => item.Update(this));
         }
 
         /// <summary>
@@ -89,35 +89,67 @@ namespace InsipidusEngine
         {
             _IsRunning = false;
             _ElapsedTime = 0;
+
+            //Reset all events.
+            _Events.ForEach(item => item.State = TimelineEventState.Idle);
         }
 
         /// <summary>
-        /// Invoke a timeline event.
+        /// Conclude this timeline.
         /// </summary>
-        /// <param name="eventRule">The event to activate.</param>
-        protected void EventInvoke(TimelineEvent eventRule)
+        protected void ConcludeInvoke()
         {
-            //The event has now occurred.
-            eventRule.State = TimelineEventState.Active;
-
-            //If the event says stop the game, listen to it.
-            if (eventRule.Event == AnimationRule.EndAnimation) { Stop(); }
+            //Stop this timeline.
+            Stop();
 
             //If someone has hooked up a delegate to the event, fire it.
-            if (EventOccurred != null) { EventOccurred(eventRule); }
+            if (OnConcluded != null) { OnConcluded(); }
         }
-
+        /// <summary>
+        /// An event has been concluded.
+        /// </summary>
+        /// <param name="e">The event that has been concluded.</param>
+        private void OnEventConcluded(TimelineEvent e)
+        {
+            //Do something.
+        }
         /// <summary>
         /// Add an event to the timeline.
         /// </summary>
         /// <param name="eventRule">The event to add.</param>
         public void AddEvent(TimelineEvent eventRule)
         {
+            //Add the event and subscribe to its events.
             _Events.Add(eventRule);
+            eventRule.OnConcluded += OnEventConcluded;
         }
         #endregion
 
         #region Properties
+        /// <summary>
+        /// The battle move this timeline tries to express.
+        /// </summary>
+        public BattleMove Move
+        {
+            get { return _Move; }
+            set { _Move = value; }
+        }
+        /// <summary>
+        /// The user of the move.
+        /// </summary>
+        public Character User
+        {
+            get { return _Move.User; }
+            set { _Move.User = value; }
+        }
+        /// <summary>
+        /// The target of the move.
+        /// </summary>
+        public Character Target
+        {
+            get { return _Move.Target; }
+            set { _Move.Target = value; }
+        }
         /// <summary>
         /// The elapsed time.
         /// </summary>

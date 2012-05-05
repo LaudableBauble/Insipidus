@@ -92,7 +92,7 @@ namespace InsipidusEngine
             //Copy the list of moves so that we can iterate on the list unobstructed.
             List<BattleMove> moves = new List<BattleMove>(_Moves);
             //Draw the sprite and moves.
-            moves.ForEach(move => move.Draw(spritebatch));
+            //moves.ForEach(move => move.Draw(spritebatch));
         }
 
         /// <summary>

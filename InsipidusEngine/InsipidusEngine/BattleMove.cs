@@ -13,6 +13,7 @@ using Microsoft.Xna.Framework.Net;
 using Microsoft.Xna.Framework.Storage;
 
 using InsipidusEngine.Battle;
+using InsipidusEngine.Battle.Events;
 using InsipidusEngine.Imagery;
 
 namespace InsipidusEngine
@@ -23,12 +24,13 @@ namespace InsipidusEngine
     public class BattleMove
     {
         #region Fields
-        protected Move _Move;
-        protected AttackState _AttackState;
-        protected AttackOutcome _AttackOutcome;
-        protected Character _User;
-        protected Character _Target;
-        protected bool _IsCancelable;
+        private Move _Move;
+        private AttackState _AttackState;
+        private AttackOutcome _AttackOutcome;
+        private Timeline _Timeline;
+        private Character _User;
+        private Character _Target;
+        private bool _IsCancelable;
         #endregion
 
         #region Events
@@ -63,13 +65,22 @@ namespace InsipidusEngine
             _Move = move;
             _AttackState = AttackState.Idle;
             _AttackOutcome = AttackOutcome.None;
+            _Timeline = new Timeline(this);
             _User = user;
             _Target = target;
             _IsCancelable = true;
-        }
-        public void LoadContent(ContentManager content)
-        {
 
+            //Add events to the timeline.
+            TimelineEvent moveTo = new ContactEvent(_Timeline, 0, 0, AnimationRule.MoveToTarget, TimelineEventType.Direct, null);
+            TimelineEvent damage = new DamageEvent(_Timeline, 0, 0, AnimationRule.DamageTarget, TimelineEventType.Direct, moveTo);
+            _Timeline.AddEvent(moveTo);
+            _Timeline.AddEvent(damage);
+
+            //Start the timeline.
+            _Timeline.Start();
+
+            //Subscribe to the timeline.
+            _Timeline.OnConcluded += MoveCompletedInvoke;
         }
         /// <summary>
         /// Update the active move.
@@ -77,6 +88,9 @@ namespace InsipidusEngine
         /// <param name="gametime">The current game time.</param>
         public void Update(GameTime gametime)
         {
+            //Update the timeline.
+            _Timeline.Update(gametime);
+
             //Perform the move.
             switch (_AttackState)
             {
@@ -96,7 +110,7 @@ namespace InsipidusEngine
                             case AttackOutcome.Clash:
                                 {
                                     //Declare unstoppable.
-                                    _IsCancelable = false;
+                                    /*_IsCancelable = false;
                                     //Test animation.
                                     _User.Velocity = Calculator.LineDirection(_User.Position, _Target.Position) * _User.Speed * .05f;
                                     _Target.Velocity = Calculator.LineDirection(_Target.Position, _User.Position) * _Target.Speed * .05f;
@@ -106,13 +120,13 @@ namespace InsipidusEngine
                                     {
                                         //The attack is ready to be completed.
                                         _AttackState = AttackState.Conclusion;
-                                    }
+                                    }*/
                                     break;
                                 }
                             case AttackOutcome.Hit:
                                 {
                                     //Declare unstoppable.
-                                    _IsCancelable = false;
+                                    /*_IsCancelable = false;
                                     //Test animation.
                                     _User.Velocity = Calculator.LineDirection(_User.Position, _Target.Position) * _User.Speed * .05f;
 
@@ -121,7 +135,7 @@ namespace InsipidusEngine
                                     {
                                         //The attack is ready to be completed.
                                         _AttackState = AttackState.Conclusion;
-                                    }
+                                    }*/
                                     break;
                                 }
                         }
@@ -143,23 +157,19 @@ namespace InsipidusEngine
                             case AttackOutcome.Hit:
                                 {
                                     //Damage the target.
-                                    _Target.ReceiveAttack(this);
+                                    //_Target.ReceiveAttack(this);
                                     break;
                                 }
                         }
 
                         //The move consumes energy!
-                        _User.CurrentEnergy -= _Move.EnergyConsume;
+                        //_User.CurrentEnergy -= _Move.EnergyConsume;
 
                         //Call the event.
-                        MoveCompletedInvoke();
+                        //MoveCompletedInvoke();
                         break;
                     }
             }
-        }
-        public void Draw(SpriteBatch spritebatch)
-        {
-
         }
 
         /// <summary>

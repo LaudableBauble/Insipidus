@@ -12,13 +12,13 @@ using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework.Net;
 using Microsoft.Xna.Framework.Storage;
 
-using InsipidusEngine.Battle.Actions;
 using InsipidusEngine.Imagery;
 
 namespace InsipidusEngine.Battle.Events
 {
     /// <summary>
-    /// A contact event is used when an attack requires physical contact between the participants.
+    /// A contact event is used when an attack requires physical contact between the participants, ie. one is going to move into contact with the other.
+    /// Beware that this event will not resolve any collisions.
     /// </summary>
     public class ContactEvent : TimelineEvent
     {
@@ -34,60 +34,50 @@ namespace InsipidusEngine.Battle.Events
         /// <param name="dependentOn">An optional event to be dependent upon, ie. wait for.</param>
         public ContactEvent(Timeline timeline, float start, float end, AnimationRule rule, TimelineEventType type, TimelineEvent dependentOn)
         {
-            Initialize(start, end, rule, type, dependentOn);
+            Initialize(timeline, start, end, rule, type, dependentOn);
         }
         #endregion
 
         #region Methods
         /// <summary>
-        /// Initialize the timeline event.
+        /// Perform this event.
         /// </summary>
-        /// <param name="start">The start of the event.</param>
-        /// <param name="end">The end of the event.</param>
-        /// <param name="rule">The event that will happen.</param>
-        /// <param name="type">The type of event, ie. duration or action-specific.</param>
-        /// <param name="dependentOn">An optional event to be dependent upon, ie. wait for.</param>
-        private void Initialize(float start, float end, AnimationRule rule, TimelineEventType type, TimelineEvent dependentOn)
+        /// <param name="elapsedTime">The elapsed time since the beginning of this event.</param>
+        protected override void PerformEvent(float elapsedTime)
         {
-            //Initialize the variables.
-            _StartTime = start;
-            _EndTime = end;
-            _Event = rule;
-            _Type = type;
-            _DependentOn = dependentOn;
-            _State = TimelineEventState.Idle;
+            //Call the base method.
+            base.PerformEvent(elapsedTime);
 
-            //If this event is dependent upon someone else, subscribe to it.
-            if (_DependentOn != null) { _DependentOn.OnEnded += OnDependentEnded; }
-        }
-        /// <summary>
-        /// Update the timeline event.
-        /// </summary>
-        /// <param name="timeline">The timeline that this event belongs to.</param>
-        protected override void Update(Timeline timeline)
-        {
-            //If the event is not active, stop here.
-            if (_State != TimelineEventState.Active) { return; }
+            //The speed with which to move.
+            float speed = 0;
 
-            //The elapsed time in regard to this event's starting time.
-            float elapsedTime = GetElapsedTime(timeline.ElapsedTime);
-
-            //If the elapsed time is less than 0, quit.
-            if (elapsedTime < 0) { return; }
-
-            //Perform the event.
-            switch (_Event)
+            //Whether the event is duration-based or action-based.
+            switch (_Type)
             {
-                case AnimationRule.DamageTarget: { break; }
-                case AnimationRule.EndAnimation: { break; }
-                case AnimationRule.MoveToTarget: { break; }
-                case AnimationRule.MoveToUser: { break; }
+                case TimelineEventType.Direct:
+                    {
+                        //Check if the event has run its course.
+                        if (Vector2.Distance(User.Position, Target.Position) < 10) { EventConcludedInvoke(); }
+
+                        //Move towards the target as fast as possible.
+                        speed = User.Speed;
+                        break;
+                    }
+                case TimelineEventType.Duration:
+                    {
+                        //Check if the event has run its course.
+                        if (Vector2.Distance(User.Position, Target.Position) < 10 || elapsedTime >= Duration) { EventConcludedInvoke(); }
+
+                        //Move towards the target.
+                        speed = Math.Min(Vector2.Distance(User.Position, Target.Position) / (Duration - elapsedTime), User.Speed * .1f);
+                        break;
+                    }
                 default: { break; }
             }
-        }
-        #endregion
 
-        #region Properties
+            //Move towards the target.
+            User.Velocity = Calculator.LineDirection(User.Position, Target.Position) * speed;
+        }
         #endregion
     }
 }
