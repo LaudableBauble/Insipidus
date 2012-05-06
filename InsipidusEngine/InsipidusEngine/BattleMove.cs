@@ -35,7 +35,7 @@ namespace InsipidusEngine
 
         #region Events
         public delegate void MoveEventHandler(BattleMove source);
-        public event MoveEventHandler MoveCompleted;
+        public event MoveEventHandler Concluded;
         #endregion
 
         #region Constructors
@@ -82,7 +82,7 @@ namespace InsipidusEngine
             _Timeline.Start();
 
             //Subscribe to the timeline.
-            _Timeline.OnConcluded += MoveCompletedInvoke;
+            _Timeline.OnConcluded += ConcludedInvoke;
         }
         /// <summary>
         /// Update the active move.
@@ -92,103 +92,23 @@ namespace InsipidusEngine
         {
             //Update the timeline.
             _Timeline.Update(gametime);
-
-            //Perform the move.
-            switch (_AttackState)
-            {
-                case AttackState.Idle: { break; }
-                case AttackState.Cancelled: { break; }
-                case AttackState.Underway:
-                    {
-                        //The outcome of the move.
-                        switch (_AttackOutcome)
-                        {
-                            case AttackOutcome.Miss:
-                                {
-                                    //The attack is ready to be completed.
-                                    _AttackState = AttackState.Conclusion;
-                                    break;
-                                }
-                            case AttackOutcome.Clash:
-                                {
-                                    //Declare unstoppable.
-                                    /*_IsCancelable = false;
-                                    //Test animation.
-                                    _User.Velocity = Calculator.LineDirection(_User.Position, _Target.Position) * _User.Speed * .05f;
-                                    _Target.Velocity = Calculator.LineDirection(_Target.Position, _User.Position) * _Target.Speed * .05f;
-
-                                    //If the attacker has reached the target.
-                                    if (Vector2.Distance(_User.Position, _Target.Position) < 10)
-                                    {
-                                        //The attack is ready to be completed.
-                                        _AttackState = AttackState.Conclusion;
-                                    }*/
-                                    break;
-                                }
-                            case AttackOutcome.Hit:
-                                {
-                                    //Declare unstoppable.
-                                    /*_IsCancelable = false;
-                                    //Test animation.
-                                    _User.Velocity = Calculator.LineDirection(_User.Position, _Target.Position) * _User.Speed * .05f;
-
-                                    //If the attacker has reached the target.
-                                    if (Vector2.Distance(_User.Position, _Target.Position) < 10)
-                                    {
-                                        //The attack is ready to be completed.
-                                        _AttackState = AttackState.Conclusion;
-                                    }*/
-                                    break;
-                                }
-                        }
-                        break;
-                    }
-                case AttackState.Conclusion:
-                    {
-                        //The outcome of the move.
-                        switch (_AttackOutcome)
-                        {
-                            case AttackOutcome.Miss:
-                                {
-                                    break;
-                                }
-                            case AttackOutcome.Clash:
-                                {
-                                    break;
-                                }
-                            case AttackOutcome.Hit:
-                                {
-                                    //Damage the target.
-                                    //_Target.ReceiveAttack(this);
-                                    break;
-                                }
-                        }
-
-                        //The move consumes energy!
-                        //_User.CurrentEnergy -= _Move.EnergyConsume;
-
-                        //Call the event.
-                        //MoveCompletedInvoke();
-                        break;
-                    }
-            }
         }
 
         /// <summary>
-        /// Use the move on a Pokémon.
+        /// Use the move on a character by activating it.
         /// </summary>
         /// <param name="outcome">The outcome of the attack.</param>
-        public void Use(AttackOutcome outcome)
+        public void Activate(AttackOutcome outcome)
         {
-            //Stop here if the attacker or target isn't valid, or if the move is already underway.
-            if (_User == null || _Target == null || _AttackState != AttackState.Idle) { return; }
+            //If the move has not been set-up properly or if its already underway, we cannot activate it again.
+            if (_User == null || _Target == null || _AttackState != AttackState.Idle) { throw new Exception("The move has either already been activated or it has not been set-up properly."); }
 
             //Get the outcome of the move and then activate it.
             _AttackOutcome = outcome;
             _AttackState = AttackState.Underway;
         }
         /// <summary>
-        /// Cancel the move for use in battle.
+        /// Cancel the move and end it prematurely.
         /// </summary>
         public void Cancel()
         {
@@ -196,15 +116,15 @@ namespace InsipidusEngine
             if (_IsCancelable) { _AttackState = AttackState.Cancelled; }
         }
         /// <summary>
-        /// The move has been completed.
+        /// The move has been concluded.
         /// </summary>
-        protected void MoveCompletedInvoke()
+        protected void ConcludedInvoke()
         {
             //The attack is now officially finished.
             _AttackState = AttackState.Concluded;
 
             //If someone has hooked up a delegate to the event, fire it.
-            if (MoveCompleted != null) { MoveCompleted(this); }
+            if (Concluded != null) { Concluded(this); }
         }
         #endregion
 

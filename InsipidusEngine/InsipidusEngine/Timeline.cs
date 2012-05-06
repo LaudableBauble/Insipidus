@@ -18,7 +18,7 @@ using InsipidusEngine.Imagery;
 namespace InsipidusEngine
 {
     /// <summary>
-    /// A timeline is a finite set of time during which a number of different animation events may happen.
+    /// A timeline is a finite set of time during which a number of different animation events may occur.
     /// </summary>
     public class Timeline
     {

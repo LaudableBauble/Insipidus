@@ -105,7 +105,7 @@ namespace InsipidusEngine
             if (move != null && move.User != null && move.Target != null) { _Moves.Add(move); }
 
             //Subscribe to the move's events.
-            move.MoveCompleted += OnMoveFinished;
+            move.Concluded += OnMoveFinished;
         }
         /// <summary>
         /// Use a move.
@@ -118,7 +118,7 @@ namespace InsipidusEngine
             move.Target.BattleState = BattleState.Active;
 
             //Use the move.
-            move.Use(CalculateAttackOutcome(move));
+            move.Activate(CalculateAttackOutcome(move));
         }
         /// <summary>
         /// Calculate the outcome for a move.
@@ -149,7 +149,7 @@ namespace InsipidusEngine
             move.Target.BattleState = BattleState.Idle;
 
             //Unsubscribe from the move.
-            move.MoveCompleted -= OnMoveFinished;
+            move.Concluded -= OnMoveFinished;
         }
         #endregion
 

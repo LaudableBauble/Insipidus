@@ -19,3 +19,30 @@ The solution to these problems will be to split the events into two categories; 
 at the given starting time, whereas duration-specific events are active during a set duration. If an event is dependent on another (split into start or end-dependent)
 it will only be activated after the source event is triggered. In this case the starting time set onto the dependent event is relative to the source event, not the
 timeline's elapsed time.
+
+- Thoughts on a more direct battle structure
+
+Instead of using a strictly choreographed battle system a more direct variant would perhaps be more beneficial. All attacks are still animations based upon the
+timeline-formula already developed but they depend less upon the interaction between participants. A tackle for example uses an animation where the user leaps towards
+the target, but instead of choreographing a collision the engine will let the it happen on its own. The only responsibility each participant needs to take is
+notifying each other when an attack is launched, the outcome of it and when it lands. Let the target behave appropriately on his own; do not include that animation
+into the attack.
+
+It would be easier if the full range of battle animations were known and if a scriptable pattern could be discerned between them.
+
+Types of attack animation events:
+- Movement, ie. Attack or Scratch.
+- Projectile, ie. Ember or Stun Powder.
+- Effects, ie. Curse or Wish.
+- Result, all attacks and moves.
+
+Out of those four event types only the effects-variant is based upon duration, all the other are direct and tries to finish as soon as possible. There are however
+a few differences between them in how they are set up.
+
+Movement - Needs a destination point and type of movement (ie. walk, run or jump).
+Projectile - Needs direction or target position and type of projectile.
+Effects - Needs duration, location and type of effect.
+Result - Needs stat and the value to change it with (ie. health, defense or energy)
+
+In order for an attack or move to fail only one of its event may fail. If for example a movement event fails (which it will if there is no collision at the destination
+point or during the movement) it means that the target has dodged the attack (or moved by some other reason; not important) and the attack will thus fail.
