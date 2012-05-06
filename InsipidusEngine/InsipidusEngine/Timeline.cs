@@ -89,8 +89,15 @@ namespace InsipidusEngine
         {
             _IsRunning = false;
             _ElapsedTime = 0;
+        }
 
-            //Reset all events.
+        /// <summary>
+        /// Resets the timeline.
+        /// </summary>
+        public void Reset()
+        {
+            //Stops the timeline and reset all events.
+            Stop();
             _Events.ForEach(item => item.State = TimelineEventState.Idle);
         }
 
@@ -106,12 +113,13 @@ namespace InsipidusEngine
             if (OnConcluded != null) { OnConcluded(); }
         }
         /// <summary>
-        /// An event has been concluded.
+        /// An event has been concluded, see if the timeline has ended with it.
         /// </summary>
         /// <param name="e">The event that has been concluded.</param>
         private void OnEventConcluded(TimelineEvent e)
         {
-            //Do something.
+            //If this was the last active event, conclude the timeline.
+            if (!_Events.Exists(item => item.State != TimelineEventState.Concluded)) { ConcludeInvoke(); }
         }
         /// <summary>
         /// Add an event to the timeline.

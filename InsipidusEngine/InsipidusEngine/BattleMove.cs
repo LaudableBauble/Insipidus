@@ -73,8 +73,10 @@ namespace InsipidusEngine
             //Add events to the timeline.
             TimelineEvent moveTo = new ContactEvent(_Timeline, 0, 0, AnimationRule.MoveToTarget, TimelineEventType.Direct, null);
             TimelineEvent damage = new DamageEvent(_Timeline, 0, 0, AnimationRule.DamageTarget, TimelineEventType.Direct, moveTo);
+            TimelineEvent energy = new EnergyEvent(_Timeline, 0, 0, AnimationRule.ConsumeEnergy, TimelineEventType.Direct, damage);
             _Timeline.AddEvent(moveTo);
             _Timeline.AddEvent(damage);
+            _Timeline.AddEvent(energy);
 
             //Start the timeline.
             _Timeline.Start();

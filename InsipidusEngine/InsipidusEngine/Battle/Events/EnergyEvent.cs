@@ -17,9 +17,9 @@ using InsipidusEngine.Imagery;
 namespace InsipidusEngine.Battle.Events
 {
     /// <summary>
-    /// A damage event is used when an attack is going to deal out some damage.
+    /// An energy event is used when an attack is altering the amount of energy of any participant.
     /// </summary>
-    public class DamageEvent : TimelineEvent
+    public class EnergyEvent : TimelineEvent
     {
         #region Constructors
         /// <summary>
@@ -31,7 +31,7 @@ namespace InsipidusEngine.Battle.Events
         /// <param name="rule">The event rule that will be applied.</param>
         /// <param name="type">The type of event, ie. duration or action-specific.</param>
         /// <param name="dependentOn">An optional event to be dependent upon, ie. wait for.</param>
-        public DamageEvent(Timeline timeline, float start, float end, AnimationRule rule, TimelineEventType type, TimelineEvent dependentOn)
+        public EnergyEvent(Timeline timeline, float start, float end, AnimationRule rule, TimelineEventType type, TimelineEvent dependentOn)
         {
             Initialize(timeline, start, end, rule, type, dependentOn);
         }
@@ -48,8 +48,8 @@ namespace InsipidusEngine.Battle.Events
             //Call the base method and see whether to perform the event or not.
             if (!base.PerformEvent(elapsedTime)) { return false; }
 
-            //Damage the target.
-            Target.ReceiveAttack(_Timeline.Move);
+            //The move consumes energy for the user.
+            User.CurrentEnergy -= _Timeline.Move.EnergyConsume;
             EventConcludedInvoke();
 
             //The event has been performed.

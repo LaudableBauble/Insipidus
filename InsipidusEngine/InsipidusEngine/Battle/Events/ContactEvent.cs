@@ -43,10 +43,11 @@ namespace InsipidusEngine.Battle.Events
         /// Perform this event.
         /// </summary>
         /// <param name="elapsedTime">The elapsed time since the beginning of this event.</param>
-        protected override void PerformEvent(float elapsedTime)
+        /// <returns>Whether the event was performed this cycle or not.</returns>
+        protected override bool PerformEvent(float elapsedTime)
         {
-            //Call the base method.
-            base.PerformEvent(elapsedTime);
+            //Call the base method and see whether to perform the event or not.
+            if (!base.PerformEvent(elapsedTime)) { return false; }
 
             //The speed with which to move.
             float speed = 0;
@@ -77,6 +78,9 @@ namespace InsipidusEngine.Battle.Events
 
             //Move towards the target.
             User.Velocity = Calculator.LineDirection(User.Position, Target.Position) * speed;
+
+            //The event has been performed.
+            return true;
         }
         #endregion
     }

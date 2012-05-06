@@ -18,8 +18,8 @@ using InsipidusEngine.Imagery;
 namespace InsipidusEngine
 {
     /// <summary>
-    /// A move is an ability that can be performed by a Pokémon; either to damage or to affect a Pokémon in some way. Moves are primarily used in battle.
-    /// In order to use a move in battle, encapsulate it within a <code>PerformedMove</code> instance and thus activate.
+    /// A move is an ability that can be performed by a character; either to damage or to affect another character in some way. Moves are primarily used in battle.
+    /// In order to use a move in battle, encapsulate it within a <code>BattleMove</code> instance and thus activate.
     /// </summary>
     public class Move
     {

@@ -17,7 +17,7 @@ using InsipidusEngine.Imagery;
 namespace InsipidusEngine
 {
     /// <summary>
-    /// A Pokémon is a creature and is primarily used for battling with other Pokémon.
+    /// A character is a creature and is primarily used for battling with other characters.
     /// </summary>
     public class Character
     {
@@ -134,8 +134,7 @@ namespace InsipidusEngine
             BattleMove active = new BattleMove(move, this, target);
 
             //Prepare for the attack.
-            _BattleState = BattleState.Active;
-            active.MoveCompleted += OnMoveFinished;
+            _BattleState = BattleState.Waiting;
 
             //Attack.
             BattleCoordinator.Instance.QueueMove(active);
@@ -190,18 +189,6 @@ namespace InsipidusEngine
             _Velocity = Vector2.Clamp(_Velocity, -new Vector2(5, 5), new Vector2(5, 5));
         }
         /// <summary>
-        /// An attack is incoming, prepare for it.
-        /// </summary>
-        /// <param name="move">The move in question.</param>
-        public void IncomingAttack(BattleMove move)
-        {
-            //If not already state of attack, start defending.
-            if (_BattleState != BattleState.Active) { _BattleState = BattleState.Active; }
-
-            //Subscribe to the move's events.
-            move.MoveCompleted += OnMoveFinished;
-        }
-        /// <summary>
         /// Try to keep some distance from the opponent.
         /// </summary>
         private void KeepDistance()
@@ -214,17 +201,6 @@ namespace InsipidusEngine
                 //The velocity.
                 _Velocity += (direction != Vector2.Zero) ? direction * _Speed * .05f : Vector2.One * _Speed * .05f;
             }
-        }
-        /// <summary>
-        /// When a move has finished performing, relax some.
-        /// </summary>
-        /// <param name="move">The move that has finished performing.</param>
-        private void OnMoveFinished(BattleMove move)
-        {
-            //We are now idle.
-            _BattleState = BattleState.Idle;
-            //Unsubscribe from the move.
-            move.MoveCompleted -= OnMoveFinished;
         }
         #endregion
 
@@ -318,6 +294,14 @@ namespace InsipidusEngine
         {
             get { return _Velocity; }
             set { _Velocity = value; }
+        }
+        /// <summary>
+        /// The state of battle for this character.
+        /// </summary>
+        public BattleState BattleState
+        {
+            get { return _BattleState; }
+            set { _BattleState = value; }
         }
         #endregion
     }

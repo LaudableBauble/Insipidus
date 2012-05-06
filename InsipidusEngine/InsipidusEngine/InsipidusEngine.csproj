@@ -119,6 +119,7 @@
     <Compile Include="Battle\BattleMenu.cs" />
     <Compile Include="Battle\BattleMenuSelectEntry.cs" />
     <Compile Include="Battle\Events\ContactEvent.cs" />
+    <Compile Include="Battle\Events\EnergyEvent.cs" />
     <Compile Include="Battle\Events\DamageEvent.cs" />
     <Compile Include="Battle\Events\TimelineEvent.cs" />
     <Compile Include="Battle\ExperienceBar.cs" />
@@ -164,6 +165,8 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Documentation\Battle Structure.txt" />
+    <Content Include="Documentation\Todo.txt" />
+    <Content Include="Documentation\Issues.txt" />
     <Content Include="Game.ico" />
     <Content Include="GameThumbnail.png" />
   </ItemGroup>

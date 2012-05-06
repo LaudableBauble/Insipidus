@@ -105,6 +105,7 @@ namespace InsipidusEngine
         MoveToTarget,
         MoveToUser,
         DamageTarget,
+        ConsumeEnergy
     }
 
     /// <summary>

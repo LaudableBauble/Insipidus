@@ -1,0 +1,3 @@
+﻿/// Issues
+
+- Would it not be better if events were created as a way to express animation rules, not as an extension of the rule?

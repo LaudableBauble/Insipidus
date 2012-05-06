@@ -78,11 +78,17 @@ namespace InsipidusEngine.Battle.Events
         /// Perform this event.
         /// </summary>
         /// <param name="elapsedTime">The elapsed time since the beginning of this event.</param>
-        protected virtual void PerformEvent(float elapsedTime)
+        /// <returns>Whether the event was performed this cycle or not.</returns>
+        protected virtual bool PerformEvent(float elapsedTime)
         {
-            //If the elapsed time is less than 0, quit. Otherwise activate the event.
-            if (_State == TimelineEventState.Concluded || elapsedTime < 0) { return; }
-            else { _State = TimelineEventState.Active; }
+            //If the elapsed time is less than 0, quit.
+            if (_State == TimelineEventState.Concluded || elapsedTime < 0) { return false; }
+
+            //Activate the event.
+            _State = TimelineEventState.Active;
+
+            //The event was performed.
+            return true;
         }
         /// <summary>
         /// Get the elapsed time in relation to this event. A negative number indicates that this event has yet to see the light of day.

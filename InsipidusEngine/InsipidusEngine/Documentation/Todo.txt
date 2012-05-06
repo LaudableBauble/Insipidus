@@ -1,0 +1,4 @@
+﻿/// Todo
+
+- Add visual elements to attacks, ie. add a sprite collection to timeline events somehow.
+- Perhaps incorporate the modified sprite system from the java game?

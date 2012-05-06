@@ -113,8 +113,10 @@ namespace InsipidusEngine
         /// <param name="move">The move to use.</param>
         private void UseMove(BattleMove move)
         {
-            //Alert the target of the incoming attack.
-            move.Target.IncomingAttack(move);
+            //Alert the target of the incoming attack, as well as the user.
+            move.User.BattleState = BattleState.Active;
+            move.Target.BattleState = BattleState.Active;
+
             //Use the move.
             move.Use(CalculateAttackOutcome(move));
         }
@@ -139,8 +141,12 @@ namespace InsipidusEngine
         /// <param name="move">The move that is finished.</param>
         private void OnMoveFinished(BattleMove move)
         {
-            //The move is obsolete, remove it.
+            //The move is now obsolete, remove it.
             _Moves.Remove(move);
+
+            //Deactivate the participants of the move.
+            move.User.BattleState = BattleState.Idle;
+            move.Target.BattleState = BattleState.Idle;
 
             //Unsubscribe from the move.
             move.MoveCompleted -= OnMoveFinished;
