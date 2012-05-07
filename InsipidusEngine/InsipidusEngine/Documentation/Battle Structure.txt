@@ -1,4 +1,4 @@
-﻿/// Battle Structure
+﻿/// General thoughts on the Battle Structure
 
 Every character active in a battle can, when idle, launch an attack on another character. In order for the battle to unfold as smoothly as possible
 the battle coordinator 'chunks' up the battle into short turns. Every turn the coordinator decides which newly launched moves are legit and which are not.
@@ -34,7 +34,7 @@ Types of attack animation events:
 - Movement, ie. Attack or Scratch.
 - Projectile, ie. Ember or Stun Powder.
 - Effects, ie. Curse or Wish.
-- Result, all attacks and moves.
+- Modifier, all attacks and moves.
 
 Out of those four event types only the effects-variant is based upon duration, all the other are direct and tries to finish as soon as possible. There are however
 a few differences between them in how they are set up.
@@ -42,7 +42,61 @@ a few differences between them in how they are set up.
 Movement - Needs a destination point and type of movement (ie. walk, run or jump).
 Projectile - Needs direction or target position and type of projectile.
 Effects - Needs duration, location and type of effect.
-Result - Needs stat and the value to change it with (ie. health, defense or energy)
+Modify - Needs stat and the value to change it with (ie. health, defense or energy).
 
 In order for an attack or move to fail only one of its event may fail. If for example a movement event fails (which it will if there is no collision at the destination
 point or during the movement) it means that the target has dodged the attack (or moved by some other reason; not important) and the attack will thus fail.
+
+/// Battle Events
+
+The first three events are good as they are but the fourth, the Result event, needs some tweaking. The problem lies in the fact that there exists practically an
+infinite number of changes and results to be had and it is hard to design a single event that encompasses all of these multitude of posibilities. For example,
+besides changing health or other stats an attack may want to affect the weather or time of day. How do we keep the event as simple as possible while still allowing it
+to retain a wide array of areas to influence?
+One solution for this may be to split up the event into as many as there are stats/aspects to modify.
+
+- Basic
+
+	Description: This event will act as a base for all other battle events.
+
+	Arguments:
+		Start: The time to start the event.
+		Dependence: Optional event to be dependent upon, for example to start after the end of the other event.
+
+- Movement
+	
+	Description: This event is used when an attack requires some sort of movement from either participant.
+	
+	Arguments:
+		Entity: The entity to move.
+		Destination: The destination to move to. Note: Cannot be an immutable locator or homing will not work.
+		Homing: Whether the movement will home in on the destination point, for example if it moves.
+		Type: The type of movement (ie. walk, run or jump).
+
+- Projectile
+
+	Description: This event is used when an attack requires some sort of projectile to be launched.
+
+	Arguments:
+		Position: The starting position of the projectile.
+		Destination: The destination of the projectile. Note: Cannot be an immutable locator or homing will not work.
+		Homing: Whether the projectile will home in on the destination point, for example if it moves.
+		Type: The type of projectile (ie. sprite, speed etc).
+
+ - Effects
+
+	Description: This event is used when an attack requires some sort of effect to be displayed.
+
+	Arguments:
+		Position: The position of the effect.
+		Duration: The duration of the effect.
+		Type: The type of effect (ie. particles, sprite or screen shake)
+
+ - Modify
+
+	Description: This event is used when an attack requires some sort of modification to be made, for example changing an character's stats.
+
+	Arguments:
+		Entity: The entity who's stats to change.
+		Amount: The amount of change.
+		Type: The type of stat to change.

@@ -26,7 +26,7 @@ namespace InsipidusEngine
         private BattleMove _Move;
         private float _ElapsedTime;
         private List<TimelineEvent> _Events;
-        private bool _IsRunning;
+        private TimelineState _State;
         #endregion
 
         #region Events
@@ -56,7 +56,7 @@ namespace InsipidusEngine
             _Move = move;
             _ElapsedTime = 0;
             _Events = new List<TimelineEvent>();
-            _IsRunning = false;
+            _State = TimelineState.Idle;
         }
         /// <summary>
         /// Update the timeline.
@@ -64,8 +64,8 @@ namespace InsipidusEngine
         /// <param name="gametime">The current game time.</param>
         public void Update(GameTime gametime)
         {
-            //If the timeline has not yet been started, stop here.
-            if (!_IsRunning) { return; }
+            //If the timeline is not active, stop here.
+            if (_State != TimelineState.Active) { return; }
 
             //Get the time since the last update.
             _ElapsedTime += (float)gametime.ElapsedGameTime.TotalSeconds;
@@ -79,7 +79,7 @@ namespace InsipidusEngine
         /// </summary>
         public void Start()
         {
-            _IsRunning = true;
+            _State = TimelineState.Active;
         }
 
         /// <summary>
@@ -87,8 +87,11 @@ namespace InsipidusEngine
         /// </summary>
         public void Stop()
         {
-            _IsRunning = false;
-            _ElapsedTime = 0;
+            //Stop the timeline.
+            _State = TimelineState.Concluded;
+
+            //If someone has hooked up a delegate to the event, fire it.
+            if (OnConcluded != null) { OnConcluded(); }
         }
 
         /// <summary>
@@ -96,22 +99,13 @@ namespace InsipidusEngine
         /// </summary>
         public void Reset()
         {
-            //Stops the timeline and reset all events.
+            //Stops the timeline, resets the elapsed time and all events.
             Stop();
-            _Events.ForEach(item => item.State = TimelineEventState.Idle);
+            _ElapsedTime = 0;
+            _Events.ForEach(item => item.State = TimelineState.Idle);
+            _State = TimelineState.Idle;
         }
 
-        /// <summary>
-        /// Conclude this timeline.
-        /// </summary>
-        protected void ConcludeInvoke()
-        {
-            //Stop this timeline.
-            Stop();
-
-            //If someone has hooked up a delegate to the event, fire it.
-            if (OnConcluded != null) { OnConcluded(); }
-        }
         /// <summary>
         /// An event has been concluded, see if the timeline has ended with it.
         /// </summary>
@@ -119,7 +113,7 @@ namespace InsipidusEngine
         private void OnEventConcluded(TimelineEvent e)
         {
             //If this was the last active event, conclude the timeline.
-            if (!_Events.Exists(item => item.State != TimelineEventState.Concluded)) { ConcludeInvoke(); }
+            if (!_Events.Exists(item => item.State != TimelineState.Concluded)) { Stop(); }
         }
         /// <summary>
         /// Add an event to the timeline.
@@ -165,6 +159,13 @@ namespace InsipidusEngine
         {
             get { return _ElapsedTime; }
             set { _ElapsedTime = value; }
+        }
+        /// <summary>
+        /// The state of this timeline.
+        /// </summary>
+        public TimelineState State
+        {
+            get { return _State; }
         }
         #endregion
     }

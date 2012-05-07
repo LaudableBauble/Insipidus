@@ -74,7 +74,7 @@ namespace InsipidusEngine
             if (_ElapsedTime >= _TimePerTurn)
             {
                 //Go through all queued moves and use them.
-                moves.FindAll(move => move.State == AttackState.Idle).ForEach(move => UseMove(move));
+                moves.FindAll(move => move.State == TimelineState.Idle).ForEach(move => UseMove(move));
 
                 //Begin the cycle anew.
                 _ElapsedTime -= _TimePerTurn;

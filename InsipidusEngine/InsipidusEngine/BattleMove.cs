@@ -25,7 +25,6 @@ namespace InsipidusEngine
     {
         #region Fields
         private Move _Move;
-        private AttackState _AttackState;
         private AttackOutcome _AttackOutcome;
         private Timeline _Timeline;
         private Character _User;
@@ -63,7 +62,6 @@ namespace InsipidusEngine
         {
             //Initialize the class.
             _Move = move;
-            _AttackState = AttackState.Idle;
             _AttackOutcome = AttackOutcome.None;
             _Timeline = new Timeline(this);
             _User = user;
@@ -71,15 +69,12 @@ namespace InsipidusEngine
             _IsCancelable = true;
 
             //Add events to the timeline.
-            TimelineEvent moveTo = new ContactEvent(_Timeline, 0, 0, AnimationRule.MoveToTarget, TimelineEventType.Direct, null);
-            TimelineEvent damage = new DamageEvent(_Timeline, 0, 0, AnimationRule.DamageTarget, TimelineEventType.Direct, moveTo);
-            TimelineEvent energy = new EnergyEvent(_Timeline, 0, 0, AnimationRule.ConsumeEnergy, TimelineEventType.Direct, damage);
+            MovementEvent moveTo = new MovementEvent(_Timeline, 0, null, _User, _Target.Position, MovementType.Run);
+            ModifyHealthEvent damage = new ModifyHealthEvent(_Timeline, 0, moveTo, _Target, -GetDamage());
+            ModifyEnergyEvent energy = new ModifyEnergyEvent(_Timeline, 0, damage, _User, -EnergyConsume);
             _Timeline.AddEvent(moveTo);
             _Timeline.AddEvent(damage);
             _Timeline.AddEvent(energy);
-
-            //Start the timeline.
-            _Timeline.Start();
 
             //Subscribe to the timeline.
             _Timeline.OnConcluded += ConcludedInvoke;
@@ -101,11 +96,11 @@ namespace InsipidusEngine
         public void Activate(AttackOutcome outcome)
         {
             //If the move has not been set-up properly or if its already underway, we cannot activate it again.
-            if (_User == null || _Target == null || _AttackState != AttackState.Idle) { throw new Exception("The move has either already been activated or it has not been set-up properly."); }
+            if (_User == null || _Target == null || _Timeline.State != TimelineState.Idle) { throw new Exception("The move has either already been activated or it has not been set-up properly."); }
 
-            //Get the outcome of the move and then activate it.
+            //Get the outcome of the move.
             _AttackOutcome = outcome;
-            _AttackState = AttackState.Underway;
+            _Timeline.Start();
         }
         /// <summary>
         /// Cancel the move and end it prematurely.
@@ -113,16 +108,30 @@ namespace InsipidusEngine
         public void Cancel()
         {
             //Cancel the move, if we can.
-            if (_IsCancelable) { _AttackState = AttackState.Cancelled; }
+            if (_IsCancelable) { _Timeline.Stop(); }
+        }
+        private float GetDamage()
+        {
+            //The STAB, weakness/resistance factor and a random value.
+            float STAB = 1;
+            float wrFactor = 1;
+            float random = Calculator.RandomNumber(85, 100);
+
+            //Calculate the damage of the move.
+            float damagePhysical = (((((2 * _User.Level / 5) + 2) * _User.AttackPhysical * PowerPhysical / _Target.DefensePhysical) / 50) + 2) * STAB * wrFactor * random / 100;
+            float damageSpecial = (((((2 * _User.Level / 5) + 2) * _User.SpecialAttack * PowerSpecial / _Target.SpecialDefense) / 50) + 2) * STAB * wrFactor * random / 100;
+
+            //Calculate the cleanliness and force of the attack.
+            float hitCleanliness = MathHelper.Clamp(_User.Speed / _Target.Speed, 0, 1) * Calculator.RandomNumber(Accuracy / 100, 1);
+
+            //Damage the Pokémon and subtract from its health.
+            return (damagePhysical + damageSpecial) * hitCleanliness;
         }
         /// <summary>
-        /// The move has been concluded.
+        /// The move's animation has been concluded, and so has this move.
         /// </summary>
-        protected void ConcludedInvoke()
+        private void ConcludedInvoke()
         {
-            //The attack is now officially finished.
-            _AttackState = AttackState.Concluded;
-
             //If someone has hooked up a delegate to the event, fire it.
             if (Concluded != null) { Concluded(this); }
         }
@@ -189,9 +198,9 @@ namespace InsipidusEngine
             get { return _Target; }
             set { _Target = value; }
         }
-        public AttackState State
+        public TimelineState State
         {
-            get { return _AttackState; }
+            get { return _Timeline.State; }
         }
         public AttackOutcome Outcome
         {

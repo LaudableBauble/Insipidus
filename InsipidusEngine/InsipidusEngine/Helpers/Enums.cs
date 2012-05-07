@@ -117,12 +117,23 @@ namespace InsipidusEngine
         Direct
     }
     /// <summary>
-    /// The state of a timeline event.
+    /// The state of a timeline and its events.
     /// </summary>
-    public enum TimelineEventState
+    public enum TimelineState
     {
         Idle,
         Active,
         Concluded
+    }
+    /// <summary>
+    /// The different types of movement available to a character.
+    /// </summary>
+    public enum MovementType
+    {
+        Walk,
+        Run,
+        Jump,
+        Fly,
+        Teleport
     }
 }

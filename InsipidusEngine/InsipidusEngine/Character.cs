@@ -140,31 +140,6 @@ namespace InsipidusEngine
             BattleCoordinator.Instance.QueueMove(active);
         }
         /// <summary>
-        /// Defend against a certain move.
-        /// </summary>
-        /// <param name="move">The move to defend against.</param>
-        public void ReceiveAttack(BattleMove move)
-        {
-            //The STAB, weakness/resistance factor and a random value.
-            float STAB = 1;
-            float wrFactor = 1;
-            float random = Calculator.RandomNumber(85, 100);
-
-            //Calculate the damage of the move.
-            float damagePhysical = (((((2 * move.User.Level / 5) + 2) * move.User.AttackPhysical * move.PowerPhysical / _DefensePhysical) / 50) + 2) * STAB * wrFactor * random / 100;
-            float damageSpecial = (((((2 * move.User.Level / 5) + 2) * move.User.SpecialAttack * move.PowerSpecial / _SpecialDefense) / 50) + 2) * STAB * wrFactor * random / 100;
-
-            //Calculate the cleanliness and force of the attack.
-            float hitCleanliness = MathHelper.Clamp(move.User.Speed / move.Target.Speed, 0, 1) * Calculator.RandomNumber(move.Accuracy / 100, 1);
-            float force = move.Force * hitCleanliness;
-
-            //Update the velocity of the defending Pokémon to accomodate for the force of the attack.
-            _Velocity += Calculator.LineDirection(_Velocity, move.User.Velocity) * force;
-
-            //Damage the Pokémon and subtract from its health.
-            _CurrentHP -= (damagePhysical + damageSpecial) * hitCleanliness;
-        }
-        /// <summary>
         /// Update the Pokémon's movement.
         /// </summary>
         private void Move()

@@ -118,9 +118,9 @@
     <Compile Include="Battle\BattleIntro.cs" />
     <Compile Include="Battle\BattleMenu.cs" />
     <Compile Include="Battle\BattleMenuSelectEntry.cs" />
-    <Compile Include="Battle\Events\ContactEvent.cs" />
-    <Compile Include="Battle\Events\EnergyEvent.cs" />
-    <Compile Include="Battle\Events\DamageEvent.cs" />
+    <Compile Include="Battle\Events\ModifyEnergyEvent.cs" />
+    <Compile Include="Battle\Events\MovementEvent.cs" />
+    <Compile Include="Battle\Events\ModifyHealthEvent.cs" />
     <Compile Include="Battle\Events\TimelineEvent.cs" />
     <Compile Include="Battle\ExperienceBar.cs" />
     <Compile Include="Battle\HealthBar.cs" />

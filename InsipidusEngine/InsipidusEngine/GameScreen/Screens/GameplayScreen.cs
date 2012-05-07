@@ -196,7 +196,7 @@ namespace InsipidusEngine
             energybar2.Draw();
 
             //Draw some text.
-            foreach (BattleMove m in BattleCoordinator.Instance.Moves.FindAll(x => x.State != AttackState.Idle))
+            foreach (BattleMove m in BattleCoordinator.Instance.Moves.FindAll(x => x.State != TimelineState.Idle))
             {
                 if (m.User == pokemon1)
                 {

@@ -25,9 +25,7 @@ namespace InsipidusEngine.Battle.Events
         protected Timeline _Timeline;
         protected float _StartTime;
         protected float _EndTime;
-        protected AnimationRule _Event;
-        protected TimelineEventState _State;
-        protected TimelineEventType _Type;
+        protected TimelineState _State;
         protected TimelineEvent _DependentOn;
         #endregion
 
@@ -43,20 +41,15 @@ namespace InsipidusEngine.Battle.Events
         /// </summary>
         /// <param name="timeline">The timeline this event is part of.</param>
         /// <param name="start">The start of the event.</param>
-        /// <param name="end">The end of the event.</param>
-        /// <param name="rule">The event that will happen.</param>
-        /// <param name="type">The type of event, ie. duration or action-specific.</param>
         /// <param name="dependentOn">An optional event to be dependent upon, ie. wait for.</param>
-        protected virtual void Initialize(Timeline timeline, float start, float end, AnimationRule rule, TimelineEventType type, TimelineEvent dependentOn)
+        protected virtual void Initialize(Timeline timeline, float start, TimelineEvent dependentOn)
         {
             //Initialize the variables.
             _Timeline = timeline;
             _StartTime = start;
-            _EndTime = end;
-            _Event = rule;
-            _Type = type;
+            _EndTime = start;
             _DependentOn = dependentOn;
-            _State = TimelineEventState.Idle;
+            _State = TimelineState.Idle;
 
             //If this event is dependent upon someone else, subscribe to it.
             if (_DependentOn != null) { _DependentOn.OnConcluded += OnDependentEnded; }
@@ -68,7 +61,7 @@ namespace InsipidusEngine.Battle.Events
         public virtual void Update(Timeline timeline)
         {
             //If the event has been concluded, stop here.
-            if (_State == TimelineEventState.Concluded) { return; }
+            if (_State == TimelineState.Concluded) { return; }
 
             //Perform the event.
             PerformEvent(GetElapsedTime(timeline.ElapsedTime));
@@ -82,10 +75,10 @@ namespace InsipidusEngine.Battle.Events
         protected virtual bool PerformEvent(float elapsedTime)
         {
             //If the elapsed time is less than 0, quit.
-            if (_State == TimelineEventState.Concluded || elapsedTime < 0) { return false; }
+            if (_State == TimelineState.Concluded || elapsedTime < 0) { return false; }
 
             //Activate the event.
-            _State = TimelineEventState.Active;
+            _State = TimelineState.Active;
 
             //The event was performed.
             return true;
@@ -101,7 +94,7 @@ namespace InsipidusEngine.Battle.Events
             if (_DependentOn != null)
             {
                 //If that event is not concluded yet, we have to wait.
-                if (_DependentOn.State != TimelineEventState.Concluded) { return -1; }
+                if (_DependentOn.State != TimelineState.Concluded) { return -1; }
 
                 //Calculate the elapsed time.
                 return elapsedTime - _DependentOn.EndTime;
@@ -116,7 +109,7 @@ namespace InsipidusEngine.Battle.Events
         protected void EventConcludedInvoke()
         {
             //The event has now occurred.
-            _State = TimelineEventState.Concluded;
+            _State = TimelineState.Concluded;
 
             //If someone has hooked up a delegate to the event, fire it.
             if (OnConcluded != null) { OnConcluded(this); }
@@ -128,7 +121,7 @@ namespace InsipidusEngine.Battle.Events
         protected virtual void OnDependentEnded(TimelineEvent eventRule)
         {
             //Set the state to active.
-            _State = TimelineEventState.Active;
+            _State = TimelineState.Active;
         }
         #endregion
 
@@ -150,27 +143,12 @@ namespace InsipidusEngine.Battle.Events
             set { _EndTime = value; }
         }
         /// <summary>
-        /// The rule that defines this event.
-        /// </summary>
-        public AnimationRule Event
-        {
-            get { return _Event; }
-            set { _Event = value; }
-        }
-        /// <summary>
         /// What state the event is currently in, ie. idle, active or concluded.
         /// </summary>
-        public TimelineEventState State
+        public TimelineState State
         {
             get { return _State; }
             set { _State = value; }
-        }
-        /// <summary>
-        /// The duration of the event.
-        /// </summary>
-        public float Duration
-        {
-            get { return _EndTime - _StartTime; }
         }
         /// <summary>
         /// The event this is dependent on, ie. has to wait for. Null if this event is independent.
