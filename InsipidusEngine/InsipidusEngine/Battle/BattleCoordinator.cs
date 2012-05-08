@@ -14,7 +14,7 @@ using Microsoft.Xna.Framework.Storage;
 
 using InsipidusEngine.Imagery;
 
-namespace InsipidusEngine
+namespace InsipidusEngine.Battle
 {
     /// <summary>
     /// The battle coordinator handles all battles in the game and subsequently controls the flow of each battle.
@@ -23,6 +23,7 @@ namespace InsipidusEngine
     {
         #region Fields
         private static BattleCoordinator _Instance;
+        private ContentManager _Content;
         private List<BattleMove> _Moves;
         private float _ElapsedTime;
         private float _TimePerTurn;
@@ -56,7 +57,11 @@ namespace InsipidusEngine
         /// <param name="content">The content manager.</param>
         public void LoadContent(ContentManager content)
         {
+            //Save the content manager for future references.
+            _Content = content;
+
             //Load all content.
+            (new List<BattleMove>(_Moves)).ForEach(move => move.LoadContent(content));
         }
         /// <summary>
         /// Update the battle coordinator.
@@ -92,7 +97,7 @@ namespace InsipidusEngine
             //Copy the list of moves so that we can iterate on the list unobstructed.
             List<BattleMove> moves = new List<BattleMove>(_Moves);
             //Draw the sprite and moves.
-            //moves.ForEach(move => move.Draw(spritebatch));
+            moves.ForEach(move => move.Draw(spritebatch));
         }
 
         /// <summary>
@@ -116,6 +121,9 @@ namespace InsipidusEngine
             //Alert the target of the incoming attack, as well as the user.
             move.User.BattleState = BattleState.Active;
             move.Target.BattleState = BattleState.Active;
+
+            //Load the move's content.
+            move.LoadContent(_Content);
 
             //Use the move.
             move.Activate(CalculateAttackOutcome(move));

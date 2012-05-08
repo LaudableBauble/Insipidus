@@ -12,10 +12,10 @@ using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework.Net;
 using Microsoft.Xna.Framework.Storage;
 
-using InsipidusEngine.Battle.Events;
+using InsipidusEngine.Battle.Animation.Events;
 using InsipidusEngine.Imagery;
 
-namespace InsipidusEngine
+namespace InsipidusEngine.Battle
 {
     /// <summary>
     /// A timeline is a finite set of time during which a number of different animation events may occur.
@@ -59,6 +59,15 @@ namespace InsipidusEngine
             _State = TimelineState.Idle;
         }
         /// <summary>
+        /// Load the content of all the timeline's events.
+        /// </summary>
+        /// <param name="content">The content manager to use.</param>
+        public virtual void LoadContent(ContentManager content)
+        {
+            //Load all event's content.
+            _Events.ForEach(item => item.LoadContent(content));
+        }
+        /// <summary>
         /// Update the timeline.
         /// </summary>
         /// <param name="gametime">The current game time.</param>
@@ -71,7 +80,19 @@ namespace InsipidusEngine
             _ElapsedTime += (float)gametime.ElapsedGameTime.TotalSeconds;
 
             //Update all events.
-            _Events.ForEach(item => item.Update(this));
+            _Events.ForEach(item => item.Update(gametime, this));
+        }
+        /// <summary>
+        /// Draw the timeline's event.
+        /// </summary>
+        /// <param name="spritebatch">The sprite batch to use.</param>
+        public virtual void Draw(SpriteBatch spritebatch)
+        {
+            //If the timeline is not active, stop here.
+            if (_State != TimelineState.Active) { return; }
+
+            //Draw all events.
+            _Events.ForEach(item => item.Draw(spritebatch));
         }
 
         /// <summary>

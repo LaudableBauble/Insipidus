@@ -107,10 +107,11 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="BattleAnimation.cs" />
-    <Compile Include="BattleCoordinator.cs" />
-    <Compile Include="BattleMove.cs" />
-    <Compile Include="BattleMoveOld.cs" />
+    <Compile Include="Battle\Animation\Events\ProjectileEvent.cs" />
+    <Compile Include="Battle\Animation\Projectiles\FlameProjectile.cs" />
+    <Compile Include="Battle\BattleAnimation.cs" />
+    <Compile Include="Battle\BattleCoordinator.cs" />
+    <Compile Include="Battle\BattleMove.cs" />
     <Compile Include="Battle\Bar.cs" />
     <Compile Include="Battle\Battle.cs" />
     <Compile Include="Battle\BattleHUD.cs" />
@@ -118,12 +119,13 @@
     <Compile Include="Battle\BattleIntro.cs" />
     <Compile Include="Battle\BattleMenu.cs" />
     <Compile Include="Battle\BattleMenuSelectEntry.cs" />
-    <Compile Include="Battle\Events\ModifyEnergyEvent.cs" />
-    <Compile Include="Battle\Events\MovementEvent.cs" />
-    <Compile Include="Battle\Events\ModifyHealthEvent.cs" />
-    <Compile Include="Battle\Events\TimelineEvent.cs" />
+    <Compile Include="Battle\Animation\Events\ModifyEnergyEvent.cs" />
+    <Compile Include="Battle\Animation\Events\MovementEvent.cs" />
+    <Compile Include="Battle\Animation\Events\ModifyHealthEvent.cs" />
+    <Compile Include="Battle\Animation\Events\TimelineEvent.cs" />
     <Compile Include="Battle\ExperienceBar.cs" />
     <Compile Include="Battle\HealthBar.cs" />
+    <Compile Include="Battle\Animation\Projectiles\Projectile.cs" />
     <Compile Include="Camera2D.cs" />
     <Compile Include="Character.cs" />
     <Compile Include="CharacterList.cs" />
@@ -161,7 +163,7 @@
     <Compile Include="System.cs" />
     <Compile Include="Text\TextBox.cs" />
     <Compile Include="Text\TextManager.cs" />
-    <Compile Include="Timeline.cs" />
+    <Compile Include="Battle\Timeline.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Documentation\Battle Structure.txt" />

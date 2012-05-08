@@ -14,7 +14,7 @@ using Microsoft.Xna.Framework.Storage;
 
 using InsipidusEngine.Imagery;
 
-namespace InsipidusEngine.Battle.Events
+namespace InsipidusEngine.Battle.Animation.Events
 {
     /// <summary>
     /// A timeline event is an animation rule that wants to be applied at a certain time in a timeline. Inherit from this class to build specific battle events.
@@ -55,24 +55,42 @@ namespace InsipidusEngine.Battle.Events
             if (_DependentOn != null) { _DependentOn.OnConcluded += OnDependentEnded; }
         }
         /// <summary>
+        /// Load the timeline event's content.
+        /// </summary>
+        /// <param name="content">The content manager to use.</param>
+        public virtual void LoadContent(ContentManager content)
+        {
+            
+        }
+        /// <summary>
         /// Update the timeline event.
         /// </summary>
+        /// <param name="gametime">The elapsed game time.</param>
         /// <param name="timeline">The timeline that this event belongs to.</param>
-        public virtual void Update(Timeline timeline)
+        public virtual void Update(GameTime gametime, Timeline timeline)
         {
             //If the event has been concluded, stop here.
             if (_State == TimelineState.Concluded) { return; }
 
             //Perform the event.
-            PerformEvent(GetElapsedTime(timeline.ElapsedTime));
+            PerformEvent(gametime, GetElapsedTime(timeline.ElapsedTime));
+        }
+        /// <summary>
+        /// Draw the timeline event.
+        /// </summary>
+        /// <param name="spritebatch">The sprite batch to use.</param>
+        public virtual void Draw(SpriteBatch spritebatch)
+        {
+
         }
 
         /// <summary>
         /// Perform this event.
         /// </summary>
+        /// <param name="gametime">The elapsed game time.</param>
         /// <param name="elapsedTime">The elapsed time since the beginning of this event.</param>
         /// <returns>Whether the event was performed this cycle or not.</returns>
-        protected virtual bool PerformEvent(float elapsedTime)
+        protected virtual bool PerformEvent(GameTime gametime, float elapsedTime)
         {
             //If the elapsed time is less than 0, quit.
             if (_State == TimelineState.Concluded || elapsedTime < 0) { return false; }

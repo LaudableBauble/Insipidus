@@ -14,7 +14,7 @@ using Microsoft.Xna.Framework.Storage;
 
 using InsipidusEngine.Imagery;
 
-namespace InsipidusEngine.Battle.Events
+namespace InsipidusEngine.Battle.Animation.Events
 {
     /// <summary>
     /// A movement event is used when an attack requires some sort of movement from either participant, for example if one is going to move into contact with the other.
@@ -67,12 +67,13 @@ namespace InsipidusEngine.Battle.Events
         /// <summary>
         /// Perform this event.
         /// </summary>
+        /// <param name="gametime">The elapsed game time.</param>
         /// <param name="elapsedTime">The elapsed time since the beginning of this event.</param>
         /// <returns>Whether the event was performed this cycle or not.</returns>
-        protected override bool PerformEvent(float elapsedTime)
+        protected override bool PerformEvent(GameTime gametime, float elapsedTime)
         {
             //Call the base method and see whether to perform the event or not.
-            if (!base.PerformEvent(elapsedTime)) { return false; }
+            if (!base.PerformEvent(gametime, elapsedTime)) { return false; }
 
             //The speed with which to move.
             float speed = 0;

@@ -12,10 +12,10 @@ using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework.Net;
 using Microsoft.Xna.Framework.Storage;
 
-using InsipidusEngine.Battle.Events;
+using InsipidusEngine.Battle.Animation;
 using InsipidusEngine.Imagery;
 
-namespace InsipidusEngine
+namespace InsipidusEngine.Battle
 {
     /// <summary>
     /// A battle animation is what makes battles visible to the naked eye. It is basically a set of rules dictating what a move will look like

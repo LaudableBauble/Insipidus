@@ -13,10 +13,10 @@ using Microsoft.Xna.Framework.Net;
 using Microsoft.Xna.Framework.Storage;
 
 using InsipidusEngine.Battle;
-using InsipidusEngine.Battle.Events;
+using InsipidusEngine.Battle.Animation.Events;
 using InsipidusEngine.Imagery;
 
-namespace InsipidusEngine
+namespace InsipidusEngine.Battle
 {
     /// <summary>
     /// A battle move is simply an activated form of a move and is carried out by two parties in a battle; an attacker and a defender.
@@ -58,7 +58,7 @@ namespace InsipidusEngine
         /// <param name="move">The move to use in battle.</param>
         /// <param name="user">The user of the move.</param>
         /// <param name="target">The target for the move.</param>
-        public void Initialize(Move move, Character user, Character target)
+        protected void Initialize(Move move, Character user, Character target)
         {
             //Initialize the class.
             _Move = move;
@@ -69,15 +69,25 @@ namespace InsipidusEngine
             _IsCancelable = true;
 
             //Add events to the timeline.
-            MovementEvent moveTo = new MovementEvent(_Timeline, 0, null, _User, _Target.Position, MovementType.Run);
-            ModifyHealthEvent damage = new ModifyHealthEvent(_Timeline, 0, moveTo, _Target, -GetDamage());
+            TimelineEvent main = (move.Name.Equals("Ember")) ? (TimelineEvent)new ProjectileEvent(_Timeline, 0, null, _User.Position, _Target.Position) : new MovementEvent(_Timeline, 0, null, _User, _Target.Position, MovementType.Run);
+            //ProjectileEvent fire = new ProjectileEvent(_Timeline, 0, null, _User.Position, _Target.Position);
+            ModifyHealthEvent damage = new ModifyHealthEvent(_Timeline, 0, main, _Target, -GetDamage());
             ModifyEnergyEvent energy = new ModifyEnergyEvent(_Timeline, 0, damage, _User, -EnergyConsume);
-            _Timeline.AddEvent(moveTo);
+            _Timeline.AddEvent(main);
             _Timeline.AddEvent(damage);
             _Timeline.AddEvent(energy);
 
             //Subscribe to the timeline.
             _Timeline.OnConcluded += ConcludedInvoke;
+        }
+        /// <summary>
+        /// Load the timeline's content.
+        /// </summary>
+        /// <param name="content">The content manager to use.</param>
+        public virtual void LoadContent(ContentManager content)
+        {
+            //Load the timeline's content.
+            _Timeline.LoadContent(content);
         }
         /// <summary>
         /// Update the active move.
@@ -87,6 +97,15 @@ namespace InsipidusEngine
         {
             //Update the timeline.
             _Timeline.Update(gametime);
+        }
+        /// <summary>
+        /// Draw the timeline.
+        /// </summary>
+        /// <param name="spritebatch">The sprite batch to use.</param>
+        public virtual void Draw(SpriteBatch spritebatch)
+        {
+            //Draw the timeline.
+            _Timeline.Draw(spritebatch);
         }
 
         /// <summary>

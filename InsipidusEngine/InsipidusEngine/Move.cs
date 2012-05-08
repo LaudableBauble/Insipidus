@@ -34,6 +34,7 @@ namespace InsipidusEngine
         private int _EnergyConsume;
         private Status _Status;
         private float _Force;
+        private Timeline _Animation;
         #endregion
 
         #region Methods
@@ -101,6 +102,11 @@ namespace InsipidusEngine
         {
             get { return _Force; }
             set { _Force = value; }
+        }
+        public Timeline Animation
+        {
+            get { return _Animation; }
+            set { _Animation = value; }
         }
         #endregion
     }

@@ -14,12 +14,12 @@ using Microsoft.Xna.Framework.Storage;
 
 using InsipidusEngine.Imagery;
 
-namespace InsipidusEngine.Battle.Events
+namespace InsipidusEngine.Battle.Animation.Events
 {
     /// <summary>
-    /// This event is used when someone's energy needs to be modified.
+    /// This event is used when someone's health needs to be modified.
     /// </summary>
-    public class ModifyEnergyEvent : TimelineEvent
+    public class ModifyHealthEvent : TimelineEvent
     {
         #region Fields
         private Character _Character;
@@ -33,9 +33,9 @@ namespace InsipidusEngine.Battle.Events
         /// <param name="timeline">The timeline this event is part of.</param>
         /// <param name="start">The start of the event.</param>
         /// <param name="dependentOn">An optional event to be dependent upon, ie. wait for.</param>
-        /// <param name="character">The character whos energy will be modified.</param>
-        /// <param name="amount">The amount to add to the energy.</param>
-        public ModifyEnergyEvent(Timeline timeline, float start, TimelineEvent dependentOn, Character character, float amount)
+        /// <param name="character">The character who health will be modified.</param>
+        /// <param name="amount">The amount to add to the health.</param>
+        public ModifyHealthEvent(Timeline timeline, float start, TimelineEvent dependentOn, Character character, float amount)
         {
             Initialize(timeline, start, dependentOn, character, amount);
         }
@@ -48,8 +48,8 @@ namespace InsipidusEngine.Battle.Events
         /// <param name="timeline">The timeline this event is part of.</param>
         /// <param name="start">The start of the event.</param>
         /// <param name="dependentOn">An optional event to be dependent upon, ie. wait for.</param>
-        /// <param name="character">The character whos energy will be modified.</param>
-        /// <param name="amount">The amount to add to the energy.</param>
+        /// <param name="character">The character who health will be modified.</param>
+        /// <param name="amount">The amount to add to the health.</param>
         protected virtual void Initialize(Timeline timeline, float start, TimelineEvent dependentOn, Character character, float amount)
         {
             //Call the base method.
@@ -62,15 +62,16 @@ namespace InsipidusEngine.Battle.Events
         /// <summary>
         /// Perform this event.
         /// </summary>
+        /// <param name="gametime">The elapsed game time.</param>
         /// <param name="elapsedTime">The elapsed time since the beginning of this event.</param>
         /// <returns>Whether the event was performed this cycle or not.</returns>
-        protected override bool PerformEvent(float elapsedTime)
+        protected override bool PerformEvent(GameTime gametime, float elapsedTime)
         {
             //Call the base method and see whether to perform the event or not.
-            if (!base.PerformEvent(elapsedTime)) { return false; }
+            if (!base.PerformEvent(gametime, elapsedTime)) { return false; }
 
-            //Modify the target's energy.
-            _Character.CurrentEnergy += _Amount;
+            //Modify the target's health.
+            _Character.CurrentHP += _Amount;
             EventConcludedInvoke();
 
             //The event has been performed.
