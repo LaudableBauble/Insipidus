@@ -152,7 +152,7 @@
     <Compile Include="Helpers\SelectEntry.cs" />
     <Compile Include="Imagery\Frame.cs" />
     <Compile Include="Imagery\Sprite.cs" />
-    <Compile Include="Imagery\SpriteCollection.cs" />
+    <Compile Include="Imagery\SpriteManager.cs" />
     <Compile Include="Imagery\SpriteOld.cs" />
     <Compile Include="Main.cs" />
     <Compile Include="Move.cs" />
@@ -167,6 +167,7 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Documentation\Battle Structure.txt" />
+    <Content Include="Documentation\General.txt" />
     <Content Include="Documentation\Todo.txt" />
     <Content Include="Documentation\Issues.txt" />
     <Content Include="Game.ico" />

@@ -126,22 +126,7 @@ namespace InsipidusEngine.Battle
             move.LoadContent(_Content);
 
             //Use the move.
-            move.Activate(CalculateAttackOutcome(move));
-        }
-        /// <summary>
-        /// Calculate the outcome for a move.
-        /// </summary>
-        /// <param name="move">The move who's outcome to calculate.</param>
-        /// <returns>The outcome of the move.</returns>
-        public AttackOutcome CalculateAttackOutcome(BattleMove move)
-        {
-            //Whether the move hit or clashed.
-            bool hit = MathHelper.Clamp(move.User.Speed / move.Target.Speed, 0, 1) * Calculator.RandomNumber(move.Accuracy / 100, 1) <= .5f ? false : true;
-            bool clash = _Moves.Find(x => move.User == x.Target) == null ? false : true;
-
-            //Whether the move hit or missed, clashed or not.
-            if (hit) { if (clash) { return AttackOutcome.Clash; } else { return AttackOutcome.Hit; } }
-            else { return AttackOutcome.Miss; }
+            move.Activate();
         }
         /// <summary>
         /// When a move has been canceled or completed.

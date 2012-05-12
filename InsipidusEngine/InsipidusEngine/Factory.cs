@@ -13,6 +13,7 @@ using Microsoft.Xna.Framework.Net;
 using Microsoft.Xna.Framework.Storage;
 
 using InsipidusEngine.Battle;
+using InsipidusEngine.Battle.Animation.Events;
 using InsipidusEngine.Imagery;
 
 namespace InsipidusEngine
@@ -34,6 +35,56 @@ namespace InsipidusEngine
         #endregion
 
         #region Methods
+        #region Battle Animations
+        /// <summary>
+        /// Create a battle animation, given a certain move.
+        /// </summary>
+        /// <param name="move">The move to create an animation for.</param>
+        /// <returns></returns>
+        public Timeline createBattleAnimation(BattleMove move)
+        {
+            //TODO: Creating and handling a move's animation should be more robust and maintainable. This is a bit of a hack.
+
+            //Create the animation timeline.
+            Timeline animation = new Timeline(move);
+
+            //Check the name of the move and create a fitting animation.
+            switch (move.Name)
+            {
+                case "Ember":
+                    {
+                        //Add events to the timeline.
+                        ProjectileEvent projectile = new ProjectileEvent(animation, 0, null, move.User.Position, move.Target.Position);
+                        ModifyHealthEvent damage = new ModifyHealthEvent(animation, 0, projectile, move.Target, -move.GetDamage());
+                        ModifyEnergyEvent energy = new ModifyEnergyEvent(animation, 0, damage, move.User, -move.EnergyConsume);
+
+                        //Add the events to the timeline.
+                        animation.AddEvent(projectile);
+                        animation.AddEvent(damage);
+                        animation.AddEvent(energy);
+                        break;
+                    }
+                case "Scratch":
+                    {
+                        //Add events to the timeline.
+                        MovementEvent moveTo = new MovementEvent(animation, 0, null, move.User, move.Target.Position, MovementType.Run);
+                        ModifyHealthEvent damage = new ModifyHealthEvent(animation, 0, moveTo, move.Target, -move.GetDamage());
+                        ModifyEnergyEvent energy = new ModifyEnergyEvent(animation, 0, damage, move.User, -move.EnergyConsume);
+
+                        //Add the events to the timeline.
+                        animation.AddEvent(moveTo);
+                        animation.AddEvent(damage);
+                        animation.AddEvent(energy);
+                        break;
+                    }
+                default: { goto case "Scratch"; }
+            }
+
+            //Return the animation.
+            return animation;
+        }
+        #endregion
+
         #region Moves
         /// <summary>
         /// Create a move.

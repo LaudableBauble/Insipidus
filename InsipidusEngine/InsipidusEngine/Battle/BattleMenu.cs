@@ -57,7 +57,7 @@ namespace InsipidusEngine
             _Position = position;
 
             //Create the Sprite.
-            _Sprite = new SpriteOld();
+            //_Sprite = new SpriteOld();
 
             //Create a clone of the Position.
             Vector2 p = _Position;

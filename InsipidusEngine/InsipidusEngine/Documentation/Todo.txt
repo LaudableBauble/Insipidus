@@ -1,5 +1,7 @@
 ﻿/// Todo
-
-- Add visual elements to attacks, ie. add a sprite collection to timeline events.
 - Perhaps incorporate the modified sprite system from the java game?
+- Determine the best way to design and handle a move's outcome, ie. if it misses or hits.
+
+/// Done
 - Strictly choreographed battles may prove to be to cumbersome and unflexible. Perhaps a more direct version is better in the long run?
+- Add visual elements to attacks, ie. add a sprite collection to timeline events.

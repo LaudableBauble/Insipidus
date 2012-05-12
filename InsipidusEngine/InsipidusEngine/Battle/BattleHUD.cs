@@ -79,7 +79,7 @@ namespace InsipidusEngine.Battle
             _TextBox.AddText("/c Go! CHARMANDER!");
 
             //Create the Sprite.
-            _Sprite = new SpriteOld();
+            //_Sprite = new SpriteOld();
 
             //Create the Healthbars.
             _HealthBarOpponent = new HealthBar(100, 100, 0.5f, new Vector2(153, 79), 48, 2);
@@ -123,7 +123,7 @@ namespace InsipidusEngine.Battle
             //Load the TextManager.
             _TextBox.LoadContent(contentManager, spriteBatch);
             //Make the TextBox Sprite invisible.
-            _TextBox.Sprite.SpriteVisibility[0, 0] = SpriteOld.Visibility.Invisible;
+            _TextBox.Sprite.SpriteVisibility[0, 0] = Visibility.Invisible;
 
             //Load the Healthbars.
             _HealthBarOpponent.LoadContent(graphicsDevice, spriteBatch);
@@ -210,7 +210,7 @@ namespace InsipidusEngine.Battle
                         //Add the What to do text.
                         _TextBox.AddText("/c What should CHARMANDER do?");
                         //Make the Message Arrow invisible.
-                        _TextBox.Sprite.SpriteVisibility[0, 1] = SpriteOld.Visibility.Invisible;
+                        _TextBox.Sprite.SpriteVisibility[0, 1] = Visibility.Invisible;
 
                         break;
                     }

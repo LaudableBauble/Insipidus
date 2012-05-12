@@ -24,21 +24,6 @@ namespace InsipidusEngine.Imagery
         private ContentManager _ContentManager;
         private SpriteBatch _SpriteBatch;
 
-        //The Sprite Orientation.
-        public enum Orientation
-        {
-            None,
-            Left,
-            Right
-        }
-
-        //The Sprite Visibility.
-        public enum Visibility
-        {
-            Invisible,
-            Visible
-        }
-
         //The Sprite Texture.
         private Texture2D[,] _SpriteTexture = new Texture2D[10, 100];
 
@@ -137,7 +122,7 @@ namespace InsipidusEngine.Imagery
                         if (_SpriteDepth[bodyIndex, spriteIndex] == depth)
                         {
                             //If the Sprite is visible.
-                            if (_SpriteVisibility[bodyIndex, spriteIndex] == SpriteOld.Visibility.Visible)
+                            if (_SpriteVisibility[bodyIndex, spriteIndex] == Visibility.Visible)
                             {
                                 //Draw the sprite.
                                 DrawSpriteFunction(bodyIndex, spriteIndex);
@@ -198,7 +183,7 @@ namespace InsipidusEngine.Imagery
             //Set the Rotation.
             _SpriteRotation[bodyIndex, _SpriteCount[bodyIndex]] = rotation;
             //Set the Visibility.
-            _SpriteVisibility[bodyIndex, _SpriteCount[bodyIndex]] = SpriteOld.Visibility.Visible;
+            _SpriteVisibility[bodyIndex, _SpriteCount[bodyIndex]] = Visibility.Visible;
             //Set the Orientation.
             _SpriteOrientation[bodyIndex, _SpriteCount[bodyIndex]] = Orientation.Right;
             //Add a count to the SpriteCount.
@@ -234,7 +219,7 @@ namespace InsipidusEngine.Imagery
             //Set the Rotation.
             _SpriteRotation[bodyIndex, _SpriteCount[bodyIndex]] = rotation;
             //Set the Visibility.
-            _SpriteVisibility[bodyIndex, _SpriteCount[bodyIndex]] = SpriteOld.Visibility.Visible;
+            _SpriteVisibility[bodyIndex, _SpriteCount[bodyIndex]] = Visibility.Visible;
             //Set the Orientation.
             _SpriteOrientation[bodyIndex, _SpriteCount[bodyIndex]] = Orientation.Right;
             //Add a count to the SpriteCount.
@@ -270,7 +255,7 @@ namespace InsipidusEngine.Imagery
             //Set the Rotation.
             _SpriteRotation[bodyIndex, _SpriteCount[bodyIndex]] = rotation;
             //Set the Visibility.
-            _SpriteVisibility[bodyIndex, _SpriteCount[bodyIndex]] = SpriteOld.Visibility.Visible;
+            _SpriteVisibility[bodyIndex, _SpriteCount[bodyIndex]] = Visibility.Visible;
             //Set the Orientation.
             _SpriteOrientation[bodyIndex, _SpriteCount[bodyIndex]] = Orientation.Right;
             //Add a count to the SpriteCount.

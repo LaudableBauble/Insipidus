@@ -387,5 +387,33 @@ namespace InsipidusEngine
             //Return the direction if valid; otherwise return an empty one.
             return (float.IsNaN(direction.X) || float.IsNaN(direction.Y)) ? Vector2.Zero : direction;
         }
+        /// <summary>
+        /// Add two angles.
+        /// </summary>
+        /// <param name="radian1">The first angle to add.</param>
+        /// <param name="radian2">The second angle to add.</param>
+        /// <returns>The angle sum.</returns>
+        public static float AddAngles(float radian1, float radian2)
+        {
+            //Add the angles together.
+            float addResult = radian1 + radian2;
+            //Check if the sum of the angles has overreached a full lap, aka two PI, and if so fix it.
+            if (addResult > (Math.PI * 2)) { return (addResult - ((float)Math.PI * 2)); }
+            else { return addResult; }
+        }
+        /// <summary>
+        /// Subtracts an angle from an angle.
+        /// </summary>
+        /// <param name="radian1">The angle to subtract from.</param>
+        /// <param name="radian2">The angle to subtract.</param>
+        /// <returns>The subtracted angle.</returns>
+        public static float SubtractAngles(float radian1, float radian2)
+        {
+            //Subtract the angles from eachother.
+            float subtractResult = radian1 - radian2;
+            //If the difference has exceeded a full lap, aka 0, fix that.
+            if (subtractResult < 0) { return (subtractResult + ((float)Math.PI * 2)); }
+            else { return subtractResult; }
+        }
     }
 }

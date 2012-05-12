@@ -81,8 +81,8 @@ namespace InsipidusEngine
             BattleCoordinator.Instance.LoadContent(content);
 
             //Create the two sprites.
-            Sprite s1 = new Sprite(pokemon1.Sprite, @"Characters\Pansear_Icon[1]", new Vector2(100, 300), 1, 1, 0, 0, 0, "");
-            Sprite s2 = new Sprite(pokemon1.Sprite, @"Characters\Snivy_Icon[1]", new Vector2(400, 300), 1, 1, 0, 0, 0, "");
+            Sprite s1 = new Sprite(pokemon1.Sprite, @"Characters\Pansear_Icon[1]", new Vector2(100, 300));
+            Sprite s2 = new Sprite(pokemon1.Sprite, @"Characters\Snivy_Icon[1]", new Vector2(400, 300));
 
             //Add the sprites to the pokemon.
             pokemon1.Sprite.AddSprite(s1);

@@ -44,7 +44,7 @@ namespace InsipidusEngine.Battle.Projectiles
             base.LoadContent(content);
 
             //Add a flame sprite to the collection.
-            _Sprite.AddSprite(new Sprite(_Sprite, @"Battle\Misc\Flame[1]", _Position, 1, 1, 0, 0, 0, ""));
+            _Sprite.AddSprite(new Sprite(_Sprite, @"Battle\Misc\Flame[1]", _Position));
         }
         #endregion
     }

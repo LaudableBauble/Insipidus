@@ -38,7 +38,7 @@ namespace InsipidusEngine
         private List<Move> _Moves;
         private float _CurrentEnergy;
         private float _MaxEnergy;
-        private SpriteCollection _Sprite;
+        private SpriteManager _Sprite;
         private Character _Target;
         private Vector2 _Position;
         private Vector2 _Velocity;
@@ -56,7 +56,7 @@ namespace InsipidusEngine
             _Gender = Gender.Male;
             _Types = new List<PokemonType>();
             _Moves = new List<Move>();
-            _Sprite = new SpriteCollection();
+            _Sprite = new SpriteManager();
             _MaxEnergy = 100;
             _CurrentEnergy = _MaxEnergy;
             _Position = Vector2.Zero;
@@ -246,7 +246,7 @@ namespace InsipidusEngine
             get { return _MaxEnergy; }
             set { _MaxEnergy = value; }
         }
-        public SpriteCollection Sprite
+        public SpriteManager Sprite
         {
             get { return _Sprite; }
             set { _Sprite = value; }

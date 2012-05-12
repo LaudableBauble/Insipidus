@@ -1,0 +1,3 @@
+﻿/// General
+
+The engine will support a tiled approach to game worlds.

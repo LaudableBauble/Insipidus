@@ -23,7 +23,7 @@ namespace InsipidusEngine.Battle.Projectiles
     public abstract class Projectile
     {
         #region Fields
-        protected SpriteCollection _Sprite;
+        protected SpriteManager _Sprite;
         protected Vector2 _Position;
         protected Vector2 _Destination;
         protected Vector2 _Velocity;
@@ -43,7 +43,7 @@ namespace InsipidusEngine.Battle.Projectiles
         protected virtual void Initialize(Vector2 position, Vector2 destination)
         {
             //Initialize some fields.
-            _Sprite = new SpriteCollection();
+            _Sprite = new SpriteManager();
             _Position = position;
             _Destination = destination;
             _Velocity = new Vector2();
@@ -98,7 +98,7 @@ namespace InsipidusEngine.Battle.Projectiles
         /// <summary>
         /// The projectile's sprites.
         /// </summary>
-        public SpriteCollection Sprite
+        public SpriteManager Sprite
         {
             get { return _Sprite; }
             set { _Sprite = value; }

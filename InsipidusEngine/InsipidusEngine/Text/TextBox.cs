@@ -112,7 +112,7 @@ namespace InsipidusEngine.Text
             _TextDelay = 3;
 
             //The Sprite.
-            _Sprite = new SpriteOld();
+            //_Sprite = new Sprite();
             //The Font Size.
             _FontSize = ((_Font.MeasureString("tm").X + _Font.MeasureString("tm").Y) / 4);
             //The Arrow Position Multiplier.
@@ -137,7 +137,7 @@ namespace InsipidusEngine.Text
             _TextDelay = textDelay;
 
             //The Sprite.
-            _Sprite = new SpriteOld();
+            //_Sprite = new Sprite();
             //The Font Size.
             _FontSize = ((_Font.MeasureString("tm").X + _Font.MeasureString("tm").Y) / 4);
             //The Arrow Position Multiplier.
@@ -172,7 +172,7 @@ namespace InsipidusEngine.Text
                 new Vector2((_SpritePosition.X + (_TextBox.Width / 2) - 13), (_SpritePosition.Y + (_TextBox.Height / 2) - 10)),
                 1, 1, 10, 5, 1, 0, 0);
             //Make the arrow invisible.
-            _Sprite.SpriteVisibility[0, 1] = SpriteOld.Visibility.Invisible;
+            _Sprite.SpriteVisibility[0, 1] = Visibility.Invisible;
         }
         //Handle all Input.
         public void HandleInput(InputState input)

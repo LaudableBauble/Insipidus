@@ -63,19 +63,10 @@ namespace InsipidusEngine.Battle
             //Initialize the class.
             _Move = move;
             _AttackOutcome = AttackOutcome.None;
-            _Timeline = new Timeline(this);
             _User = user;
             _Target = target;
             _IsCancelable = true;
-
-            //Add events to the timeline.
-            TimelineEvent main = (move.Name.Equals("Ember")) ? (TimelineEvent)new ProjectileEvent(_Timeline, 0, null, _User.Position, _Target.Position) : new MovementEvent(_Timeline, 0, null, _User, _Target.Position, MovementType.Run);
-            //ProjectileEvent fire = new ProjectileEvent(_Timeline, 0, null, _User.Position, _Target.Position);
-            ModifyHealthEvent damage = new ModifyHealthEvent(_Timeline, 0, main, _Target, -GetDamage());
-            ModifyEnergyEvent energy = new ModifyEnergyEvent(_Timeline, 0, damage, _User, -EnergyConsume);
-            _Timeline.AddEvent(main);
-            _Timeline.AddEvent(damage);
-            _Timeline.AddEvent(energy);
+            _Timeline = Factory.Instance.createBattleAnimation(this);
 
             //Subscribe to the timeline.
             _Timeline.OnConcluded += ConcludedInvoke;
@@ -111,14 +102,12 @@ namespace InsipidusEngine.Battle
         /// <summary>
         /// Use the move on a character by activating it.
         /// </summary>
-        /// <param name="outcome">The outcome of the attack.</param>
-        public void Activate(AttackOutcome outcome)
+        public void Activate()
         {
             //If the move has not been set-up properly or if its already underway, we cannot activate it again.
             if (_User == null || _Target == null || _Timeline.State != TimelineState.Idle) { throw new Exception("The move has either already been activated or it has not been set-up properly."); }
 
-            //Get the outcome of the move.
-            _AttackOutcome = outcome;
+            //Start the aniamtion.
             _Timeline.Start();
         }
         /// <summary>
@@ -129,7 +118,12 @@ namespace InsipidusEngine.Battle
             //Cancel the move, if we can.
             if (_IsCancelable) { _Timeline.Stop(); }
         }
-        private float GetDamage()
+        /// <summary>
+        /// Get this move's damage capabilities. Note that the calculation is partly based upon random values, which means that successive calls
+        /// to this method will yield different results.
+        /// </summary>
+        /// <returns>The damage of this move.</returns>
+        public float GetDamage()
         {
             //The STAB, weakness/resistance factor and a random value.
             float STAB = 1;
@@ -145,6 +139,16 @@ namespace InsipidusEngine.Battle
 
             //Damage the Pokémon and subtract from its health.
             return (damagePhysical + damageSpecial) * hitCleanliness;
+        }
+        /// <summary>
+        /// Get whether the move will hit the target or not. It is the target's responsibility to check whether the attack will hit or not.
+        /// Note that the calculation is partly based upon random values, which means that successive calls to this method will yield different results.
+        /// </summary>
+        /// <returns>The outcome of the move, true if the move is going to hit.</returns>
+        public bool GetOutcome()
+        {
+            //Whether the move hit or clashed.
+            return (MathHelper.Clamp(_User.Speed / _Target.Speed, 0, 1) * Calculator.RandomNumber(Accuracy / 100, 1)) >= .5f;
         }
         /// <summary>
         /// The move's animation has been concluded, and so has this move.
