@@ -154,4 +154,25 @@ namespace InsipidusEngine
         Invisible,
         Visible
     }
+    /// <summary>
+    /// The direction of something.
+    /// </summary>
+    public enum Direction
+    {
+        Up, Down, Right, Left
+    }
+    /// <summary>
+    /// The speed of something, chopped up to distinctive levels.
+    /// </summary>
+    public enum SpeedType
+    {
+        Still, Slow, Normal, Fast
+    }
+    /// <summary>
+    /// The outcome of a battle event.
+    /// </summary>
+    public enum EventOutcome
+    {
+        None, Fail, Success
+    }
 }

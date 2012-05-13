@@ -61,16 +61,15 @@ namespace InsipidusEngine.Imagery
         }
         #endregion
 
-        #region Constructor
+        #region Constructors
         /// <summary>
         /// Constructor a sprite.
         /// </summary>
         /// <param name="manager">The manager this sprite is a part of.</param>
         /// <param name="name">The name of the sprite. Has nothing to do with the path of any sprite.</param>
-        /// <param name="position">The position of the sprite.</param>
-        public Sprite(SpriteManager manager, string name, Vector2 position)
+        public Sprite(SpriteManager manager, string name)
         {
-            Initialize(manager, name, position);
+            Initialize(manager, name);
         }
         #endregion
 
@@ -80,13 +79,12 @@ namespace InsipidusEngine.Imagery
         /// </summary>
         /// <param name="manager">The manager this sprite is a part of.</param>
         /// <param name="name">The name of the frame.</param>
-        /// <param name="position">The position of the sprite.</param>
-        private void Initialize(SpriteManager manager, string name, Vector2 position)
+        private void Initialize(SpriteManager manager, string name)
         {
             //Initialize some variables.
             _Manager = manager;
             _Name = name;
-            _Position = position;
+            _Position = Vector2.Zero;
             _TimePerFrame = 1;
             _Scale = 1;
             _Depth = 0;
@@ -232,6 +230,9 @@ namespace InsipidusEngine.Imagery
             Rectangle rectangle = _Manager.GetTextureBounds(path);
             //Add the frame to the list of frames.
             _Frames.Add(new Frame(path, rectangle.Width, rectangle.Height));
+
+            //Increment the animation end index.
+            _FrameEndIndex++;
         }
         /// <summary>
         /// Add a frame to the sprite.
@@ -243,6 +244,9 @@ namespace InsipidusEngine.Imagery
             Rectangle rectangle = _Manager.GetTextureBounds(texture);
             //Add the frame to the list of frames.
             _Frames.Add(new Frame(texture, rectangle.Width, rectangle.Height));
+
+            //Increment the animation end index.
+            _FrameEndIndex++;
         }
         /// <summary>
         /// Add a frame to the sprite.
@@ -255,6 +259,9 @@ namespace InsipidusEngine.Imagery
             Rectangle rectangle = _Manager.GetTextureBounds(frameName);
             //Add the frame to the list of frames.
             _Frames.Add(new Frame(frameName, rectangle.Width, rectangle.Height, origin));
+
+            //Increment the animation end index.
+            _FrameEndIndex++;
         }
         /// <summary>
         /// Find a frame's index.
@@ -279,6 +286,9 @@ namespace InsipidusEngine.Imagery
         public void RemoveFrame(string frameName)
         {
             _Frames.RemoveAt(IndexOf(frameName));
+
+            //Decrement the animation end index.
+            _FrameEndIndex--;
         }
         /// <summary>
         /// Remove a frame from the sprite.
@@ -287,6 +297,9 @@ namespace InsipidusEngine.Imagery
         public void RemoveFrame(int index)
         {
             _Frames.RemoveAt(index);
+
+            //Decrement the animation end index.
+            _FrameEndIndex--;
         }
         /// <summary>
         /// The bounds of sprite has changed.

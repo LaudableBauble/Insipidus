@@ -12,6 +12,7 @@ using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework.Net;
 using Microsoft.Xna.Framework.Storage;
 
+using InsipidusEngine;
 using InsipidusEngine.Imagery;
 using InsipidusEngine.Battle;
 
@@ -47,6 +48,8 @@ namespace InsipidusEngine
         private float _ElapsedEnergyTime;
         private float _EnergyRecoverySpeed;
         private BattleState _BattleState;
+        private Direction _FacingDirection;
+        private SpeedType _MovementSpeed;
         #endregion
 
         #region Constructors
@@ -79,6 +82,8 @@ namespace InsipidusEngine
             _ElapsedEnergyTime = 0;
             _EnergyRecoverySpeed = .1f;
             _BattleState = BattleState.Idle;
+            _FacingDirection = Direction.Down;
+            _MovementSpeed = InsipidusEngine.SpeedType.Still;
         }
         /// <summary>
         /// Load the character's content.
@@ -100,16 +105,6 @@ namespace InsipidusEngine
             _ElapsedEnergyTime += (float)gametime.ElapsedGameTime.TotalSeconds;
             _ElapsedMovementTime += (float)gametime.ElapsedGameTime.TotalSeconds;
 
-            //Whether it is time to move.
-            if (_ElapsedMovementTime >= _TimeBetweenMoving)
-            {
-                //Update the Pokémon's movement.
-                Move();
-
-                //Begin the cycle anew.
-                _ElapsedMovementTime -= _TimeBetweenMoving;
-            }
-
             //Whether it is time to recover some energy.
             if (_ElapsedEnergyTime >= _EnergyRecoverySpeed)
             {
@@ -127,12 +122,13 @@ namespace InsipidusEngine
                 if (_CurrentEnergy >= _MaxEnergy) { LaunchAttack(_Moves[Calculator.RandomNumber(0, _Moves.Count - 1)], _Target); }
             }
 
+            //Update the character's movement.
+            UpdateMovement();
             //Determine the sprite to display.
             DetermineSprite();
 
             //Update the sprite and moves.
             _Sprite.Update(gametime, _Position, 0);
-            _Moves.ForEach(item => item.Update(gametime));
         }
         /// <summary>
         /// Draw the character.
@@ -181,29 +177,26 @@ namespace InsipidusEngine
         /// </summary>
         private void DetermineSprite()
         {
-            //If the character is moving, the soon-to-be chosen sprite should be animated.
-            bool animated = (_Velocity.LengthSquared() > 1e-8) ? true : false;
-
             //Create the sprite placeholder.
             Sprite sprite = _Sprite.GetSprite(0);
 
-            //Get the direction in degrees.
-            float dir = Calculator.VectorToRadians(_Velocity / _Velocity.Length()) / Calculator.RadiansToDegreesRatio;
-
             //Determine the sprite to display.
-            if (dir >= -30 && dir <= 30)
+            switch (_FacingDirection)
             {
-                sprite = _Sprite.GetSprite("Front");
+                case Direction.Down: { sprite = _Sprite.GetSprite("Front"); break; }
+                case Direction.Up: { sprite = _Sprite.GetSprite("Back"); break; }
+                case Direction.Right: { sprite = _Sprite.GetSprite("Right"); break; }
+                case Direction.Left: { sprite = _Sprite.GetSprite("Left"); break; }
             }
-            else if ((dir >= 150 && dir <= 180) || (dir >= -180 && dir <= -120))
+
+            //Determine the animation speed of the current sprite.
+            switch (_MovementSpeed)
             {
-                sprite = _Sprite.GetSprite("Back");
+                case SpeedType.Fast: { sprite.EnableAnimation = true; sprite.TimePerFrame = .05f; break; }
+                case SpeedType.Normal: { sprite.EnableAnimation = true; sprite.TimePerFrame = .1f; break; }
+                case SpeedType.Slow: { sprite.EnableAnimation = true; sprite.TimePerFrame = .3f; break; }
+                case SpeedType.Still: { sprite.EnableAnimation = false; break; }
             }
-            else if (dir >= 60 && dir <= 120)
-            {
-                sprite = _Sprite.GetSprite("Right");
-            }
-            else if (dir >= -120 && dir <= -30) { sprite = _Sprite.GetSprite("Left"); }
 
             //If the chosen sprite already is visible, end here.
             if (sprite.Visibility == Visibility.Visible) { return; }
@@ -211,24 +204,47 @@ namespace InsipidusEngine
             //First, make all sprites invisible. Then make the chosen sprite visible.
             _Sprite.Visibility = Visibility.Invisible;
             sprite.Visibility = Visibility.Visible;
-
-            //Decide whether the sprite should be animated or not.
-            if (animated) { sprite.EnableAnimation = true; }
-            else { sprite.EnableAnimation = false; sprite.CurrentFrameIndex = 0; }
         }
         /// <summary>
         /// Update the character's movement.
         /// </summary>
-        private void Move()
+        private void UpdateMovement()
         {
-            //If idle, try to keep our distance.
-            if (_BattleState == BattleState.Idle) { KeepDistance(); }
+            //Whether it is time to move.
+            if (_ElapsedMovementTime >= _TimeBetweenMoving)
+            {
+                //If idle, try to keep our distance.
+                if (_BattleState == BattleState.Idle) { KeepDistance(); }
 
-            //Update the velocity and clamp it if needed.
-            UpdateVelocity();
+                //Update the velocity and clamp it if needed. Also update the position.
+                UpdateVelocity();
+                _Position += _Velocity;
 
-            //Update the position.
-            _Position += _Velocity;
+                //Begin the cycle anew.
+                _ElapsedMovementTime -= _TimeBetweenMoving;
+            }
+
+            //Determine which direction to face based upon velocity.
+            float dir = Calculator.VectorToRadians(_Velocity / _Velocity.Length()) / Calculator.RadiansToDegreesRatio;
+
+            //If the direction is not valid, ie. NaN, keep the previous facing direction.
+            if (!float.IsNaN(dir))
+            {
+                //Determine the facing direction.
+                if (dir >= -30 && dir <= 30) { _FacingDirection = Direction.Up; }
+                else if ((dir >= 150 && dir <= 180) || (dir >= -180 && dir <= -120)) { _FacingDirection = Direction.Down; }
+                else if (dir >= 60 && dir <= 120) { _FacingDirection = Direction.Right; }
+                else if (dir >= -120 && dir <= -30) { _FacingDirection = Direction.Left; }
+            }
+
+            //The current speed.
+            float speed = _Velocity.LengthSquared();
+
+            //Determine the movement speed.
+            if (speed > 4) { _MovementSpeed = SpeedType.Fast; }
+            else if (speed > 1.5f) { _MovementSpeed = SpeedType.Normal; }
+            else if (speed > .5f) { _MovementSpeed = SpeedType.Slow; }
+            else { _MovementSpeed = SpeedType.Still; }
         }
         /// <summary>
         /// Update the velocity and clamp it if needed.
@@ -236,7 +252,7 @@ namespace InsipidusEngine
         private void UpdateVelocity()
         {
             //Decrease the velocity.
-            _Velocity -= (_Velocity.LengthSquared() > 1e-8) ? Vector2.Normalize(_Velocity) * .1f : _Velocity;
+            _Velocity -= (_Velocity.LengthSquared() > 1e-2) ? Vector2.Normalize(_Velocity) * .1f : _Velocity;
             //Clamp the velocity.
             _Velocity = Vector2.Clamp(_Velocity, -new Vector2(2, 2), new Vector2(2, 2));
         }

@@ -26,6 +26,7 @@ namespace InsipidusEngine.Battle.Animation.Events
         protected float _StartTime;
         protected float _EndTime;
         protected TimelineState _State;
+        protected EventOutcome _Outcome;
         protected TimelineEvent _DependentOn;
         #endregion
 
@@ -49,6 +50,7 @@ namespace InsipidusEngine.Battle.Animation.Events
             _StartTime = start;
             _EndTime = start;
             _DependentOn = dependentOn;
+            _Outcome = EventOutcome.None;
             _State = TimelineState.Idle;
 
             //If this event is dependent upon someone else, subscribe to it.
@@ -60,7 +62,7 @@ namespace InsipidusEngine.Battle.Animation.Events
         /// <param name="content">The content manager to use.</param>
         public virtual void LoadContent(ContentManager content)
         {
-            
+
         }
         /// <summary>
         /// Update the timeline event.
@@ -167,6 +169,14 @@ namespace InsipidusEngine.Battle.Animation.Events
         {
             get { return _State; }
             set { _State = value; }
+        }
+        /// <summary>
+        /// The outcome of the event.
+        /// </summary>
+        public EventOutcome Outcome
+        {
+            get { return _Outcome; }
+            set { _Outcome = value; }
         }
         /// <summary>
         /// The event this is dependent on, ie. has to wait for. Null if this event is independent.

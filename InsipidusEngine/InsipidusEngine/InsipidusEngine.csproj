@@ -126,7 +126,7 @@
     <Compile Include="Battle\ExperienceBar.cs" />
     <Compile Include="Battle\HealthBar.cs" />
     <Compile Include="Battle\Animation\Projectiles\Projectile.cs" />
-    <Compile Include="Camera2D.cs" />
+    <Compile Include="Infrastructure\Camera2D.cs" />
     <Compile Include="Character.cs" />
     <Compile Include="CharacterList.cs" />
     <Compile Include="Effect.cs" />
@@ -154,6 +154,7 @@
     <Compile Include="Imagery\Sprite.cs" />
     <Compile Include="Imagery\SpriteManager.cs" />
     <Compile Include="Imagery\SpriteOld.cs" />
+    <Compile Include="Infrastructure\Helper.cs" />
     <Compile Include="Main.cs" />
     <Compile Include="Move.cs" />
     <Compile Include="Party.cs" />
@@ -206,6 +207,7 @@
       <Install>true</Install>
     </BootstrapperPackage>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <Import Project="$(MSBuildExtensionsPath)\Microsoft\XNA Game Studio\Microsoft.Xna.GameStudio.targets" />
   <!--

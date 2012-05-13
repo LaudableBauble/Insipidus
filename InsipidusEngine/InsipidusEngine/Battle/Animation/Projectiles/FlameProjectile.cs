@@ -41,7 +41,7 @@ namespace InsipidusEngine.Battle.Projectiles
         public override void LoadContent(ContentManager content)
         {
             //Add a flame sprite to the collection.
-            Sprite sprite = _Sprite.AddSprite(new Sprite(_Sprite, "Flame", _Position));
+            Sprite sprite = _Sprite.AddSprite(new Sprite(_Sprite, "Flame"));
             sprite.AddFrame(@"Battle\Misc\Flame[1]");
 
             //Call the base method.

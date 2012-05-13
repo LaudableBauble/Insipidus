@@ -22,6 +22,7 @@ using Microsoft.Xna.Framework.Net;
 using Microsoft.Xna.Framework.Storage;
 using InsipidusEngine.Imagery;
 using InsipidusEngine.Battle;
+using InsipidusEngine.Infrastructure;
 #endregion
 
 namespace InsipidusEngine
@@ -35,6 +36,7 @@ namespace InsipidusEngine
     {
         #region Fields
         ContentManager content;
+        Camera2D _Camera;
         Character pokemon1;
         Character pokemon2;
         HealthBar healthbar1;
@@ -60,6 +62,10 @@ namespace InsipidusEngine
             if (content == null) { content = new ContentManager(ScreenManager.Game.Services, "Content"); }
 
             #region Initialize
+            //Create the camera.
+            _Camera = new Camera2D(new Rectangle(0, 0, ScreenManager.Game.Window.ClientBounds.Width, ScreenManager.Game.Window.ClientBounds.Height),
+                new Rectangle(0, 0, 2000, 2000));
+
             pokemon1 = Factory.Instance.Pansear;
             pokemon1.Position = new Vector2(300, 300);
             pokemon2 = Factory.Instance.Snivy;
@@ -81,44 +87,44 @@ namespace InsipidusEngine
             BattleCoordinator.Instance.LoadContent(content);
 
             //Bulbasaur's sprites.
-            Sprite front = pokemon1.Sprite.AddSprite(new Sprite(pokemon1.Sprite, "Front", new Vector2(300, 300)));
+            Sprite front = pokemon1.Sprite.AddSprite(new Sprite(pokemon1.Sprite, "Front"));
             front.AddFrame(@"Characters\Bulbasaur\Bulbasaur_Front[1]");
             front.AddFrame(@"Characters\Bulbasaur\Bulbasaur_Front[2]");
             front.AddFrame(@"Characters\Bulbasaur\Bulbasaur_Front[1]");
             front.AddFrame(@"Characters\Bulbasaur\Bulbasaur_Front[3]");
-            Sprite back = pokemon1.Sprite.AddSprite(new Sprite(pokemon1.Sprite, "Back", new Vector2(300, 300)));
+            Sprite back = pokemon1.Sprite.AddSprite(new Sprite(pokemon1.Sprite, "Back"));
             back.AddFrame(@"Characters\Bulbasaur\Bulbasaur_Back[1]");
             back.AddFrame(@"Characters\Bulbasaur\Bulbasaur_Back[2]");
             back.AddFrame(@"Characters\Bulbasaur\Bulbasaur_Back[1]");
             back.AddFrame(@"Characters\Bulbasaur\Bulbasaur_Back[3]");
-            Sprite left = pokemon1.Sprite.AddSprite(new Sprite(pokemon1.Sprite, "Left", new Vector2(300, 300)));
+            Sprite left = pokemon1.Sprite.AddSprite(new Sprite(pokemon1.Sprite, "Left"));
             left.AddFrame(@"Characters\Bulbasaur\Bulbasaur_Left[1]");
             left.AddFrame(@"Characters\Bulbasaur\Bulbasaur_Left[2]");
             left.AddFrame(@"Characters\Bulbasaur\Bulbasaur_Left[1]");
             left.AddFrame(@"Characters\Bulbasaur\Bulbasaur_Left[3]");
-            Sprite right = pokemon1.Sprite.AddSprite(new Sprite(pokemon1.Sprite, "Right", new Vector2(300, 300)));
+            Sprite right = pokemon1.Sprite.AddSprite(new Sprite(pokemon1.Sprite, "Right"));
             right.AddFrame(@"Characters\Bulbasaur\Bulbasaur_Right[1]");
             right.AddFrame(@"Characters\Bulbasaur\Bulbasaur_Right[2]");
             right.AddFrame(@"Characters\Bulbasaur\Bulbasaur_Right[1]");
             right.AddFrame(@"Characters\Bulbasaur\Bulbasaur_Right[3]");
 
             //Charizard's sprites.
-            front = pokemon2.Sprite.AddSprite(new Sprite(pokemon2.Sprite, "Front", new Vector2(600, 300)));
+            front = pokemon2.Sprite.AddSprite(new Sprite(pokemon2.Sprite, "Front"));
             front.AddFrame(@"Characters\Charizard\Charizard_Front[1]");
             front.AddFrame(@"Characters\Charizard\Charizard_Front[2]");
             front.AddFrame(@"Characters\Charizard\Charizard_Front[1]");
             front.AddFrame(@"Characters\Charizard\Charizard_Front[3]");
-            back = pokemon2.Sprite.AddSprite(new Sprite(pokemon2.Sprite, "Back", new Vector2(600, 300)));
+            back = pokemon2.Sprite.AddSprite(new Sprite(pokemon2.Sprite, "Back"));
             back.AddFrame(@"Characters\Charizard\Charizard_Back[1]");
             back.AddFrame(@"Characters\Charizard\Charizard_Back[2]");
             back.AddFrame(@"Characters\Charizard\Charizard_Back[1]");
             back.AddFrame(@"Characters\Charizard\Charizard_Back[3]");
-            left = pokemon2.Sprite.AddSprite(new Sprite(pokemon2.Sprite, "Left", new Vector2(600, 300)));
+            left = pokemon2.Sprite.AddSprite(new Sprite(pokemon2.Sprite, "Left"));
             left.AddFrame(@"Characters\Charizard\Charizard_Left[1]");
             left.AddFrame(@"Characters\Charizard\Charizard_Left[2]");
             left.AddFrame(@"Characters\Charizard\Charizard_Left[1]");
             left.AddFrame(@"Characters\Charizard\Charizard_Left[3]");
-            right = pokemon2.Sprite.AddSprite(new Sprite(pokemon2.Sprite, "Right", new Vector2(600, 300)));
+            right = pokemon2.Sprite.AddSprite(new Sprite(pokemon2.Sprite, "Right"));
             right.AddFrame(@"Characters\Charizard\Charizard_Right[1]");
             right.AddFrame(@"Characters\Charizard\Charizard_Right[2]");
             right.AddFrame(@"Characters\Charizard\Charizard_Right[1]");
@@ -169,6 +175,9 @@ namespace InsipidusEngine
 
             if (IsActive)
             {
+                //Update the camera.
+                _Camera.Update(gameTime);
+
                 //Update the battle coordinator.
                 BattleCoordinator.Instance.Update(gameTime);
 
@@ -210,10 +219,14 @@ namespace InsipidusEngine
                 else if (input.IsKeyDown(Keys.D2)) { pokemon1.CurrentHP++; }
                 else if (input.IsKeyDown(Keys.D3)) { pokemon2.CurrentHP--; }
                 else if (input.IsKeyDown(Keys.D4)) { pokemon2.CurrentHP++; }
-                else if (input.IsKeyDown(Keys.A)) { pokemon1.CurrentHP++; }
-                else if (input.IsKeyDown(Keys.S)) { pokemon2.CurrentHP--; }
-                else if (input.IsKeyDown(Keys.D)) { pokemon2.CurrentHP++; }
-                else if (input.IsKeyDown(Keys.W)) { pokemon2.CurrentHP++; }
+                else if (input.IsKeyDown(Keys.A)) { _Camera.Move(new Vector2(-1, 0)); }
+                else if (input.IsKeyDown(Keys.S)) { _Camera.Move(new Vector2(0, 1)); }
+                else if (input.IsKeyDown(Keys.D)) { _Camera.Move(new Vector2(1, 0)); }
+                else if (input.IsKeyDown(Keys.W)) { _Camera.Move(new Vector2(0, -1)); }
+                else if (input.IsKeyDown(Keys.Left)) { pokemon1.Velocity += new Vector2(-1, 0); }
+                else if (input.IsKeyDown(Keys.Down)) { pokemon1.Velocity += new Vector2(0, 1); }
+                else if (input.IsKeyDown(Keys.Right)) { pokemon1.Velocity += new Vector2(1, 0); }
+                else if (input.IsKeyDown(Keys.Up)) { pokemon1.Velocity += new Vector2(0, -1); }
             }
         }
 
@@ -228,7 +241,7 @@ namespace InsipidusEngine
 
             SpriteBatch spriteBatch = ScreenManager.SpriteBatch;
 
-            spriteBatch.Begin();
+            spriteBatch.Begin(SpriteSortMode.Immediate, BlendState.AlphaBlend, null, null, null, null, _Camera.Transform);
 
             //Draw the battle coordinator.
             BattleCoordinator.Instance.Draw(spriteBatch);
@@ -236,6 +249,10 @@ namespace InsipidusEngine
             //Draw the pokemon.
             pokemon1.Draw(spriteBatch);
             pokemon2.Draw(spriteBatch);
+
+            spriteBatch.End();
+
+            spriteBatch.Begin();
 
             //Draw the healthbars.
             healthbar1.Draw();
