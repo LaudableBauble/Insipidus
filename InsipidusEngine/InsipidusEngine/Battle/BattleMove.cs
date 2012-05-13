@@ -25,7 +25,6 @@ namespace InsipidusEngine.Battle
     {
         #region Fields
         private Move _Move;
-        private AttackOutcome _AttackOutcome;
         private Timeline _Timeline;
         private Character _User;
         private Character _Target;
@@ -62,7 +61,6 @@ namespace InsipidusEngine.Battle
         {
             //Initialize the class.
             _Move = move;
-            _AttackOutcome = AttackOutcome.None;
             _User = user;
             _Target = target;
             _IsCancelable = true;
@@ -225,9 +223,13 @@ namespace InsipidusEngine.Battle
         {
             get { return _Timeline.State; }
         }
-        public AttackOutcome Outcome
+        /// <summary>
+        /// Whether the move can be cancelled or not.
+        /// </summary>
+        public bool IsCancelable
         {
-            get { return _AttackOutcome; }
+            get { return _IsCancelable; }
+            set { _IsCancelable = value; }
         }
         #endregion
     }

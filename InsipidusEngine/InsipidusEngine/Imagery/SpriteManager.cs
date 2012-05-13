@@ -1,4 +1,5 @@
 using System;
+using System.Linq;
 using System.Collections.Generic;
 using System.Text;
 
@@ -117,20 +118,8 @@ namespace InsipidusEngine.Imagery
         /// <param name="spriteBatch">The sprite batch to use.</param>
         public void Draw(SpriteBatch spriteBatch)
         {
-            //Loop through the depth values.
-            for (int depth = 0; depth <= 10; depth++)
-            {
-                //Loop through all the sprites.
-                foreach (Sprite sprite in _SpritesOuter)
-                {
-                    //Check if the sprite's depth equals the looped depth value.
-                    if (sprite.Depth == depth)
-                    {
-                        //If the Sprite is visible, draw it.
-                        if (sprite.Visibility == Visibility.Visible) { sprite.Draw(spriteBatch); }
-                    }
-                }
-            }
+            //Draw all sprites.
+            _SpritesOuter.ForEach(item => item.Draw(spriteBatch));
         }
 
         /// <summary>
@@ -141,6 +130,13 @@ namespace InsipidusEngine.Imagery
         {
             //Add the sprite to the list.
             _SpritesInner.Add(sprite);
+
+            //Sort the list by depth.
+            _SpritesInner.Sort((x, y) => x.Depth.CompareTo(y.Depth));
+
+            //If we have a valid content manager, load the sprite's content.
+            if (_ContentManager != null) { sprite.LoadContent(); }
+
             //Return it.
             return sprite;
         }
@@ -156,12 +152,12 @@ namespace InsipidusEngine.Imagery
         /// <summary>
         /// Get a sprite.
         /// </summary>
-        /// <param name="tag">The tag of the sprite.</param>
+        /// <param name="name">The name of the sprite.</param>
         /// <returns>The sprite.</returns>
-        public Sprite GetSprite(string tag)
+        public Sprite GetSprite(string name)
         {
             //Loop through the list of sprites and find the one with the right name.
-            foreach (Sprite sprite in _SpritesOuter) { if (sprite.Tag.Equals(tag)) { return sprite; } }
+            foreach (Sprite sprite in _SpritesOuter) { if (sprite.Name.Equals(name)) { return sprite; } }
 
             //Return null.
             return null;
@@ -223,6 +219,9 @@ namespace InsipidusEngine.Imagery
         public void RemoveSprite(int index)
         {
             _SpritesInner.RemoveAt(index);
+
+            //Sort the list by depth.
+            _SpritesInner.Sort((x, y) => x.Depth.CompareTo(y.Depth));
         }
         /// <summary>
         /// Get the bounds of a certain texture asset.

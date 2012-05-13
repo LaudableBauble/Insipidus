@@ -28,7 +28,7 @@ namespace InsipidusEngine.Imagery
 
         #region Constructor
         /// <summary>
-        /// Create a frame.
+        /// Constructor for a frame.
         /// </summary>
         /// <param name="name">The name of the frame.</param>
         /// <param name="width">The width of the frame.</param>

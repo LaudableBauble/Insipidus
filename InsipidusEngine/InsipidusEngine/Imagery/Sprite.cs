@@ -66,7 +66,7 @@ namespace InsipidusEngine.Imagery
         /// Constructor a sprite.
         /// </summary>
         /// <param name="manager">The manager this sprite is a part of.</param>
-        /// <param name="name">The name of the frame.</param>
+        /// <param name="name">The name of the sprite. Has nothing to do with the path of any sprite.</param>
         /// <param name="position">The position of the sprite.</param>
         public Sprite(SpriteManager manager, string name, Vector2 position)
         {
@@ -99,9 +99,6 @@ namespace InsipidusEngine.Imagery
             _Visibility = Visibility.Visible;
             _Orientation = Orientation.Right;
             _Frames = new List<Frame>();
-
-            //Create the first frame.
-            AddFrame(_Name);
         }
         /// <summary>
         /// Load the texture for the sprite using the Content Pipeline.
@@ -134,19 +131,79 @@ namespace InsipidusEngine.Imagery
         /// <param name="spriteBatch">The sprite batch to use.</param>
         public void Draw(SpriteBatch spriteBatch)
         {
-            //If the Sprite is visible.
-            if (_Visibility == Visibility.Visible)
+            //If there is no texture loaded or if the sprite is invisible, stop here.
+            if (_Texture == null || _Visibility == Visibility.Invisible) { return; }
+
+            //The Sprite Effect, facing right.
+            SpriteEffects spriteEffects = SpriteEffects.None;
+
+            //The sprite faces left.
+            if (_Orientation == Orientation.Left) { spriteEffects = SpriteEffects.FlipHorizontally; }
+
+            //Draw the sprite.
+            spriteBatch.Draw(_Texture, _Position, null, Color.White * _Transparence, Calculator.AddAngles(_Rotation, _RotationOffset), _Frames[_FrameIndex].Origin,
+                _Scale, spriteEffects, 0);
+        }
+
+        /// <summary>
+        /// Load a frame's texture.
+        /// </summary>
+        public void LoadFrame()
+        {
+            //If ths sprite has no frames, stop here.
+            if (_Frames.Count == 0) { return; }
+
+            //If a frame has a texture already stored on its premises, load that texture.
+            if (_Frames[_FrameIndex].Texture != null) { _Texture = _Frames[_FrameIndex].Texture; }
+            //Otherwise load one by using the name of the frame.
+            else { _Texture = _Manager.ContentManager.Load<Texture2D>(_Frames[_FrameIndex].Name); }
+
+            //The bounds of the sprite has changed, invoke the appropriate event.
+            BoundsChangedInvoke();
+        }
+        /// <summary>
+        /// Update the sprite's frames.
+        /// </summary>
+        /// <param name="gameTime">The game time.</param>
+        public void UpdateFrame(GameTime gameTime)
+        {
+            //Get the Time since the last Update.
+            _TotalElapsedTime += (float)gameTime.ElapsedGameTime.TotalSeconds;
+
+            //If it's time to change SpriteFrame.
+            if (_TotalElapsedTime > _TimePerFrame)
             {
-                //The Sprite Effect, facing right.
-                SpriteEffects spriteEffects = SpriteEffects.None;
+                //If the animation is going forward.
+                if (_AnimationDirection)
+                {
+                    //If the number of drawn frames are less than the total, change to the next.
+                    if (_FrameIndex < _FrameEndIndex) { IncrementFrameIndex(); }
+                    //Make the animation start over.
+                    else { FrameChangedInvoke(_FrameStartIndex); }
+                }
+                //If the animation is going backwards.
+                else
+                {
+                    //If the number of drawn frames are less than the total, change to the next.
+                    if (_FrameIndex > _FrameStartIndex) { DecrementFrameIndex(); }
+                    //Make the animation start over.
+                    else { FrameChangedInvoke(_FrameEndIndex); }
+                }
 
-                //The sprite faces left.
-                if (_Orientation == Orientation.Left) { spriteEffects = SpriteEffects.FlipHorizontally; }
-
-                //Draw the sprite.
-                spriteBatch.Draw(_Texture, _Position, null, Color.White * _Transparence, Calculator.AddAngles(_Rotation, _RotationOffset), _Frames[_FrameIndex].Origin,
-                    _Scale, spriteEffects, 0);
+                //Substract the time per frame, to be certain the next frame is drawn in time.
+                _TotalElapsedTime -= _TimePerFrame;
             }
+        }
+        /// <summary>
+        /// Update the sprite's position and rotation.
+        /// </summary>
+        /// <param name="position">The new position of the sprite.</param>
+        /// <param name="rotation">The new rotation of the sprite.</param>
+        public void UpdateSprite(Vector2 position, float rotation)
+        {
+            //Update the sprite's position and rotation
+            _Position = Calculator.CalculateOrbitPosition(position, Calculator.AddAngles(rotation, _OrbitOffset), _PositionOffset);
+            _Rotation = Calculator.AddAngles(rotation, _RotationOffset);
         }
 
         /// <summary>
@@ -165,17 +222,16 @@ namespace InsipidusEngine.Imagery
             //Increment the frame index.
             FrameChangedInvoke(_FrameIndex - 1);
         }
-
         /// <summary>
         /// Add a frame to the sprite.
         /// </summary>
-        /// <param name="frameName">The name of the frame.</param>
-        public void AddFrame(string frameName)
+        /// <param name="path">The path of the frame.</param>
+        public void AddFrame(string path)
         {
             //Get the bounds of the frame.
-            Rectangle rectangle = _Manager.GetTextureBounds(frameName);
+            Rectangle rectangle = _Manager.GetTextureBounds(path);
             //Add the frame to the list of frames.
-            _Frames.Add(new Frame(frameName, rectangle.Width, rectangle.Height));
+            _Frames.Add(new Frame(path, rectangle.Width, rectangle.Height));
         }
         /// <summary>
         /// Add a frame to the sprite.
@@ -232,64 +288,6 @@ namespace InsipidusEngine.Imagery
         {
             _Frames.RemoveAt(index);
         }
-        /// <summary>
-        /// Load a frame's texture.
-        /// </summary>
-        public void LoadFrame()
-        {
-            //If a frame has a texture already stored on its premises, load that texture.
-            if (_Frames[_FrameIndex].Texture != null) { _Texture = _Frames[_FrameIndex].Texture; }
-            //Otherwise load one by using the name of the frame.
-            else { _Texture = _Manager.ContentManager.Load<Texture2D>(_Frames[_FrameIndex].Name); }
-
-            //The bounds of the sprite has changed, invoke the appropriate event.
-            BoundsChangedInvoke();
-        }
-        /// <summary>
-        /// Update the sprite's frames.
-        /// </summary>
-        /// <param name="gameTime">The game time.</param>
-        public void UpdateFrame(GameTime gameTime)
-        {
-            //Get the Time since the last Update.
-            _TotalElapsedTime += (float)gameTime.ElapsedGameTime.TotalSeconds;
-
-            //If it's time to change SpriteFrame.
-            if (_TotalElapsedTime > _TimePerFrame)
-            {
-                //If the animation is going forward.
-                if (_AnimationDirection)
-                {
-                    //If the number of drawn frames are less than the total, change to the next.
-                    if (_FrameIndex < _FrameEndIndex) { IncrementFrameIndex(); }
-                    //Make the animation start over.
-                    else { FrameChangedInvoke(_FrameStartIndex); }
-                }
-                //If the animation is going backwards.
-                else
-                {
-                    //If the number of drawn frames are less than the total, change to the next.
-                    if (_FrameIndex > _FrameStartIndex) { DecrementFrameIndex(); }
-                    //Make the animation start over.
-                    else { FrameChangedInvoke(_FrameEndIndex); }
-                }
-
-                //Substract the time per frame, to be certain the next frame is drawn in time.
-                _TotalElapsedTime -= _TimePerFrame;
-            }
-        }
-        /// <summary>
-        /// Update the sprite's position and rotation.
-        /// </summary>
-        /// <param name="position">The new position of the sprite.</param>
-        /// <param name="rotation">The new rotation of the sprite.</param>
-        public void UpdateSprite(Vector2 position, float rotation)
-        {
-            //Update the sprite's position and rotation
-            _Position = Calculator.CalculateOrbitPosition(position, Calculator.AddAngles(rotation, _OrbitOffset), _PositionOffset);
-            _Rotation = Calculator.AddAngles(rotation, _RotationOffset);
-        }
-
         /// <summary>
         /// The bounds of sprite has changed.
         /// </summary>

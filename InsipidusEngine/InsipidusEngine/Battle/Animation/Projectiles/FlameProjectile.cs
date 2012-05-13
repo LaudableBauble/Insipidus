@@ -40,11 +40,12 @@ namespace InsipidusEngine.Battle.Projectiles
         /// <param name="content">The content manager to use.</param>
         public override void LoadContent(ContentManager content)
         {
+            //Add a flame sprite to the collection.
+            Sprite sprite = _Sprite.AddSprite(new Sprite(_Sprite, "Flame", _Position));
+            sprite.AddFrame(@"Battle\Misc\Flame[1]");
+
             //Call the base method.
             base.LoadContent(content);
-
-            //Add a flame sprite to the collection.
-            _Sprite.AddSprite(new Sprite(_Sprite, @"Battle\Misc\Flame[1]", _Position));
         }
         #endregion
     }

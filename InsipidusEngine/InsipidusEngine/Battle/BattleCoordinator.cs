@@ -129,6 +129,15 @@ namespace InsipidusEngine.Battle
             move.Activate();
         }
         /// <summary>
+        /// Get the first active move carried out by the specified user.
+        /// </summary>
+        /// <param name="user">The user of the move.</param>
+        /// <returns>A move.</returns>
+        public BattleMove FindMove(Character user)
+        {
+            return (new List<BattleMove>(_Moves)).Find(item => item.User == user);
+        }
+        /// <summary>
         /// When a move has been canceled or completed.
         /// </summary>
         /// <param name="move">The move that is finished.</param>

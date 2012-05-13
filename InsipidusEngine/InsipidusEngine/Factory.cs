@@ -197,7 +197,6 @@ namespace InsipidusEngine
         {
             //Create the Pokémon.
             Character pokemon = new Character();
-            pokemon.Initialize();
 
             //Set the stats accordingly.
             pokemon.Name = name;

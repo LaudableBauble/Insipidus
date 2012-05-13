@@ -61,9 +61,9 @@ namespace InsipidusEngine
 
             #region Initialize
             pokemon1 = Factory.Instance.Pansear;
-            pokemon1.Position = new Vector2(100, 300);
+            pokemon1.Position = new Vector2(300, 300);
             pokemon2 = Factory.Instance.Snivy;
-            pokemon2.Position = new Vector2(400, 300);
+            pokemon2.Position = new Vector2(600, 300);
 
             //Make the Pokemons target each other.
             pokemon1.Target = pokemon2;
@@ -80,13 +80,57 @@ namespace InsipidusEngine
             //Load the battle coordinator's content.
             BattleCoordinator.Instance.LoadContent(content);
 
-            //Create the two sprites.
-            Sprite s1 = new Sprite(pokemon1.Sprite, @"Characters\Pansear_Icon[1]", new Vector2(100, 300));
-            Sprite s2 = new Sprite(pokemon1.Sprite, @"Characters\Snivy_Icon[1]", new Vector2(400, 300));
+            //Bulbasaur's sprites.
+            Sprite front = pokemon1.Sprite.AddSprite(new Sprite(pokemon1.Sprite, "Front", new Vector2(300, 300)));
+            front.AddFrame(@"Characters\Bulbasaur\Bulbasaur_Front[1]");
+            front.AddFrame(@"Characters\Bulbasaur\Bulbasaur_Front[2]");
+            front.AddFrame(@"Characters\Bulbasaur\Bulbasaur_Front[1]");
+            front.AddFrame(@"Characters\Bulbasaur\Bulbasaur_Front[3]");
+            Sprite back = pokemon1.Sprite.AddSprite(new Sprite(pokemon1.Sprite, "Back", new Vector2(300, 300)));
+            back.AddFrame(@"Characters\Bulbasaur\Bulbasaur_Back[1]");
+            back.AddFrame(@"Characters\Bulbasaur\Bulbasaur_Back[2]");
+            back.AddFrame(@"Characters\Bulbasaur\Bulbasaur_Back[1]");
+            back.AddFrame(@"Characters\Bulbasaur\Bulbasaur_Back[3]");
+            Sprite left = pokemon1.Sprite.AddSprite(new Sprite(pokemon1.Sprite, "Left", new Vector2(300, 300)));
+            left.AddFrame(@"Characters\Bulbasaur\Bulbasaur_Left[1]");
+            left.AddFrame(@"Characters\Bulbasaur\Bulbasaur_Left[2]");
+            left.AddFrame(@"Characters\Bulbasaur\Bulbasaur_Left[1]");
+            left.AddFrame(@"Characters\Bulbasaur\Bulbasaur_Left[3]");
+            Sprite right = pokemon1.Sprite.AddSprite(new Sprite(pokemon1.Sprite, "Right", new Vector2(300, 300)));
+            right.AddFrame(@"Characters\Bulbasaur\Bulbasaur_Right[1]");
+            right.AddFrame(@"Characters\Bulbasaur\Bulbasaur_Right[2]");
+            right.AddFrame(@"Characters\Bulbasaur\Bulbasaur_Right[1]");
+            right.AddFrame(@"Characters\Bulbasaur\Bulbasaur_Right[3]");
 
-            //Add the sprites to the pokemon.
-            pokemon1.Sprite.AddSprite(s1);
-            pokemon2.Sprite.AddSprite(s2);
+            //Charizard's sprites.
+            front = pokemon2.Sprite.AddSprite(new Sprite(pokemon2.Sprite, "Front", new Vector2(600, 300)));
+            front.AddFrame(@"Characters\Charizard\Charizard_Front[1]");
+            front.AddFrame(@"Characters\Charizard\Charizard_Front[2]");
+            front.AddFrame(@"Characters\Charizard\Charizard_Front[1]");
+            front.AddFrame(@"Characters\Charizard\Charizard_Front[3]");
+            back = pokemon2.Sprite.AddSprite(new Sprite(pokemon2.Sprite, "Back", new Vector2(600, 300)));
+            back.AddFrame(@"Characters\Charizard\Charizard_Back[1]");
+            back.AddFrame(@"Characters\Charizard\Charizard_Back[2]");
+            back.AddFrame(@"Characters\Charizard\Charizard_Back[1]");
+            back.AddFrame(@"Characters\Charizard\Charizard_Back[3]");
+            left = pokemon2.Sprite.AddSprite(new Sprite(pokemon2.Sprite, "Left", new Vector2(600, 300)));
+            left.AddFrame(@"Characters\Charizard\Charizard_Left[1]");
+            left.AddFrame(@"Characters\Charizard\Charizard_Left[2]");
+            left.AddFrame(@"Characters\Charizard\Charizard_Left[1]");
+            left.AddFrame(@"Characters\Charizard\Charizard_Left[3]");
+            right = pokemon2.Sprite.AddSprite(new Sprite(pokemon2.Sprite, "Right", new Vector2(600, 300)));
+            right.AddFrame(@"Characters\Charizard\Charizard_Right[1]");
+            right.AddFrame(@"Characters\Charizard\Charizard_Right[2]");
+            right.AddFrame(@"Characters\Charizard\Charizard_Right[1]");
+            right.AddFrame(@"Characters\Charizard\Charizard_Right[3]");
+
+            //Make the sprites' invisible.
+            pokemon1.Sprite.Visibility = Visibility.Invisible;
+            pokemon2.Sprite.Visibility = Visibility.Invisible;
+
+            //Set all sprite's time per frame.
+            pokemon1.Sprite.Sprites.ForEach(item => item.TimePerFrame = .5f);
+            pokemon2.Sprite.Sprites.ForEach(item => item.TimePerFrame = .5f);
 
             //Load the pokemons' content.
             pokemon1.LoadContent(content);
@@ -166,6 +210,10 @@ namespace InsipidusEngine
                 else if (input.IsKeyDown(Keys.D2)) { pokemon1.CurrentHP++; }
                 else if (input.IsKeyDown(Keys.D3)) { pokemon2.CurrentHP--; }
                 else if (input.IsKeyDown(Keys.D4)) { pokemon2.CurrentHP++; }
+                else if (input.IsKeyDown(Keys.A)) { pokemon1.CurrentHP++; }
+                else if (input.IsKeyDown(Keys.S)) { pokemon2.CurrentHP--; }
+                else if (input.IsKeyDown(Keys.D)) { pokemon2.CurrentHP++; }
+                else if (input.IsKeyDown(Keys.W)) { pokemon2.CurrentHP++; }
             }
         }
 
@@ -200,11 +248,11 @@ namespace InsipidusEngine
             {
                 if (m.User == pokemon1)
                 {
-                    spriteBatch.DrawString(ScreenManager.Font, "--- Attack ---\nName: " + m.Name + "\nOutcome: " + m.Outcome, new Vector2(5, 50), Color.Black);
+                    spriteBatch.DrawString(ScreenManager.Font, "--- Attack ---\nName: " + m.Name, new Vector2(5, 50), Color.Black);
                 }
                 else
                 {
-                    spriteBatch.DrawString(ScreenManager.Font, "--- Attack ---\nName: " + m.Name + "\nOutcome: " + m.Outcome, new Vector2(ScreenManager.Game.Window.ClientBounds.Width - 200, 50), Color.Black);
+                    spriteBatch.DrawString(ScreenManager.Font, "--- Attack ---\nName: " + m.Name, new Vector2(ScreenManager.Game.Window.ClientBounds.Width - 200, 50), Color.Black);
                 }
             }
 

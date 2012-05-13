@@ -49,8 +49,21 @@ namespace InsipidusEngine
         private BattleState _BattleState;
         #endregion
 
+        #region Constructors
+        /// <summary>
+        /// Constructor for a character.
+        /// </summary>
+        public Character()
+        {
+            Initialize();
+        }
+        #endregion
+
         #region Methods
-        public void Initialize()
+        /// <summary>
+        /// Initialize the character.
+        /// </summary>
+        private void Initialize()
         {
             //Initialize the class.
             _Gender = Gender.Male;
@@ -67,6 +80,10 @@ namespace InsipidusEngine
             _EnergyRecoverySpeed = .1f;
             _BattleState = BattleState.Idle;
         }
+        /// <summary>
+        /// Load the character's content.
+        /// </summary>
+        /// <param name="content">The content manager to use.</param>
         public void LoadContent(ContentManager content)
         {
             //Load all content.
@@ -74,7 +91,7 @@ namespace InsipidusEngine
             _Moves.ForEach(item => item.LoadContent(content));
         }
         /// <summary>
-        /// Update the Pokémon.
+        /// Update the character.
         /// </summary>
         /// <param name="gametime">The time that has passed.</param>
         public void Update(GameTime gametime)
@@ -110,10 +127,17 @@ namespace InsipidusEngine
                 if (_CurrentEnergy >= _MaxEnergy) { LaunchAttack(_Moves[Calculator.RandomNumber(0, _Moves.Count - 1)], _Target); }
             }
 
+            //Determine the sprite to display.
+            DetermineSprite();
+
             //Update the sprite and moves.
             _Sprite.Update(gametime, _Position, 0);
             _Moves.ForEach(item => item.Update(gametime));
         }
+        /// <summary>
+        /// Draw the character.
+        /// </summary>
+        /// <param name="spritebatch">The sprite batch to use.</param>
         public void Draw(SpriteBatch spritebatch)
         {
             //Draw the sprite and moves.
@@ -122,7 +146,7 @@ namespace InsipidusEngine
         }
 
         /// <summary>
-        /// Launch an attack on a Pokémon with a move.
+        /// Launch an attack on a character with a move.
         /// </summary>
         /// <param name="move">The move to attack with.</param>
         /// <param name="target">The target to attack.</param>
@@ -141,7 +165,59 @@ namespace InsipidusEngine
             BattleCoordinator.Instance.QueueMove(active);
         }
         /// <summary>
-        /// Update the Pokémon's movement.
+        /// Recive an attack from another character.
+        /// </summary>
+        /// <param name="damage">The damage the attack dishes out.</param>
+        public void RecieveAttack(float damage)
+        {
+            //Decrease the health.
+            _CurrentHP -= damage;
+
+            //Try to cancel the current attack, if there exist one.
+            BattleCoordinator.Instance.FindMove(this).Cancel();
+        }
+        /// <summary>
+        /// Determine which sprite to show.
+        /// </summary>
+        private void DetermineSprite()
+        {
+            //If the character is moving, the soon-to-be chosen sprite should be animated.
+            bool animated = (_Velocity.LengthSquared() > 1e-8) ? true : false;
+
+            //Create the sprite placeholder.
+            Sprite sprite = _Sprite.GetSprite(0);
+
+            //Get the direction in degrees.
+            float dir = Calculator.VectorToRadians(_Velocity / _Velocity.Length()) / Calculator.RadiansToDegreesRatio;
+
+            //Determine the sprite to display.
+            if (dir >= -30 && dir <= 30)
+            {
+                sprite = _Sprite.GetSprite("Front");
+            }
+            else if ((dir >= 150 && dir <= 180) || (dir >= -180 && dir <= -120))
+            {
+                sprite = _Sprite.GetSprite("Back");
+            }
+            else if (dir >= 60 && dir <= 120)
+            {
+                sprite = _Sprite.GetSprite("Right");
+            }
+            else if (dir >= -120 && dir <= -30) { sprite = _Sprite.GetSprite("Left"); }
+
+            //If the chosen sprite already is visible, end here.
+            if (sprite.Visibility == Visibility.Visible) { return; }
+
+            //First, make all sprites invisible. Then make the chosen sprite visible.
+            _Sprite.Visibility = Visibility.Invisible;
+            sprite.Visibility = Visibility.Visible;
+
+            //Decide whether the sprite should be animated or not.
+            if (animated) { sprite.EnableAnimation = true; }
+            else { sprite.EnableAnimation = false; sprite.CurrentFrameIndex = 0; }
+        }
+        /// <summary>
+        /// Update the character's movement.
         /// </summary>
         private void Move()
         {
@@ -162,7 +238,7 @@ namespace InsipidusEngine
             //Decrease the velocity.
             _Velocity -= (_Velocity.LengthSquared() > 1e-8) ? Vector2.Normalize(_Velocity) * .1f : _Velocity;
             //Clamp the velocity.
-            _Velocity = Vector2.Clamp(_Velocity, -new Vector2(5, 5), new Vector2(5, 5));
+            _Velocity = Vector2.Clamp(_Velocity, -new Vector2(2, 2), new Vector2(2, 2));
         }
         /// <summary>
         /// Try to keep some distance from the opponent.

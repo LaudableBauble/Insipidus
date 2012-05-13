@@ -188,6 +188,130 @@
       <Processor>TextureProcessor</Processor>
     </Compile>
   </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Characters\Bulbasaur\Bulbasaur_Back[1].png">
+      <Name>Bulbasaur_Back[1]</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="Characters\Bulbasaur\Bulbasaur_Back[2].png">
+      <Name>Bulbasaur_Back[2]</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="Characters\Bulbasaur\Bulbasaur_Back[3].png">
+      <Name>Bulbasaur_Back[3]</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="Characters\Bulbasaur\Bulbasaur_Front[1].png">
+      <Name>Bulbasaur_Front[1]</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="Characters\Bulbasaur\Bulbasaur_Front[2].png">
+      <Name>Bulbasaur_Front[2]</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="Characters\Bulbasaur\Bulbasaur_Front[3].png">
+      <Name>Bulbasaur_Front[3]</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="Characters\Bulbasaur\Bulbasaur_Left[1].png">
+      <Name>Bulbasaur_Left[1]</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="Characters\Bulbasaur\Bulbasaur_Left[2].png">
+      <Name>Bulbasaur_Left[2]</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="Characters\Bulbasaur\Bulbasaur_Left[3].png">
+      <Name>Bulbasaur_Left[3]</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="Characters\Bulbasaur\Bulbasaur_Right[1].png">
+      <Name>Bulbasaur_Right[1]</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="Characters\Bulbasaur\Bulbasaur_Right[2].png">
+      <Name>Bulbasaur_Right[2]</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="Characters\Bulbasaur\Bulbasaur_Right[3].png">
+      <Name>Bulbasaur_Right[3]</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Characters\Charizard\Charizard_Back[1].png">
+      <Name>Charizard_Back[1]</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="Characters\Charizard\Charizard_Back[2].png">
+      <Name>Charizard_Back[2]</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="Characters\Charizard\Charizard_Back[3].png">
+      <Name>Charizard_Back[3]</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="Characters\Charizard\Charizard_Front[1].png">
+      <Name>Charizard_Front[1]</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="Characters\Charizard\Charizard_Front[2].png">
+      <Name>Charizard_Front[2]</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="Characters\Charizard\Charizard_Front[3].png">
+      <Name>Charizard_Front[3]</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="Characters\Charizard\Charizard_Left[1].png">
+      <Name>Charizard_Left[1]</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="Characters\Charizard\Charizard_Left[2].png">
+      <Name>Charizard_Left[2]</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="Characters\Charizard\Charizard_Left[3].png">
+      <Name>Charizard_Left[3]</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="Characters\Charizard\Charizard_Right[1].png">
+      <Name>Charizard_Right[1]</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="Characters\Charizard\Charizard_Right[2].png">
+      <Name>Charizard_Right[2]</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="Characters\Charizard\Charizard_Right[3].png">
+      <Name>Charizard_Right[3]</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+  </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Microsoft\XNA Game Studio\$(XnaFrameworkVersion)\Microsoft.Xna.GameStudio.ContentPipeline.targets" />
   <!--  To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
