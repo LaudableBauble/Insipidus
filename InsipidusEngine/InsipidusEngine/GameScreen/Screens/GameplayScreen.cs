@@ -65,11 +65,12 @@ namespace InsipidusEngine
             //Create the camera.
             _Camera = new Camera2D(new Rectangle(0, 0, ScreenManager.Game.Window.ClientBounds.Width, ScreenManager.Game.Window.ClientBounds.Height),
                 new Rectangle(0, 0, 2000, 2000));
+            _Camera.Position = new Vector2(1000, 1000);
 
             pokemon1 = Factory.Instance.Pansear;
-            pokemon1.Position = new Vector2(300, 300);
+            pokemon1.Position = new Vector2(700, 1000);
             pokemon2 = Factory.Instance.Snivy;
-            pokemon2.Position = new Vector2(600, 300);
+            pokemon2.Position = new Vector2(1300, 1000);
 
             //Make the Pokemons target each other.
             pokemon1.Target = pokemon2;
@@ -261,15 +262,19 @@ namespace InsipidusEngine
             energybar2.Draw();
 
             //Draw some text.
+            spriteBatch.DrawString(ScreenManager.Font, "State: " + pokemon1.BattleState, new Vector2(5, 45), Color.Black);
+            spriteBatch.DrawString(ScreenManager.Font, "State: " + pokemon2.BattleState, new Vector2(ScreenManager.Game.Window.ClientBounds.Width - 200, 45), Color.Black);
+
+            //Draw some text.
             foreach (BattleMove m in BattleCoordinator.Instance.Moves.FindAll(x => x.State != TimelineState.Idle))
             {
                 if (m.User == pokemon1)
                 {
-                    spriteBatch.DrawString(ScreenManager.Font, "--- Attack ---\nName: " + m.Name, new Vector2(5, 50), Color.Black);
+                    spriteBatch.DrawString(ScreenManager.Font, "--- Attack ---\nName: " + m.Name, new Vector2(5, 65), Color.Black);
                 }
                 else
                 {
-                    spriteBatch.DrawString(ScreenManager.Font, "--- Attack ---\nName: " + m.Name, new Vector2(ScreenManager.Game.Window.ClientBounds.Width - 200, 50), Color.Black);
+                    spriteBatch.DrawString(ScreenManager.Font, "--- Attack ---\nName: " + m.Name, new Vector2(ScreenManager.Game.Window.ClientBounds.Width - 200, 65), Color.Black);
                 }
             }
 

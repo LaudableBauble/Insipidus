@@ -13,6 +13,7 @@ using Microsoft.Xna.Framework.Net;
 using Microsoft.Xna.Framework.Storage;
 
 using InsipidusEngine.Imagery;
+using InsipidusEngine.Helpers;
 using InsipidusEngine.Battle.Projectiles;
 
 namespace InsipidusEngine.Battle.Animation.Events
@@ -24,7 +25,8 @@ namespace InsipidusEngine.Battle.Animation.Events
     {
         #region Fields
         protected Vector2 _Position;
-        protected Vector2 _Destination;
+        protected Destination _Destination;
+        protected Character _Target;
         protected Projectile _Projectile;
         #endregion
 
@@ -37,7 +39,7 @@ namespace InsipidusEngine.Battle.Animation.Events
         /// <param name="dependentOn">An optional event to be dependent upon, ie. wait for.</param>
         /// <param name="position">The starting position of the projectile.</param>
         /// <param name="destination">The destination point of the projectile.</param>
-        public ProjectileEvent(Timeline timeline, float start, TimelineEvent dependentOn, Vector2 position, Vector2 destination)
+        public ProjectileEvent(Timeline timeline, float start, TimelineEvent dependentOn, Vector2 position, Destination destination)
         {
             Initialize(timeline, start, dependentOn, position, destination);
         }
@@ -52,7 +54,7 @@ namespace InsipidusEngine.Battle.Animation.Events
         /// <param name="dependentOn">An optional event to be dependent upon, ie. wait for.</param>
         /// <param name="position">The starting position of the projectile.</param>
         /// <param name="destination">The destination point of the projectile.</param>
-        protected virtual void Initialize(Timeline timeline, float start, TimelineEvent dependentOn, Vector2 position, Vector2 destination)
+        protected virtual void Initialize(Timeline timeline, float start, TimelineEvent dependentOn, Vector2 position, Destination destination)
         {
             //Call the base method.
             base.Initialize(timeline, start, dependentOn);

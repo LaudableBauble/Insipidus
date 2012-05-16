@@ -118,10 +118,6 @@ namespace InsipidusEngine.Battle
         /// <param name="move">The move to use.</param>
         private void UseMove(BattleMove move)
         {
-            //Alert the target of the incoming attack, as well as the user.
-            move.User.BattleState = BattleState.Active;
-            move.Target.BattleState = BattleState.Active;
-
             //Load the move's content.
             move.LoadContent(_Content);
 
@@ -129,26 +125,60 @@ namespace InsipidusEngine.Battle
             move.Activate();
         }
         /// <summary>
-        /// Get the first active move carried out by the specified user.
+        /// Try to cancel a character's moves.
         /// </summary>
-        /// <param name="user">The user of the move.</param>
-        /// <returns>A move.</returns>
-        public BattleMove FindMove(Character user)
+        /// <param name="move">The move to cancel.</param>
+        public void CancelMoves(Character character)
         {
-            return (new List<BattleMove>(_Moves)).Find(item => item.User == user);
+            //Try to cancel all moves.
+            FindUserMoves(character).ForEach(item => item.Cancel());
         }
         /// <summary>
-        /// When a move has been canceled or completed.
+        /// Get all of sthe currently active moves carried out by a specified user.
+        /// </summary>
+        /// <param name="user">The user of the moves.</param>
+        /// <returns>The moves.</returns>
+        public List<BattleMove> FindUserMoves(Character user)
+        {
+            return (new List<BattleMove>(_Moves)).FindAll(item => item.User == user);
+        }
+        /// <summary>
+        /// Find out whether any active move currently has control over the specified character.
+        /// </summary>
+        /// <param name="character">The character to base the search on.</param>
+        /// <returns>Whether any move has control over the character.</returns>
+        public bool HasMoveControl(Character character)
+        {
+            //The result.
+            bool result = false;
+
+            //Find out.
+            foreach (BattleMove move in new List<BattleMove>(_Moves))
+            {
+                if ((move.User == character && move.HasUserControl) || (move.Target == character && move.HasTargetControl)) { result = true; break; }
+            }
+
+            //Return the result.
+            return result;
+        }
+        /// <summary>
+        /// Update a character's state by looking at all active moves' state of control.
+        /// </summary>
+        /// <param name="character">The character whos state to update.</param>
+        public void UpdateControlState(Character character)
+        {
+            //If any active move has control over the character, set its state to active.
+            if (HasMoveControl(character)) { character.BattleState = BattleState.Active; }
+            else { character.BattleState = BattleState.Idle; }
+        }
+        /// <summary>
+        /// When a move has been cancelled or completed.
         /// </summary>
         /// <param name="move">The move that is finished.</param>
         private void OnMoveFinished(BattleMove move)
         {
             //The move is now obsolete, remove it.
             _Moves.Remove(move);
-
-            //Deactivate the participants of the move.
-            move.User.BattleState = BattleState.Idle;
-            move.Target.BattleState = BattleState.Idle;
 
             //Unsubscribe from the move.
             move.Concluded -= OnMoveFinished;

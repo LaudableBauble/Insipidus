@@ -15,6 +15,7 @@ using Microsoft.Xna.Framework.Storage;
 using InsipidusEngine.Battle;
 using InsipidusEngine.Battle.Animation.Events;
 using InsipidusEngine.Imagery;
+using InsipidusEngine.Helpers;
 
 namespace InsipidusEngine
 {
@@ -54,27 +55,41 @@ namespace InsipidusEngine
                 case "Ember":
                     {
                         //Add events to the timeline.
-                        ProjectileEvent projectile = new ProjectileEvent(animation, 0, null, move.User.Position, move.Target.Position);
+                        ModifyEnergyEvent energy = new ModifyEnergyEvent(animation, 0, null, move.User, -move.EnergyConsume);
+                        ModifyControlEvent state = new ModifyControlEvent(animation, 0, energy, move, move.User, false);
+                        ModifyCancelableEvent cancel = new ModifyCancelableEvent(animation, 0, energy, move, false);
+                        ProjectileEvent projectile = new ProjectileEvent(animation, 0, null, move.User.Position, new Destination(move.Target));
                         ModifyHealthEvent damage = new ModifyHealthEvent(animation, 0, projectile, move.Target, -move.GetDamage());
-                        ModifyEnergyEvent energy = new ModifyEnergyEvent(animation, 0, damage, move.User, -move.EnergyConsume);
+                        ImpactEvent impact = new ImpactEvent(animation, 0, projectile, move);
 
                         //Add the events to the timeline.
+                        animation.AddEvent(energy);
+                        animation.AddEvent(state);
+                        animation.AddEvent(cancel);
                         animation.AddEvent(projectile);
                         animation.AddEvent(damage);
-                        animation.AddEvent(energy);
+                        animation.AddEvent(impact);
                         break;
                     }
                 case "Scratch":
                     {
                         //Add events to the timeline.
-                        MovementEvent moveTo = new MovementEvent(animation, 0, null, move.User, move.Target.Position, MovementType.Run);
+                        ModifyControlEvent stateStart = new ModifyControlEvent(animation, 0, null, move, move.User, true);
+                        MovementEvent moveTo = new MovementEvent(animation, 0, null, move.User, new Destination(move.Target), MovementType.Run);
+                        ModifyCancelableEvent cancel = new ModifyCancelableEvent(animation, 0, moveTo, move, false);
                         ModifyHealthEvent damage = new ModifyHealthEvent(animation, 0, moveTo, move.Target, -move.GetDamage());
                         ModifyEnergyEvent energy = new ModifyEnergyEvent(animation, 0, damage, move.User, -move.EnergyConsume);
+                        ModifyControlEvent stateEnd = new ModifyControlEvent(animation, 0, energy, move, move.User, false);
+                        ImpactEvent impact = new ImpactEvent(animation, 0, moveTo, move);
 
                         //Add the events to the timeline.
+                        animation.AddEvent(stateStart);
                         animation.AddEvent(moveTo);
+                        animation.AddEvent(cancel);
                         animation.AddEvent(damage);
                         animation.AddEvent(energy);
+                        animation.AddEvent(stateEnd);
+                        animation.AddEvent(impact);
                         break;
                     }
                 default: { goto case "Scratch"; }

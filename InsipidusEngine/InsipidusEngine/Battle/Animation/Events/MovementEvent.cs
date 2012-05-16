@@ -13,6 +13,7 @@ using Microsoft.Xna.Framework.Net;
 using Microsoft.Xna.Framework.Storage;
 
 using InsipidusEngine.Imagery;
+using InsipidusEngine.Helpers;
 
 namespace InsipidusEngine.Battle.Animation.Events
 {
@@ -24,7 +25,7 @@ namespace InsipidusEngine.Battle.Animation.Events
     {
         #region Fields
         protected Character _Character;
-        protected Vector2 _Destination;
+        protected Destination _Destination;
         protected MovementType _Type;
         #endregion
 
@@ -38,7 +39,7 @@ namespace InsipidusEngine.Battle.Animation.Events
         /// <param name="character">The character to move.</param>
         /// <param name="destination">The destination point of the movement.</param>
         /// <param name="type">The type movement.</param>
-        public MovementEvent(Timeline timeline, float start, TimelineEvent dependentOn, Character character, Vector2 destination, MovementType type)
+        public MovementEvent(Timeline timeline, float start, TimelineEvent dependentOn, Character character, Destination destination, MovementType type)
         {
             Initialize(timeline, start, dependentOn, character, destination, type);
         }
@@ -53,8 +54,9 @@ namespace InsipidusEngine.Battle.Animation.Events
         /// <param name="dependentOn">An optional event to be dependent upon, ie. wait for.</param>
         /// <param name="character">The character to move.</param>
         /// <param name="destination">The destination point of the movement.</param>
+        /// <param name="target">The target of the movement. Overrides the destination.</param>
         /// <param name="type">The type movement.</param>
-        protected virtual void Initialize(Timeline timeline, float start, TimelineEvent dependentOn, Character character, Vector2 destination, MovementType type)
+        protected virtual void Initialize(Timeline timeline, float start, TimelineEvent dependentOn, Character character, Destination destination, MovementType type)
         {
             //Call the base method.
             base.Initialize(timeline, start, dependentOn);
@@ -84,7 +86,7 @@ namespace InsipidusEngine.Battle.Animation.Events
                 case MovementType.Run:
                     {
                         //Check if the event has run its course.
-                        if (Vector2.Distance(_Character.Position, _Destination) < 10) { EventConcludedInvoke(); }
+                        if (Vector2.Distance(_Character.Position, _Destination.Position) < 10) { EventConcludedInvoke(); }
 
                         //Move towards the target as fast as possible.
                         speed = User.Speed;
@@ -94,7 +96,7 @@ namespace InsipidusEngine.Battle.Animation.Events
             }
 
             //Move towards the target.
-            User.Velocity = Calculator.LineDirection(_Character.Position, _Destination) * speed;
+            User.Velocity = Calculator.LineDirection(_Character.Position, _Destination.Position) * speed;
 
             //The event has been performed.
             return true;

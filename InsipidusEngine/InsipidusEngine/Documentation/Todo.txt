@@ -5,3 +5,4 @@
 /// Done
 - Strictly choreographed battles may prove to be to cumbersome and unflexible. Perhaps a more direct version is better in the long run?
 - Add visual elements to attacks, ie. add a sprite collection to timeline events.
+- Due to Vector2 being immutable (or something similar) any event relying on homing in on a position needs some extra work. Currently only a character's position is used.

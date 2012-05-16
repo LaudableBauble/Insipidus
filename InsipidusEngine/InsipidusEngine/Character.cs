@@ -115,7 +115,7 @@ namespace InsipidusEngine
                 _ElapsedEnergyTime -= _EnergyRecoverySpeed;
             }
 
-            //If the pokémon is currently trading blows, let him be guided by the battle animation.
+            //If the character is currently trading blows, let him be guided by the battle animation.
             if (_BattleState != BattleState.Active)
             {
                 //Can we attack? If yes, do so.
@@ -151,26 +151,27 @@ namespace InsipidusEngine
             //Stop here if the move or target isn't valid, or if a move already has been set in motion.
             if (move == null || target == null || _BattleState != BattleState.Idle) { return; }
 
-            //Create the activated form of the move.
-            BattleMove active = new BattleMove(move, this, target);
-
             //Prepare for the attack.
             _BattleState = BattleState.Waiting;
+            //Create the activated form of the move.
+            BattleMove active = new BattleMove(move, this, target);
 
             //Attack.
             BattleCoordinator.Instance.QueueMove(active);
         }
         /// <summary>
-        /// Recive an attack from another character.
+        /// Recieve recoil from an attack.
         /// </summary>
-        /// <param name="damage">The damage the attack dishes out.</param>
-        public void RecieveAttack(float damage)
+        /// <param name="power">The power of the recoil.</param>
+        public void RecieveImpact(Vector2 power)
         {
-            //Decrease the health.
-            _CurrentHP -= damage;
+            //Move the character according to the recoil.
+            _Velocity += power;
+            //Decrease the energy a bit.
+            _CurrentEnergy -= 10;
 
             //Try to cancel the current attack, if there exist one.
-            BattleCoordinator.Instance.FindMove(this).Cancel();
+            BattleCoordinator.Instance.CancelMoves(this);
         }
         /// <summary>
         /// Determine which sprite to show.
@@ -213,8 +214,8 @@ namespace InsipidusEngine
             //Whether it is time to move.
             if (_ElapsedMovementTime >= _TimeBetweenMoving)
             {
-                //If idle, try to keep our distance.
-                if (_BattleState == BattleState.Idle) { KeepDistance(); }
+                //Try to keep our distance.
+                //KeepDistance();
 
                 //Update the velocity and clamp it if needed. Also update the position.
                 UpdateVelocity();

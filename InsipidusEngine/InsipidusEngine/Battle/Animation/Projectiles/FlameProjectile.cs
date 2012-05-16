@@ -13,6 +13,7 @@ using Microsoft.Xna.Framework.Net;
 using Microsoft.Xna.Framework.Storage;
 
 using InsipidusEngine.Imagery;
+using InsipidusEngine.Helpers;
 
 namespace InsipidusEngine.Battle.Projectiles
 {
@@ -27,7 +28,7 @@ namespace InsipidusEngine.Battle.Projectiles
         /// </summary>
         /// <param name="position">The starting position of the projectile.</param>
         /// <param name="destination">The destination of this projectile.</param>
-        public FlameProjectile(Vector2 position, Vector2 destination)
+        public FlameProjectile(Vector2 position, Destination destination)
         {
             Initialize(position, destination);
         }

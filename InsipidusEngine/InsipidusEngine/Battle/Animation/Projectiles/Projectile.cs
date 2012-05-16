@@ -13,6 +13,7 @@ using Microsoft.Xna.Framework.Net;
 using Microsoft.Xna.Framework.Storage;
 
 using InsipidusEngine.Imagery;
+using InsipidusEngine.Helpers;
 
 namespace InsipidusEngine.Battle.Projectiles
 {
@@ -25,7 +26,7 @@ namespace InsipidusEngine.Battle.Projectiles
         #region Fields
         protected SpriteManager _Sprite;
         protected Vector2 _Position;
-        protected Vector2 _Destination;
+        protected Destination _Destination;
         protected Vector2 _Velocity;
         #endregion
 
@@ -40,7 +41,7 @@ namespace InsipidusEngine.Battle.Projectiles
         /// </summary>
         /// <param name="position">The starting position of the projectile.</param>
         /// <param name="destination">The projectile's destination.</param>
-        protected virtual void Initialize(Vector2 position, Vector2 destination)
+        protected virtual void Initialize(Vector2 position, Destination destination)
         {
             //Initialize some fields.
             _Sprite = new SpriteManager();
@@ -64,14 +65,14 @@ namespace InsipidusEngine.Battle.Projectiles
         public virtual void Update(GameTime gametime)
         {
             //Determine the velocity.
-            _Velocity = Calculator.LineDirection(_Position, _Destination) * 3;
+            _Velocity = Calculator.LineDirection(_Position, _Destination.Position) * 3;
 
             //Move the projectile and its sprite.
             _Position += _Velocity;
             _Sprite.Update(gametime, _Position, 0);
 
             //Check if the projectile has collided.
-            if (Vector2.Distance(_Position, _Destination) < 10) { CollisionInvoke(null); }
+            if (Vector2.Distance(_Position, _Destination.Position) < 10) { CollisionInvoke(null); }
         }
         /// <summary>
         /// Draw the projectile.
@@ -114,7 +115,7 @@ namespace InsipidusEngine.Battle.Projectiles
         /// <summary>
         /// The projectile's destination.
         /// </summary>
-        public Vector2 Destination
+        public Destination Destination
         {
             get { return _Destination; }
             set { _Destination = value; }

@@ -17,13 +17,14 @@ using InsipidusEngine.Imagery;
 namespace InsipidusEngine.Battle.Animation.Events
 {
     /// <summary>
-    /// This event is used when someone's health needs to be modified.
+    /// This event is used when a move's state of control over either the user or the target needs to be modified.
     /// </summary>
-    public class ModifyHealthEvent : TimelineEvent
+    public class ModifyControlEvent : TimelineEvent
     {
         #region Fields
+        private BattleMove _Move;
         private Character _Character;
-        private float _Amount;
+        private bool _HasControl;
         #endregion
 
         #region Constructors
@@ -33,11 +34,12 @@ namespace InsipidusEngine.Battle.Animation.Events
         /// <param name="timeline">The timeline this event is part of.</param>
         /// <param name="start">The start of the event.</param>
         /// <param name="dependentOn">An optional event to be dependent upon, ie. wait for.</param>
-        /// <param name="character">The character whos health will be modified.</param>
-        /// <param name="amount">The amount to add to the health.</param>
-        public ModifyHealthEvent(Timeline timeline, float start, TimelineEvent dependentOn, Character character, float amount)
+        /// <param name="move">The move to modify.</param>
+        /// <param name="character">The character whos state of control will be modified.</param>
+        /// <param name="control">The new state of control.</param>
+        public ModifyControlEvent(Timeline timeline, float start, TimelineEvent dependentOn, BattleMove move, Character character, bool control)
         {
-            Initialize(timeline, start, dependentOn, character, amount);
+            Initialize(timeline, start, dependentOn, move, character, control);
         }
         #endregion
 
@@ -48,16 +50,18 @@ namespace InsipidusEngine.Battle.Animation.Events
         /// <param name="timeline">The timeline this event is part of.</param>
         /// <param name="start">The start of the event.</param>
         /// <param name="dependentOn">An optional event to be dependent upon, ie. wait for.</param>
-        /// <param name="character">The character who health will be modified.</param>
-        /// <param name="amount">The amount to add to the health.</param>
-        protected virtual void Initialize(Timeline timeline, float start, TimelineEvent dependentOn, Character character, float amount)
+        /// <param name="move">The move to modify.</param>
+        /// <param name="character">The character whos state of control will be modified.</param>
+        /// <param name="control">The new state of control.</param>
+        protected virtual void Initialize(Timeline timeline, float start, TimelineEvent dependentOn, BattleMove move, Character character, bool control)
         {
             //Call the base method.
             base.Initialize(timeline, start, dependentOn);
 
             //Initialize the variables.
+            _Move = move;
             _Character = character;
-            _Amount = amount;
+            _HasControl = control;
         }
         /// <summary>
         /// Perform this event.
@@ -70,8 +74,11 @@ namespace InsipidusEngine.Battle.Animation.Events
             //Call the base method and see whether to perform the event or not.
             if (!base.PerformEvent(gametime, elapsedTime)) { return false; }
 
-            //Modify the target's health.
-            _Character.CurrentHP += _Amount;
+            //Modify the move's state of control.
+            if (_Move.User == _Character) { _Move.HasUserControl = _HasControl; }
+            else if (_Move.Target == _Character) { _Move.HasTargetControl = _HasControl; }
+
+            //Conclude the event.
             EventConcludedInvoke();
 
             //The event has been performed.

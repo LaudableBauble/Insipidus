@@ -49,7 +49,7 @@ point or during the movement) it means that the target has dodged the attack (or
 
 /// Battle Events
 
-The first three events are good as they are but the fourth, the Result event, needs some tweaking. The problem lies in the fact that there exists practically an
+The first three events are good as they are but the fourth, the Modify event, needs some tweaking. The problem lies in the fact that there exists practically an
 infinite number of changes and results to be had and it is hard to design a single event that encompasses all of these multitude of posibilities. For example,
 besides changing health or other stats an attack may want to affect the weather or time of day. How do we keep the event as simple as possible while still allowing it
 to retain a wide array of areas to influence?

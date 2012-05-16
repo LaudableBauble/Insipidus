@@ -17,27 +17,25 @@ using InsipidusEngine.Imagery;
 namespace InsipidusEngine.Battle.Animation.Events
 {
     /// <summary>
-    /// This event is used when someone's health needs to be modified.
+    /// This event is used when someone should suffer from an impact.
     /// </summary>
-    public class ModifyHealthEvent : TimelineEvent
+    public class ImpactEvent : TimelineEvent
     {
         #region Fields
-        private Character _Character;
-        private float _Amount;
+        private BattleMove _Move;
         #endregion
 
         #region Constructors
         /// <summary>
-        /// Constructor for a modify event.
+        /// Constructor for a recoil event.
         /// </summary>
         /// <param name="timeline">The timeline this event is part of.</param>
         /// <param name="start">The start of the event.</param>
         /// <param name="dependentOn">An optional event to be dependent upon, ie. wait for.</param>
-        /// <param name="character">The character whos health will be modified.</param>
-        /// <param name="amount">The amount to add to the health.</param>
-        public ModifyHealthEvent(Timeline timeline, float start, TimelineEvent dependentOn, Character character, float amount)
+        /// <param name="move">The move to calculate impact from.</param>
+        public ImpactEvent(Timeline timeline, float start, TimelineEvent dependentOn, BattleMove move)
         {
-            Initialize(timeline, start, dependentOn, character, amount);
+            Initialize(timeline, start, dependentOn, move);
         }
         #endregion
 
@@ -48,16 +46,14 @@ namespace InsipidusEngine.Battle.Animation.Events
         /// <param name="timeline">The timeline this event is part of.</param>
         /// <param name="start">The start of the event.</param>
         /// <param name="dependentOn">An optional event to be dependent upon, ie. wait for.</param>
-        /// <param name="character">The character who health will be modified.</param>
-        /// <param name="amount">The amount to add to the health.</param>
-        protected virtual void Initialize(Timeline timeline, float start, TimelineEvent dependentOn, Character character, float amount)
+        /// <param name="move">The move to calculate impact from.</param>
+        protected virtual void Initialize(Timeline timeline, float start, TimelineEvent dependentOn, BattleMove move)
         {
             //Call the base method.
             base.Initialize(timeline, start, dependentOn);
 
             //Initialize the variables.
-            _Character = character;
-            _Amount = amount;
+            _Move = move;
         }
         /// <summary>
         /// Perform this event.
@@ -70,8 +66,11 @@ namespace InsipidusEngine.Battle.Animation.Events
             //Call the base method and see whether to perform the event or not.
             if (!base.PerformEvent(gametime, elapsedTime)) { return false; }
 
-            //Modify the target's health.
-            _Character.CurrentHP += _Amount;
+            //Calculate the impact of the attack.
+            Vector2 impact = _Move.User.Velocity * _Move.Force;
+
+            //Modify the target's state of battle.
+            _Move.Target.RecieveImpact(impact);
             EventConcludedInvoke();
 
             //The event has been performed.

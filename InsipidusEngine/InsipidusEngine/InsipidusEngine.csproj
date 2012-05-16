@@ -107,6 +107,10 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Battle\Animation\Events\ModifyControlEvent.cs" />
+    <Compile Include="Battle\Animation\Events\ModifyCancelableEvent.cs" />
+    <Compile Include="Battle\Animation\Events\ImpactEvent.cs" />
+    <Compile Include="Battle\Animation\Events\ModifyStateEvent.cs" />
     <Compile Include="Battle\Animation\Events\ProjectileEvent.cs" />
     <Compile Include="Battle\Animation\Projectiles\FlameProjectile.cs" />
     <Compile Include="Battle\BattleAnimation.cs" />
@@ -126,6 +130,7 @@
     <Compile Include="Battle\ExperienceBar.cs" />
     <Compile Include="Battle\HealthBar.cs" />
     <Compile Include="Battle\Animation\Projectiles\Projectile.cs" />
+    <Compile Include="Helpers\Destination.cs" />
     <Compile Include="Infrastructure\Camera2D.cs" />
     <Compile Include="Character.cs" />
     <Compile Include="CharacterList.cs" />

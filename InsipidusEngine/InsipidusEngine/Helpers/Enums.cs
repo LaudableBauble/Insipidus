@@ -7,14 +7,11 @@ namespace InsipidusEngine
 {
     public enum BattleType
     {
-        OneVsOne,
-        OneVsTwo,
-        TwoVsTwo
+        OneVsOne, OneVsTwo, TwoVsTwo
     }
     public enum BattleStatus
     {
-        Intro,
-        BattleMenu
+        Intro, BattleMenu
     }
     public enum PokemonIndividual
     {
@@ -55,57 +52,36 @@ namespace InsipidusEngine
     /// </summary>
     public enum AttackState
     {
-        Idle,
-        Cancelled,
-        Underway,
-        Conclusion,
-        Concluded
+        Idle, Cancelled, Underway, Conclusion, Concluded
     }
     /// <summary>
     /// The outcome of an attack.
     /// </summary>
     public enum AttackOutcome
     {
-        None,
-        Miss,
-        Dodge,
-        Block,
-        Clash,
-        Hit
+        None, Miss, Dodge, Block, Clash, Hit
     }
     /// <summary>
     /// The state of battle for a participant.
     /// </summary>
     public enum BattleState
     {
-        None,
-        Idle,
-        Waiting,
-        Active
+        None, Idle, Waiting, Active
     }
     public enum TextBoxEvent
     {
-        None,
-        ClearTextBox,
-        DelayMultiplierChange,
-        EndTextBox,
-        NewLine,
-        ScrollRowsDown
+        None, ClearTextBox, DelayMultiplierChange, EndTextBox, NewLine, ScrollRowsDown
     }
     public enum TextBoxCloseMode
     {
-        Manual,
-        Automatic
+        Manual, Automatic
     }
     /// <summary>
     /// A rule to be applied during a battle animation.
     /// </summary>
     public enum AnimationRule
     {
-        MoveToTarget,
-        MoveToUser,
-        DamageTarget,
-        ConsumeEnergy
+        MoveToTarget, MoveToUser, DamageTarget, ConsumeEnergy
     }
 
     /// <summary>
@@ -113,28 +89,21 @@ namespace InsipidusEngine
     /// </summary>
     public enum TimelineEventType
     {
-        Duration,
-        Direct
+        Duration, Direct
     }
     /// <summary>
     /// The state of a timeline and its events.
     /// </summary>
     public enum TimelineState
     {
-        Idle,
-        Active,
-        Concluded
+        Idle, Active, Concluded
     }
     /// <summary>
     /// The different types of movement available to a character.
     /// </summary>
     public enum MovementType
     {
-        Walk,
-        Run,
-        Jump,
-        Fly,
-        Teleport
+        Walk, Run, Jump, Fly, Teleport
     }
 
     /// <summary>
@@ -142,17 +111,14 @@ namespace InsipidusEngine
     /// </summary>
     public enum Orientation
     {
-        None,
-        Left,
-        Right
+        None, Left, Right
     }
     /// <summary>
     /// The visibility of the sprite.
     /// </summary>
     public enum Visibility
     {
-        Invisible,
-        Visible
+        Invisible, Visible
     }
     /// <summary>
     /// The direction of something.

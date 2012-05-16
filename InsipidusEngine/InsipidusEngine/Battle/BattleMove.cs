@@ -29,6 +29,8 @@ namespace InsipidusEngine.Battle
         private Character _User;
         private Character _Target;
         private bool _IsCancelable;
+        private bool _HasUserControl;
+        private bool _HasTargetControl;
         #endregion
 
         #region Events
@@ -64,6 +66,8 @@ namespace InsipidusEngine.Battle
             _User = user;
             _Target = target;
             _IsCancelable = true;
+            _HasUserControl = true;
+            _HasTargetControl = false;
             _Timeline = Factory.Instance.createBattleAnimation(this);
 
             //Subscribe to the timeline.
@@ -107,6 +111,10 @@ namespace InsipidusEngine.Battle
 
             //Start the aniamtion.
             _Timeline.Start();
+
+            //Update the user's and target's state.
+            BattleCoordinator.Instance.UpdateControlState(_User);
+            BattleCoordinator.Instance.UpdateControlState(_Target);
         }
         /// <summary>
         /// Cancel the move and end it prematurely.
@@ -114,7 +122,11 @@ namespace InsipidusEngine.Battle
         public void Cancel()
         {
             //Cancel the move, if we can.
-            if (_IsCancelable) { _Timeline.Stop(); }
+            if (!_IsCancelable) { return; }
+
+            //Stop the animation.
+            UpdateControlState(false, false);
+            _Timeline.Stop();
         }
         /// <summary>
         /// Get this move's damage capabilities. Note that the calculation is partly based upon random values, which means that successive calls
@@ -147,6 +159,29 @@ namespace InsipidusEngine.Battle
         {
             //Whether the move hit or clashed.
             return (MathHelper.Clamp(_User.Speed / _Target.Speed, 0, 1) * Calculator.RandomNumber(Accuracy / 100, 1)) >= .5f;
+        }
+        /// <summary>
+        /// Update the move's state of control.
+        /// </summary>
+        /// <param name="hasUserControl">Whether the move has control over the user.</param>
+        /// <param name="hasTargetControl">Whether the move has control over thet target.</param>
+        private void UpdateControlState(bool hasUserControl, bool hasTargetControl)
+        {
+            //If the user control has changed.
+            if (_HasUserControl != hasUserControl)
+            {
+                //Update the control state, both for the move and the user.
+                _HasUserControl = hasUserControl;
+                BattleCoordinator.Instance.UpdateControlState(_User);
+            }
+
+            //If the target control has changed.
+            if (_HasTargetControl != hasTargetControl)
+            {
+                //Update the control state, both for the move and the target.
+                _HasTargetControl = hasTargetControl;
+                BattleCoordinator.Instance.UpdateControlState(_Target);
+            }
         }
         /// <summary>
         /// The move's animation has been concluded, and so has this move.
@@ -230,6 +265,22 @@ namespace InsipidusEngine.Battle
         {
             get { return _IsCancelable; }
             set { _IsCancelable = value; }
+        }
+        /// <summary>
+        /// Whether the move has control over the user or not.
+        /// </summary>
+        public bool HasUserControl
+        {
+            get { return _HasUserControl; }
+            set { UpdateControlState(value, _HasTargetControl); }
+        }
+        /// <summary>
+        /// Whether the move has control over the target or not.
+        /// </summary>
+        public bool HasTargetControl
+        {
+            get { return _HasTargetControl; }
+            set { UpdateControlState(_HasUserControl, value); }
         }
         #endregion
     }
