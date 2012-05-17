@@ -12,20 +12,8 @@ using System;
 using Microsoft.Xna.Framework;
 #endregion
 
-namespace InsipidusEngine
+namespace InsipidusEngine.Infrastructure
 {
-    /// <summary>
-    /// Enum describes the screen transition state.
-    /// </summary>
-    public enum ScreenState
-    {
-        TransitionOn,
-        Active,
-        TransitionOff,
-        Hidden,
-    }
-
-
     /// <summary>
     /// A screen is a single layer that has update and draw logic, and which
     /// can be combined with other layers to build up a complex menu system.

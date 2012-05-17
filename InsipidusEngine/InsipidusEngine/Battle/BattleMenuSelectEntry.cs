@@ -11,6 +11,7 @@
 using System;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using InsipidusEngine.Screens;
 #endregion
 
 namespace InsipidusEngine
@@ -149,8 +150,6 @@ namespace InsipidusEngine
         {
             return screen.ScreenManager.Font.LineSpacing;
         }
-
-
         #endregion
     }
 }

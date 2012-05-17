@@ -8,6 +8,7 @@ using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Content;
 
 using InsipidusEngine.Imagery;
+using InsipidusEngine.Infrastructure;
 
 namespace InsipidusEngine.Text
 {

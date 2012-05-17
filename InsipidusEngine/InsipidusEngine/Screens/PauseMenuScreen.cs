@@ -12,7 +12,7 @@ using System;
 using Microsoft.Xna.Framework;
 #endregion
 
-namespace InsipidusEngine
+namespace InsipidusEngine.Screens
 {
     /// <summary>
     /// The pause menu comes up over the top of the game,

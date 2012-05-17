@@ -11,9 +11,11 @@
 using System;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+
+using InsipidusEngine.Infrastructure;
 #endregion
 
-namespace InsipidusEngine
+namespace InsipidusEngine.Screens
 {
     /// <summary>
     /// The loading screen coordinates transitions between the menu system and the

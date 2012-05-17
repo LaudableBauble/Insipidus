@@ -11,6 +11,9 @@ using Microsoft.Xna.Framework.Media;
 using Microsoft.Xna.Framework.Net;
 using Microsoft.Xna.Framework.Storage;
 
+using InsipidusEngine.Infrastructure;
+using InsipidusEngine.Screens;
+
 namespace InsipidusEngine
 {
     /// <summary>
