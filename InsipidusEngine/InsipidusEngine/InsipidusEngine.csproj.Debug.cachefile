@@ -13,11 +13,6 @@ Content\Characters\Snivy_Icon[1].xnb
 Content\GameScreen\background.xnb
 Content\GameScreen\blank.xnb
 Content\GameScreen\gradient.xnb
-Content\TextBox\Speech.xnb
-Content\GameScreen\gamefont.xnb
-Content\GameScreen\Halo.xnb
-Content\GameScreen\HaloOutline.xnb
-Content\GameScreen\menufont.xnb
 Content\Battle\Misc\Flame[1].xnb
 Content\Characters\Bulbasaur\Bulbasaur_Back[1].xnb
 Content\Characters\Bulbasaur\Bulbasaur_Back[2].xnb
@@ -43,3 +38,8 @@ Content\Characters\Charizard\Charizard_Left[3].xnb
 Content\Characters\Charizard\Charizard_Right[1].xnb
 Content\Characters\Charizard\Charizard_Right[2].xnb
 Content\Characters\Charizard\Charizard_Right[3].xnb
+Content\TextBox\Speech.xnb
+Content\GameScreen\gamefont.xnb
+Content\GameScreen\Halo.xnb
+Content\GameScreen\HaloOutline.xnb
+Content\GameScreen\menufont.xnb
