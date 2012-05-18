@@ -12,9 +12,10 @@ using System;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
+using InsipidusEngine.Infrastructure;
 #endregion
 
-namespace InsipidusEngine
+namespace InsipidusEngine.Screens
 {
     /// <summary>
     /// The background screen sits behind all the other menu screens.

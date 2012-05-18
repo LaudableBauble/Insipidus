@@ -12,9 +12,10 @@ using System;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
+using InsipidusEngine.Infrastructure;
 #endregion
 
-namespace InsipidusEngine
+namespace InsipidusEngine.Screens
 {
     /// <summary>
     /// A popup message box screen, used to display "are you sure?"

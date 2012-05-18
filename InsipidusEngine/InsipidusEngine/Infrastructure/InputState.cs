@@ -12,18 +12,8 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
 #endregion
 
-namespace InsipidusEngine
+namespace InsipidusEngine.Infrastructure
 {
-    /// <summary>
-    /// The different types of mouse buttons.
-    /// </summary>
-    public enum MouseButton
-    {
-        Left,
-        Right,
-        Middle
-    }
-
     /// <summary>
     /// Helper for reading input from mouse, keyboard and gamepad. This class tracks both the current and previous state of both input devices, and implements query
     /// properties for high level input actions such as "move up through the menu" or "pause the game".

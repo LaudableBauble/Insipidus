@@ -14,6 +14,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using InsipidusEngine.Imagery;
+using InsipidusEngine.Infrastructure;
 #endregion
 
 namespace InsipidusEngine

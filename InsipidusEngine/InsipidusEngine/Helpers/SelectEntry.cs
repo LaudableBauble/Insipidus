@@ -11,6 +11,7 @@
 using System;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using InsipidusEngine.Screens;
 #endregion
 
 namespace InsipidusEngine
@@ -99,8 +100,6 @@ namespace InsipidusEngine
         #endregion
 
         #region Update and Draw
-
-
         /// <summary>
         /// Updates the menu entry.
         /// </summary>
@@ -108,7 +107,6 @@ namespace InsipidusEngine
         {
             //Update.
         }
-
 
         /// <summary>
         /// Draws the menu entry. This can be overridden to customize the appearance.
@@ -118,7 +116,6 @@ namespace InsipidusEngine
             //Draw the select entry text.
             spriteBatch.DrawString(font, text, position, Color.Black);
         }
-
 
         /// <summary>
         /// Queries how much space this menu entry requires.

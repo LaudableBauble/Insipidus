@@ -5,6 +5,20 @@ using System.Text;
 
 namespace InsipidusEngine
 {
+    /// <summary>
+    /// The different types of mouse buttons.
+    /// </summary>
+    public enum MouseButton
+    {
+        Left, Right, Middle
+    }
+    /// <summary>
+    /// Enum describes the screen transition state.
+    /// </summary>
+    public enum ScreenState
+    {
+        TransitionOn, Active, TransitionOff, Hidden,
+    }
     public enum BattleType
     {
         OneVsOne, OneVsTwo, TwoVsTwo

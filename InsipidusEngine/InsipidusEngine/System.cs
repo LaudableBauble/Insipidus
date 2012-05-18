@@ -12,6 +12,8 @@ using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework.Net;
 using Microsoft.Xna.Framework.Storage;
 
+using InsipidusEngine.Infrastructure;
+
 namespace InsipidusEngine
 {
     public class System

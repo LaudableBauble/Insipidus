@@ -19,10 +19,10 @@ using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework.Net;
 using Microsoft.Xna.Framework.Storage;
-
+using InsipidusEngine.Infrastructure;
 #endregion
 
-namespace InsipidusEngine
+namespace InsipidusEngine.Screens
 {
     /// <summary>
     /// This screen implements the actual game logic. It is just a
