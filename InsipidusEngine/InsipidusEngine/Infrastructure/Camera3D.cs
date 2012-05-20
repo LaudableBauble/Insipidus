@@ -21,11 +21,10 @@ namespace InsipidusEngine.Infrastructure
         private GraphicsDevice _Device;
         private Vector3 _Position;
         private Vector3 _Target;
-        private float _Speed;
-        private float _Yaw;
-        private float _Pitch;
-        private float _Roll;
-        private Matrix _Rotation;
+        private float _MoveSpeed;
+        private float _RotationSpeed;
+        private float _XRotation;
+        private float _YRotation;
         private Matrix _View;
         private Matrix _Projection;
         #endregion
@@ -59,20 +58,18 @@ namespace InsipidusEngine.Infrastructure
         public void HandleInput(InputState input)
         {
             //Rotation.
-            if (input.IsKeyDown(Keys.J)) { _Yaw += .02f; }
-            if (input.IsKeyDown(Keys.L)) { _Yaw += -.02f; }
-            if (input.IsKeyDown(Keys.I)) { _Pitch += -.02f; }
-            if (input.IsKeyDown(Keys.K)) { _Pitch += .02f; }
-            if (input.IsKeyDown(Keys.U)) { _Roll += -.02f; }
-            if (input.IsKeyDown(Keys.O)) { _Roll += .02f; }
+            if (input.IsKeyDown(Keys.Left)) { _XRotation += _RotationSpeed; }
+            if (input.IsKeyDown(Keys.Right)) { _XRotation += -_RotationSpeed; }
+            if (input.IsKeyDown(Keys.Down)) { _YRotation += -_RotationSpeed; }
+            if (input.IsKeyDown(Keys.Up)) { _YRotation += _RotationSpeed; }
 
             //Movement.
-            if (input.IsKeyDown(Keys.W)) { MoveCamera(_Rotation.Forward); }
-            if (input.IsKeyDown(Keys.S)) { MoveCamera(-_Rotation.Forward); }
-            if (input.IsKeyDown(Keys.A)) { MoveCamera(-_Rotation.Right); }
-            if (input.IsKeyDown(Keys.D)) { MoveCamera(_Rotation.Right); }
-            if (input.IsKeyDown(Keys.E)) { MoveCamera(_Rotation.Up); }
-            if (input.IsKeyDown(Keys.Q)) { MoveCamera(-_Rotation.Up); }
+            if (input.IsKeyDown(Keys.W)) { MoveCamera(new Vector3(0, 0, -1)); }
+            if (input.IsKeyDown(Keys.S)) { MoveCamera(new Vector3(0,0,1)); }
+            if (input.IsKeyDown(Keys.A)) { MoveCamera(new Vector3(-1, 0, 0)); }
+            if (input.IsKeyDown(Keys.D)) { MoveCamera(new Vector3(1, 0, 0)); }
+            if (input.IsKeyDown(Keys.E)) { MoveCamera(new Vector3(0, 1, 0)); }
+            if (input.IsKeyDown(Keys.Q)) { MoveCamera(new Vector3(0, -1, 0)); }
         }
         /// <summary>
         /// Update the camera.
@@ -90,19 +87,18 @@ namespace InsipidusEngine.Infrastructure
         public void ResetCamera()
         {
             //Set the position and the look-at position.
-            _Position = new Vector3(0, 0, 50);
+            _Position = new Vector3(130, 30, -50);
             _Target = Vector3.Zero;
 
-            //Set the yaw, pitch and roll as well as the speed.
-            _Yaw = 0;
-            _Pitch = 0;
-            _Roll = 0;
-            _Speed = .3f;
+            //Set the rotation as well as the speed.
+            _XRotation = MathHelper.PiOver2;
+            _YRotation = -MathHelper.Pi / 10.0f;
+            _MoveSpeed = .5f;
+            _RotationSpeed = .02f;
 
             //Set the matrices.
-            _Rotation = Matrix.Identity;
-            _View = Matrix.CreateLookAt(new Vector3(130, 30, -50), new Vector3(0, 0, -40), new Vector3(0, 1, 0));
-            _Projection = Matrix.CreatePerspectiveFieldOfView(MathHelper.PiOver4, _Device.Viewport.AspectRatio, 0.3f, 1000.0f);
+            _View = Matrix.CreateLookAt(_Position, _Target, new Vector3(0, 1, 0));
+            _Projection = Matrix.CreatePerspectiveFieldOfView(MathHelper.PiOver4, _Device.Viewport.AspectRatio, .3f, 1000);
         }
         /// <summary>
         /// Move the camera.
@@ -110,31 +106,20 @@ namespace InsipidusEngine.Infrastructure
         /// <param name="direction">The direction of the movement.</param>
         private void MoveCamera(Vector3 direction)
         {
-            _Position += _Speed * direction;
+            _Position += _MoveSpeed * Vector3.Transform(direction, Matrix.CreateRotationX(_YRotation) * Matrix.CreateRotationY(_XRotation));
         }
         /// <summary>
         /// Update the camera's view matrix.
         /// </summary>
         private void UpdateView()
         {
-            //Normalize the rotation.
-            _Rotation.Forward.Normalize();
-            _Rotation.Up.Normalize();
-            _Rotation.Right.Normalize();
-
-            //Update the rotation matrix.
-            _Rotation *= Matrix.CreateFromAxisAngle(_Rotation.Right, _Pitch);
-            _Rotation *= Matrix.CreateFromAxisAngle(_Rotation.Up, _Yaw);
-            _Rotation *= Matrix.CreateFromAxisAngle(_Rotation.Forward, _Roll);
-
-            //Reset the yaw, pitch and roll aswell as the target vector.
-            _Yaw = 0.0f;
-            _Pitch = 0.0f;
-            _Roll = 0.0f;
-            _Target = _Position + _Rotation.Forward;
+            //Calculate the target vector.
+            Matrix rotation = Matrix.CreateRotationX(_YRotation) * Matrix.CreateRotationY(_XRotation);
+            Vector3 target = _Position + Vector3.Transform(new Vector3(0, 0, -1), rotation);
+            Vector3 upVector = Vector3.Transform(new Vector3(0, 1, 0), rotation);
 
             //Update the view matrix.
-            _View = Matrix.CreateLookAt(_Position, _Target, _Rotation.Up);
+            _View = Matrix.CreateLookAt(_Position, target, upVector);
         }
         #endregion
 
@@ -148,20 +133,12 @@ namespace InsipidusEngine.Infrastructure
             set { _Position = value; }
         }
         /// <summary>
-        /// The camera's rotation.
-        /// </summary>
-        public Matrix Rotation
-        {
-            get { return _Rotation; }
-            set { _Rotation = value; }
-        }
-        /// <summary>
         /// The speed of the camera.
         /// </summary>
         public float Speed
         {
-            get { return _Speed; }
-            set { _Speed = value; }
+            get { return _MoveSpeed; }
+            set { _MoveSpeed = value; }
         }
         /// <summary>
         /// The camera's view matrix.

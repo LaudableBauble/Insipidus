@@ -46,8 +46,6 @@ namespace InsipidusEngine.Screens
         IndexBuffer terrainIndexBuffer;
 
         Effect effect;
-        Matrix viewMatrix;
-        Matrix projectionMatrix;
         #endregion
 
         #region Constructors
@@ -70,16 +68,15 @@ namespace InsipidusEngine.Screens
             if (content == null) { content = new ContentManager(ScreenManager.Game.Services, "Content"); }
 
             #region Initialize
+            //Store the device.
+            device = ScreenManager.GraphicsDevice;
+
             //Create the camera.
-            _Camera = new Camera3D(ScreenManager.GraphicsDevice);
+            _Camera = new Camera3D(device);
             #endregion
 
             #region LoadContent
-            device = ScreenManager.GraphicsDevice;
-
             effect = content.Load<Effect>(@"Misc\Effect");
-            viewMatrix = Matrix.CreateLookAt(new Vector3(130, 30, -50), new Vector3(0, 0, -40), new Vector3(0, 1, 0));
-            projectionMatrix = Matrix.CreatePerspectiveFieldOfView(MathHelper.PiOver4, device.Viewport.AspectRatio, 0.3f, 1000.0f);
 
             LoadVertices();
             #endregion
@@ -136,6 +133,7 @@ namespace InsipidusEngine.Screens
         public override void Draw(GameTime gameTime)
         {
             device.RasterizerState = RasterizerState.CullNone;
+            device.RasterizerState = new RasterizerState() { FillMode = FillMode.WireFrame };
 
             device.Clear(ClearOptions.Target | ClearOptions.DepthBuffer, Color.Black, 1.0f, 0);
             DrawTerrain();
