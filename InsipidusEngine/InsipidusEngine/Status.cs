@@ -11,7 +11,7 @@ namespace InsipidusEngine
     public class Status
     {
         #region Fields
-        private List<Effect> _Effects;
+        private List<EffectStatus> _Effects;
         #endregion
 
         #region Constructors

@@ -61,7 +61,7 @@ namespace InsipidusEngine
             screenManager.AddScreen(new MainMenuScreen());
 
             //Conveniently jump to a screen, reducing a waste of time otherwise spent in menus.
-            LoadingScreen.Load(screenManager, true, new GameplayScreen());
+            LoadingScreen.Load(screenManager, true, new WorldScreen());
 
             base.Initialize();
         }

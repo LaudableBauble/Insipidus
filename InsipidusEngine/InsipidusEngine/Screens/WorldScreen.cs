@@ -33,14 +33,21 @@ namespace InsipidusEngine.Screens
     class WorldScreen : GameScreen
     {
         #region Fields
+        GraphicsDevice device;
         ContentManager content;
-        Camera2D _Camera;
-        Character pokemon1;
-        Character pokemon2;
-        HealthBar healthbar1;
-        HealthBar healthbar2;
-        Bar energybar1;
-        Bar energybar2;
+
+        Camera3D _Camera;
+
+        int terrainWidth;
+        int terrainLength;
+        float[,] heightData;
+
+        VertexBuffer terrainVertexBuffer;
+        IndexBuffer terrainIndexBuffer;
+
+        Effect effect;
+        Matrix viewMatrix;
+        Matrix projectionMatrix;
         #endregion
 
         #region Constructors
@@ -64,91 +71,17 @@ namespace InsipidusEngine.Screens
 
             #region Initialize
             //Create the camera.
-            _Camera = new Camera2D(new Rectangle(0, 0, ScreenManager.Game.Window.ClientBounds.Width, ScreenManager.Game.Window.ClientBounds.Height),
-                new Rectangle(0, 0, 2000, 2000));
-            _Camera.Position = new Vector2(1000, 1000);
-
-            pokemon1 = Factory.Instance.Pansear;
-            pokemon1.Position = new Vector2(700, 1000);
-            pokemon2 = Factory.Instance.Snivy;
-            pokemon2.Position = new Vector2(1300, 1000);
-
-            //Make the Pokemons target each other.
-            pokemon1.Target = pokemon2;
-            pokemon2.Target = pokemon1;
-
-            //Initialize the healthbars.
-            healthbar1 = new HealthBar(pokemon1.HP, pokemon1.CurrentHP, 1, new Vector2(5, 5), 100, 10);
-            healthbar2 = new HealthBar(pokemon2.HP, pokemon2.CurrentHP, 1, new Vector2(ScreenManager.Game.Window.ClientBounds.Width - 105, 5), 100, 10);
-            energybar1 = new Bar(pokemon1.MaxEnergy, 0, pokemon1.CurrentEnergy, 1, 100, 5, new Vector2(5, 20), Color.CornflowerBlue);
-            energybar2 = new Bar(pokemon2.MaxEnergy, 0, pokemon2.CurrentEnergy, 1, 100, 5, new Vector2(ScreenManager.Game.Window.ClientBounds.Width - 105, 20), Color.CornflowerBlue);
+            _Camera = new Camera3D(ScreenManager.GraphicsDevice);
             #endregion
 
             #region LoadContent
-            //Load the battle coordinator's content.
-            BattleCoordinator.Instance.LoadContent(content);
+            device = ScreenManager.GraphicsDevice;
 
-            //Bulbasaur's sprites.
-            Sprite front = pokemon1.Sprite.AddSprite(new Sprite(pokemon1.Sprite, "Front"));
-            front.AddFrame(@"Characters\Bulbasaur\Bulbasaur_Front[1]");
-            front.AddFrame(@"Characters\Bulbasaur\Bulbasaur_Front[2]");
-            front.AddFrame(@"Characters\Bulbasaur\Bulbasaur_Front[1]");
-            front.AddFrame(@"Characters\Bulbasaur\Bulbasaur_Front[3]");
-            Sprite back = pokemon1.Sprite.AddSprite(new Sprite(pokemon1.Sprite, "Back"));
-            back.AddFrame(@"Characters\Bulbasaur\Bulbasaur_Back[1]");
-            back.AddFrame(@"Characters\Bulbasaur\Bulbasaur_Back[2]");
-            back.AddFrame(@"Characters\Bulbasaur\Bulbasaur_Back[1]");
-            back.AddFrame(@"Characters\Bulbasaur\Bulbasaur_Back[3]");
-            Sprite left = pokemon1.Sprite.AddSprite(new Sprite(pokemon1.Sprite, "Left"));
-            left.AddFrame(@"Characters\Bulbasaur\Bulbasaur_Left[1]");
-            left.AddFrame(@"Characters\Bulbasaur\Bulbasaur_Left[2]");
-            left.AddFrame(@"Characters\Bulbasaur\Bulbasaur_Left[1]");
-            left.AddFrame(@"Characters\Bulbasaur\Bulbasaur_Left[3]");
-            Sprite right = pokemon1.Sprite.AddSprite(new Sprite(pokemon1.Sprite, "Right"));
-            right.AddFrame(@"Characters\Bulbasaur\Bulbasaur_Right[1]");
-            right.AddFrame(@"Characters\Bulbasaur\Bulbasaur_Right[2]");
-            right.AddFrame(@"Characters\Bulbasaur\Bulbasaur_Right[1]");
-            right.AddFrame(@"Characters\Bulbasaur\Bulbasaur_Right[3]");
+            effect = content.Load<Effect>(@"Misc\Effect");
+            viewMatrix = Matrix.CreateLookAt(new Vector3(130, 30, -50), new Vector3(0, 0, -40), new Vector3(0, 1, 0));
+            projectionMatrix = Matrix.CreatePerspectiveFieldOfView(MathHelper.PiOver4, device.Viewport.AspectRatio, 0.3f, 1000.0f);
 
-            //Charizard's sprites.
-            front = pokemon2.Sprite.AddSprite(new Sprite(pokemon2.Sprite, "Front"));
-            front.AddFrame(@"Characters\Charizard\Charizard_Front[1]");
-            front.AddFrame(@"Characters\Charizard\Charizard_Front[2]");
-            front.AddFrame(@"Characters\Charizard\Charizard_Front[1]");
-            front.AddFrame(@"Characters\Charizard\Charizard_Front[3]");
-            back = pokemon2.Sprite.AddSprite(new Sprite(pokemon2.Sprite, "Back"));
-            back.AddFrame(@"Characters\Charizard\Charizard_Back[1]");
-            back.AddFrame(@"Characters\Charizard\Charizard_Back[2]");
-            back.AddFrame(@"Characters\Charizard\Charizard_Back[1]");
-            back.AddFrame(@"Characters\Charizard\Charizard_Back[3]");
-            left = pokemon2.Sprite.AddSprite(new Sprite(pokemon2.Sprite, "Left"));
-            left.AddFrame(@"Characters\Charizard\Charizard_Left[1]");
-            left.AddFrame(@"Characters\Charizard\Charizard_Left[2]");
-            left.AddFrame(@"Characters\Charizard\Charizard_Left[1]");
-            left.AddFrame(@"Characters\Charizard\Charizard_Left[3]");
-            right = pokemon2.Sprite.AddSprite(new Sprite(pokemon2.Sprite, "Right"));
-            right.AddFrame(@"Characters\Charizard\Charizard_Right[1]");
-            right.AddFrame(@"Characters\Charizard\Charizard_Right[2]");
-            right.AddFrame(@"Characters\Charizard\Charizard_Right[1]");
-            right.AddFrame(@"Characters\Charizard\Charizard_Right[3]");
-
-            //Make the sprites' invisible.
-            pokemon1.Sprite.Visibility = Visibility.Invisible;
-            pokemon2.Sprite.Visibility = Visibility.Invisible;
-
-            //Set all sprite's time per frame.
-            pokemon1.Sprite.Sprites.ForEach(item => item.TimePerFrame = .5f);
-            pokemon2.Sprite.Sprites.ForEach(item => item.TimePerFrame = .5f);
-
-            //Load the pokemons' content.
-            pokemon1.LoadContent(content);
-            pokemon2.LoadContent(content);
-
-            //Load the bars' content.
-            healthbar1.LoadContent(ScreenManager.GraphicsDevice, ScreenManager.SpriteBatch);
-            healthbar2.LoadContent(ScreenManager.GraphicsDevice, ScreenManager.SpriteBatch);
-            energybar1.LoadContent(ScreenManager.GraphicsDevice, ScreenManager.SpriteBatch);
-            energybar2.LoadContent(ScreenManager.GraphicsDevice, ScreenManager.SpriteBatch);
+            LoadVertices();
             #endregion
 
             // Once the load has finished, we use ResetElapsedTime to tell the game's
@@ -163,43 +96,6 @@ namespace InsipidusEngine.Screens
         {
             content.Unload();
         }
-
-        /// <summary>
-        /// Updates the state of the game. This method checks the GameScreen.IsActive
-        /// property, so the game will stop updating when the pause menu is active,
-        /// or if you tab away to a different application.
-        /// </summary>
-        public override void Update(GameTime gameTime, bool otherScreenHasFocus, bool coveredByOtherScreen)
-        {
-            base.Update(gameTime, otherScreenHasFocus, coveredByOtherScreen);
-
-            if (IsActive)
-            {
-                //Update the camera.
-                _Camera.Update(gameTime);
-
-                //Update the battle coordinator.
-                BattleCoordinator.Instance.Update(gameTime);
-
-                //Update the Pokemon.
-                pokemon1.Update(gameTime);
-                pokemon2.Update(gameTime);
-
-                //Update the bars.
-                healthbar1.GoalValue = pokemon1.CurrentHP;
-                healthbar2.GoalValue = pokemon2.CurrentHP;
-                energybar1.CurrentValue = pokemon1.CurrentEnergy;
-                energybar2.CurrentValue = pokemon2.CurrentEnergy;
-                energybar1.GoalValue = pokemon1.CurrentEnergy;
-                energybar2.GoalValue = pokemon2.CurrentEnergy;
-                healthbar1.Update();
-                healthbar2.Update();
-                energybar1.Update();
-                energybar2.Update();
-            }
-        }
-
-
         /// <summary>
         /// Lets the game respond to player input. Unlike the Update method,
         /// this will only be called when the gameplay screen is active.
@@ -215,72 +111,177 @@ namespace InsipidusEngine.Screens
             }
             else
             {
-                if (input.IsKeyDown(Keys.D1)) { pokemon1.CurrentHP--; }
-                else if (input.IsKeyDown(Keys.D2)) { pokemon1.CurrentHP++; }
-                else if (input.IsKeyDown(Keys.D3)) { pokemon2.CurrentHP--; }
-                else if (input.IsKeyDown(Keys.D4)) { pokemon2.CurrentHP++; }
-                else if (input.IsKeyDown(Keys.A)) { _Camera.Move(new Vector2(-1, 0)); }
-                else if (input.IsKeyDown(Keys.S)) { _Camera.Move(new Vector2(0, 1)); }
-                else if (input.IsKeyDown(Keys.D)) { _Camera.Move(new Vector2(1, 0)); }
-                else if (input.IsKeyDown(Keys.W)) { _Camera.Move(new Vector2(0, -1)); }
-                else if (input.IsKeyDown(Keys.Left)) { pokemon1.Velocity += new Vector2(-1, 0); }
-                else if (input.IsKeyDown(Keys.Down)) { pokemon1.Velocity += new Vector2(0, 1); }
-                else if (input.IsKeyDown(Keys.Right)) { pokemon1.Velocity += new Vector2(1, 0); }
-                else if (input.IsKeyDown(Keys.Up)) { pokemon1.Velocity += new Vector2(0, -1); }
+                //Let the camera handle input.
+                _Camera.HandleInput(input);
             }
         }
+        /// <summary>
+        /// Updates the state of the game. This method checks the GameScreen.IsActive
+        /// property, so the game will stop updating when the pause menu is active,
+        /// or if you tab away to a different application.
+        /// </summary>
+        public override void Update(GameTime gameTime, bool otherScreenHasFocus, bool coveredByOtherScreen)
+        {
+            base.Update(gameTime, otherScreenHasFocus, coveredByOtherScreen);
 
-
+            if (IsActive)
+            {
+                //Update the camera.
+                _Camera.Update(gameTime);
+            }
+        }
         /// <summary>
         /// Draws the gameplay screen.
         /// </summary>
         public override void Draw(GameTime gameTime)
         {
-            // This game has a blue background. Why? Because!
-            ScreenManager.GraphicsDevice.Clear(ClearOptions.Target, Color.GhostWhite, 0, 0);
+            device.RasterizerState = RasterizerState.CullNone;
 
-            SpriteBatch spriteBatch = ScreenManager.SpriteBatch;
-
-            spriteBatch.Begin(SpriteSortMode.Immediate, BlendState.AlphaBlend, null, null, null, null, _Camera.Transform);
-
-            //Draw the battle coordinator.
-            BattleCoordinator.Instance.Draw(spriteBatch);
-
-            //Draw the pokemon.
-            pokemon1.Draw(spriteBatch);
-            pokemon2.Draw(spriteBatch);
-
-            spriteBatch.End();
-
-            spriteBatch.Begin();
-
-            //Draw the healthbars.
-            healthbar1.Draw();
-            healthbar2.Draw();
-            energybar1.Draw();
-            energybar2.Draw();
-
-            //Draw some text.
-            spriteBatch.DrawString(ScreenManager.Font, "State: " + pokemon1.BattleState, new Vector2(5, 45), Color.Black);
-            spriteBatch.DrawString(ScreenManager.Font, "State: " + pokemon2.BattleState, new Vector2(ScreenManager.Game.Window.ClientBounds.Width - 200, 45), Color.Black);
-
-            //Draw some text.
-            foreach (BattleMove m in BattleCoordinator.Instance.Moves.FindAll(x => x.State != TimelineState.Idle))
-            {
-                if (m.User == pokemon1)
-                {
-                    spriteBatch.DrawString(ScreenManager.Font, "--- Attack ---\nName: " + m.Name, new Vector2(5, 65), Color.Black);
-                }
-                else
-                {
-                    spriteBatch.DrawString(ScreenManager.Font, "--- Attack ---\nName: " + m.Name, new Vector2(ScreenManager.Game.Window.ClientBounds.Width - 200, 65), Color.Black);
-                }
-            }
-
-            spriteBatch.End();
+            device.Clear(ClearOptions.Target | ClearOptions.DepthBuffer, Color.Black, 1.0f, 0);
+            DrawTerrain();
 
             // If the game is transitioning on or off, fade it out to black.
             if (TransitionPosition > 0) { ScreenManager.FadeBackBufferToBlack(255 - TransitionAlpha); }
+        }
+
+        private void LoadVertices()
+        {
+            Texture2D heightMap = content.Load<Texture2D>(@"Misc\heightmap");
+            LoadHeightData(heightMap);
+
+            VertexPositionNormalColored[] terrainVertices = SetUpTerrainVertices();
+            int[] terrainIndices = SetUpTerrainIndices();
+            terrainVertices = CalculateNormals(terrainVertices, terrainIndices);
+            CopyToTerrainBuffers(terrainVertices, terrainIndices);
+        }
+        private void LoadHeightData(Texture2D heightMap)
+        {
+            float minimumHeight = float.MaxValue;
+            float maximumHeight = float.MinValue;
+
+            terrainWidth = heightMap.Width;
+            terrainLength = heightMap.Height;
+
+            Color[] heightMapColors = new Color[terrainWidth * terrainLength];
+            heightMap.GetData(heightMapColors);
+
+            heightData = new float[terrainWidth, terrainLength];
+            for (int x = 0; x < terrainWidth; x++)
+                for (int y = 0; y < terrainLength; y++)
+                {
+                    heightData[x, y] = heightMapColors[x + y * terrainWidth].R;
+                    if (heightData[x, y] < minimumHeight) minimumHeight = heightData[x, y];
+                    if (heightData[x, y] > maximumHeight) maximumHeight = heightData[x, y];
+                }
+
+            for (int x = 0; x < terrainWidth; x++)
+                for (int y = 0; y < terrainLength; y++)
+                    heightData[x, y] = (heightData[x, y] - minimumHeight) / (maximumHeight - minimumHeight) * 30.0f;
+        }
+        private void DrawTerrain()
+        {
+            effect.CurrentTechnique = effect.Techniques["Colored"];
+            Matrix worldMatrix = Matrix.Identity;
+            effect.Parameters["xWorld"].SetValue(worldMatrix);
+            effect.Parameters["xView"].SetValue(_Camera.View);
+            effect.Parameters["xProjection"].SetValue(_Camera.Projection);
+
+            effect.Parameters["xEnableLighting"].SetValue(true);
+            effect.Parameters["xAmbient"].SetValue(0.4f);
+            effect.Parameters["xLightDirection"].SetValue(new Vector3(-0.5f, -1, -0.5f));
+
+            foreach (EffectPass pass in effect.CurrentTechnique.Passes)
+            {
+                pass.Apply();
+
+                device.SetVertexBuffer(terrainVertexBuffer);
+                device.Indices = terrainIndexBuffer;
+
+                int noVertices = terrainVertexBuffer.VertexCount;
+                int noTriangles = terrainIndexBuffer.IndexCount / 3;
+                device.DrawIndexedPrimitives(PrimitiveType.TriangleList, 0, 0, noVertices, 0, noTriangles);
+            }
+        }
+        private VertexPositionNormalColored[] SetUpTerrainVertices()
+        {
+            VertexPositionNormalColored[] terrainVertices = new VertexPositionNormalColored[terrainWidth * terrainLength];
+
+            for (int x = 0; x < terrainWidth; x++)
+            {
+                for (int y = 0; y < terrainLength; y++)
+                {
+                    terrainVertices[x + y * terrainWidth].Position = new Vector3(x, heightData[x, y], -y);
+
+                    if (heightData[x, y] < 6)
+                        terrainVertices[x + y * terrainWidth].Color = Color.Blue;
+                    else if (heightData[x, y] < 15)
+                        terrainVertices[x + y * terrainWidth].Color = Color.Green;
+                    else if (heightData[x, y] < 25)
+                        terrainVertices[x + y * terrainWidth].Color = Color.Brown;
+                    else
+                        terrainVertices[x + y * terrainWidth].Color = Color.White;
+                }
+            }
+
+            return terrainVertices;
+        }
+        private int[] SetUpTerrainIndices()
+        {
+            int[] indices = new int[(terrainWidth - 1) * (terrainLength - 1) * 6];
+            int counter = 0;
+            for (int y = 0; y < terrainLength - 1; y++)
+            {
+                for (int x = 0; x < terrainWidth - 1; x++)
+                {
+                    int lowerLeft = x + y * terrainWidth;
+                    int lowerRight = (x + 1) + y * terrainWidth;
+                    int topLeft = x + (y + 1) * terrainWidth;
+                    int topRight = (x + 1) + (y + 1) * terrainWidth;
+
+                    indices[counter++] = topLeft;
+                    indices[counter++] = lowerRight;
+                    indices[counter++] = lowerLeft;
+
+                    indices[counter++] = topLeft;
+                    indices[counter++] = topRight;
+                    indices[counter++] = lowerRight;
+                }
+            }
+
+            return indices;
+        }
+        private VertexPositionNormalColored[] CalculateNormals(VertexPositionNormalColored[] vertices, int[] indices)
+        {
+            for (int i = 0; i < vertices.Length; i++)
+                vertices[i].Normal = new Vector3(0, 0, 0);
+
+            for (int i = 0; i < indices.Length / 3; i++)
+            {
+                int index1 = indices[i * 3];
+                int index2 = indices[i * 3 + 1];
+                int index3 = indices[i * 3 + 2];
+
+                Vector3 side1 = vertices[index1].Position - vertices[index3].Position;
+                Vector3 side2 = vertices[index1].Position - vertices[index2].Position;
+                Vector3 normal = Vector3.Cross(side1, side2);
+
+                vertices[index1].Normal += normal;
+                vertices[index2].Normal += normal;
+                vertices[index3].Normal += normal;
+            }
+
+            for (int i = 0; i < vertices.Length; i++)
+                vertices[i].Normal.Normalize();
+
+            return vertices;
+        }
+        private void CopyToTerrainBuffers(VertexPositionNormalColored[] vertices, int[] indices)
+        {
+            terrainVertexBuffer = new VertexBuffer(device, typeof(VertexPositionNormalColored), vertices.Length, BufferUsage.WriteOnly);
+            terrainVertexBuffer.SetData(vertices);
+
+            terrainIndexBuffer = new IndexBuffer(device, typeof(int), indices.Length, BufferUsage.WriteOnly);
+            terrainIndexBuffer.SetData(indices);
         }
         #endregion
     }

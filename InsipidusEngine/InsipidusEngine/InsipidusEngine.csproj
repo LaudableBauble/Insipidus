@@ -130,12 +130,14 @@
     <Compile Include="Battle\ExperienceBar.cs" />
     <Compile Include="Battle\HealthBar.cs" />
     <Compile Include="Battle\Animation\Projectiles\Projectile.cs" />
+    <Compile Include="Helpers\Structs.cs" />
     <Compile Include="Helpers\Destination.cs" />
     <Compile Include="Infrastructure\Camera2D.cs" />
     <Compile Include="Character.cs" />
     <Compile Include="CharacterList.cs" />
     <Compile Include="Effect.cs" />
     <Compile Include="Factory.cs" />
+    <Compile Include="Infrastructure\Camera3D.cs" />
     <Compile Include="Infrastructure\GameScreen.cs" />
     <Compile Include="Infrastructure\InputState.cs" />
     <Compile Include="Infrastructure\ScreenManager.cs" />
