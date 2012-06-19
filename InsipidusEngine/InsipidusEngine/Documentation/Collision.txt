@@ -1,0 +1,4 @@
+﻿/// Collision
+
+Collisions with the terrain will have to be separated from the 'normal' collisions and simply checked by altitude as one cannot go underneath it.
+Entities will collide using a 2D SAT-algorithm that finds the most interesting planes of each colliding entity and checks for a collision.

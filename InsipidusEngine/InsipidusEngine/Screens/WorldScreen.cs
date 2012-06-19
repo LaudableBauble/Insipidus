@@ -42,6 +42,11 @@ namespace InsipidusEngine.Screens
         int terrainLength;
         float[,] heightData;
 
+        private ManualCube _Cube;
+        private EntityModel _Model;
+        private Texture2D _CubeTexture;
+        private BasicEffect _CubeEffect;
+
         VertexBuffer terrainVertexBuffer;
         IndexBuffer terrainIndexBuffer;
 
@@ -71,12 +76,23 @@ namespace InsipidusEngine.Screens
             //Store the device.
             device = ScreenManager.GraphicsDevice;
 
+            //Create a cube.
+            _Cube = new ManualCube(new Vector3(10, 10, 10), new Vector3(150, 100, -300));
+            _Model = new EntityModel();
+            _Model.Vertices = Factory.Instance.CreateCube();
+            _Model.Size = new Vector3(10, 10, 10);
+            _Model.Rotation = 1;
+
             //Create the camera.
             _Camera = new Camera3D(device);
             #endregion
 
             #region LoadContent
             effect = content.Load<Effect>(@"Misc\Effect");
+            _CubeTexture = content.Load<Texture2D>(@"Misc\Grass_Summer[1]");
+            _CubeEffect = new BasicEffect(device);
+
+            _Model.Texture = _CubeTexture;
 
             LoadVertices();
             #endregion
@@ -138,6 +154,8 @@ namespace InsipidusEngine.Screens
 
             device.Clear(ClearOptions.Target | ClearOptions.DepthBuffer, Color.Black, 1, 0);
             DrawTerrain();
+            DrawCube();
+            DrawModel();
 
             // If the game is transitioning on or off, fade it out to black.
             if (TransitionPosition > 0) { ScreenManager.FadeBackBufferToBlack(255 - TransitionAlpha); }
@@ -183,10 +201,58 @@ namespace InsipidusEngine.Screens
                 }
             }
         }
+        /// <summary>
+        /// Draw a cube.
+        /// </summary>
+        private void DrawCube()
+        {
+            //Set the world, view and projection matrices.
+            _CubeEffect.World = Matrix.Identity;
+            _CubeEffect.View = _Camera.View;
+            _CubeEffect.Projection = _Camera.Projection;
+
+            //Enable textures on the Cube Effect.
+            _CubeEffect.TextureEnabled = true;
+            _CubeEffect.Texture = _CubeTexture;
+
+            //Enable some pretty lights.
+            _CubeEffect.EnableDefaultLighting();
+
+            //Apply the effect and render the cube.
+            foreach (EffectPass pass in _CubeEffect.CurrentTechnique.Passes)
+            {
+                pass.Apply();
+                _Cube.RenderToDevice(device);
+            }
+        }
+        /// <summary>
+        /// Draw a model.
+        /// </summary>
+        private void DrawModel()
+        {
+            //Set the world, view and projection matrices.
+            _CubeEffect.World = _Model.WorldMatrix;
+            _CubeEffect.View = _Camera.View;
+            _CubeEffect.Projection = _Camera.Projection;
+
+            //Enable textures on the Cube Effect.
+            _CubeEffect.TextureEnabled = true;
+            _CubeEffect.Texture = _Model.Texture;
+
+            //Enable some pretty lights.
+            _CubeEffect.EnableDefaultLighting();
+
+            //Apply the effect and render the cube.
+            foreach (EffectPass pass in _CubeEffect.CurrentTechnique.Passes)
+            {
+                pass.Apply();
+                _Model.Draw(device);
+            }
+        }
         private void DrawTerrain()
         {
             effect.CurrentTechnique = effect.Techniques["Colored"];
-            Matrix worldMatrix = Matrix.Identity;
+            Matrix worldMatrix = Matrix.Identity * Matrix.CreateScale(new Vector3(100, 100, 100));
             effect.Parameters["xWorld"].SetValue(worldMatrix);
             effect.Parameters["xView"].SetValue(_Camera.View);
             effect.Parameters["xProjection"].SetValue(_Camera.Projection);

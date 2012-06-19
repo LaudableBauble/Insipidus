@@ -65,11 +65,14 @@ namespace InsipidusEngine.Infrastructure
 
             //Movement.
             if (input.IsKeyDown(Keys.W)) { MoveCamera(new Vector3(0, 0, -1)); }
-            if (input.IsKeyDown(Keys.S)) { MoveCamera(new Vector3(0,0,1)); }
+            if (input.IsKeyDown(Keys.S)) { MoveCamera(new Vector3(0, 0, 1)); }
             if (input.IsKeyDown(Keys.A)) { MoveCamera(new Vector3(-1, 0, 0)); }
             if (input.IsKeyDown(Keys.D)) { MoveCamera(new Vector3(1, 0, 0)); }
             if (input.IsKeyDown(Keys.E)) { MoveCamera(new Vector3(0, 1, 0)); }
             if (input.IsKeyDown(Keys.Q)) { MoveCamera(new Vector3(0, -1, 0)); }
+
+            //Camera speed.
+            if (input.IsKeyDown(Keys.Space)) { _MoveSpeed = (_MoveSpeed == 10) ? 250 : 10; }
         }
         /// <summary>
         /// Update the camera.
@@ -93,12 +96,12 @@ namespace InsipidusEngine.Infrastructure
             //Set the rotation as well as the speed.
             _XRotation = MathHelper.PiOver2;
             _YRotation = -MathHelper.Pi / 10.0f;
-            _MoveSpeed = 1.5f;
+            _MoveSpeed = 10;
             _RotationSpeed = .05f;
 
             //Set the matrices.
             _View = Matrix.CreateLookAt(_Position, _Target, new Vector3(0, 1, 0));
-            _Projection = Matrix.CreatePerspectiveFieldOfView(MathHelper.PiOver4, _Device.Viewport.AspectRatio, .3f, 1000);
+            _Projection = Matrix.CreatePerspectiveFieldOfView(MathHelper.PiOver4, _Device.Viewport.AspectRatio, .3f, 1000000);
         }
         /// <summary>
         /// Move the camera.

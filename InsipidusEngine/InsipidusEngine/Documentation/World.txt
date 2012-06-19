@@ -1,0 +1,5 @@
+﻿/// World
+
+The world will be a mix between 3D and 2D. A heightmap approach will be taken to the terrain at large while each entity will have its own body of vertices.
+In order to simplify things no models are allowed and all shapes present (except for the terrain) must use a simple geometrical form, such as a cube.
+The entity's texture will be wrapped around this shape.

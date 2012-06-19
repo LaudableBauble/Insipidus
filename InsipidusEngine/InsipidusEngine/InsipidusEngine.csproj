@@ -130,6 +130,7 @@
     <Compile Include="Battle\ExperienceBar.cs" />
     <Compile Include="Battle\HealthBar.cs" />
     <Compile Include="Battle\Animation\Projectiles\Projectile.cs" />
+    <Compile Include="EntityModel.cs" />
     <Compile Include="Helpers\Structs.cs" />
     <Compile Include="Helpers\Destination.cs" />
     <Compile Include="Infrastructure\Camera2D.cs" />
@@ -141,6 +142,7 @@
     <Compile Include="Infrastructure\GameScreen.cs" />
     <Compile Include="Infrastructure\InputState.cs" />
     <Compile Include="Infrastructure\ScreenManager.cs" />
+    <Compile Include="ManualCube.cs" />
     <Compile Include="Screens\BackgroundScreen.cs" />
     <Compile Include="Screens\BattleScreen.cs" />
     <Compile Include="Screens\WorldScreen.cs" />
@@ -176,9 +178,11 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Documentation\Battle Structure.txt" />
+    <Content Include="Documentation\Collision.txt" />
     <Content Include="Documentation\General.txt" />
     <Content Include="Documentation\Todo.txt" />
     <Content Include="Documentation\Issues.txt" />
+    <Content Include="Documentation\World.txt" />
     <Content Include="Game.ico" />
     <Content Include="GameThumbnail.png" />
   </ItemGroup>
