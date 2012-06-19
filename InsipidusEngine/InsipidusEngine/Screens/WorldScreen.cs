@@ -133,9 +133,10 @@ namespace InsipidusEngine.Screens
         public override void Draw(GameTime gameTime)
         {
             device.RasterizerState = RasterizerState.CullNone;
-            device.RasterizerState = new RasterizerState() { FillMode = FillMode.WireFrame };
+            //device.RasterizerState = new RasterizerState() { FillMode = FillMode.WireFrame };
+            device.DepthStencilState = new DepthStencilState();
 
-            device.Clear(ClearOptions.Target | ClearOptions.DepthBuffer, Color.Black, 1.0f, 0);
+            device.Clear(ClearOptions.Target | ClearOptions.DepthBuffer, Color.Black, 1, 0);
             DrawTerrain();
 
             // If the game is transitioning on or off, fade it out to black.
@@ -165,16 +166,22 @@ namespace InsipidusEngine.Screens
 
             heightData = new float[terrainWidth, terrainLength];
             for (int x = 0; x < terrainWidth; x++)
+            {
                 for (int y = 0; y < terrainLength; y++)
                 {
                     heightData[x, y] = heightMapColors[x + y * terrainWidth].R;
-                    if (heightData[x, y] < minimumHeight) minimumHeight = heightData[x, y];
-                    if (heightData[x, y] > maximumHeight) maximumHeight = heightData[x, y];
+                    if (heightData[x, y] < minimumHeight) { minimumHeight = heightData[x, y]; }
+                    if (heightData[x, y] > maximumHeight) { maximumHeight = heightData[x, y]; }
                 }
+            }
 
             for (int x = 0; x < terrainWidth; x++)
+            {
                 for (int y = 0; y < terrainLength; y++)
-                    heightData[x, y] = (heightData[x, y] - minimumHeight) / (maximumHeight - minimumHeight) * 30.0f;
+                {
+                    heightData[x, y] = (heightData[x, y] - minimumHeight) / (maximumHeight - minimumHeight) * 50.0f;
+                }
+            }
         }
         private void DrawTerrain()
         {
@@ -185,8 +192,8 @@ namespace InsipidusEngine.Screens
             effect.Parameters["xProjection"].SetValue(_Camera.Projection);
 
             effect.Parameters["xEnableLighting"].SetValue(true);
-            effect.Parameters["xAmbient"].SetValue(0.4f);
-            effect.Parameters["xLightDirection"].SetValue(new Vector3(-0.5f, -1, -0.5f));
+            effect.Parameters["xAmbient"].SetValue(0.1f);
+            effect.Parameters["xLightDirection"].SetValue(new Vector3(.5f, -.5f, .5f));
 
             foreach (EffectPass pass in effect.CurrentTechnique.Passes)
             {
@@ -210,14 +217,14 @@ namespace InsipidusEngine.Screens
                 {
                     terrainVertices[x + y * terrainWidth].Position = new Vector3(x, heightData[x, y], -y);
 
-                    if (heightData[x, y] < 6)
-                        terrainVertices[x + y * terrainWidth].Color = Color.Blue;
-                    else if (heightData[x, y] < 15)
-                        terrainVertices[x + y * terrainWidth].Color = Color.Green;
-                    else if (heightData[x, y] < 25)
-                        terrainVertices[x + y * terrainWidth].Color = Color.Brown;
-                    else
-                        terrainVertices[x + y * terrainWidth].Color = Color.White;
+                    if (heightData[x, y] < 6) { terrainVertices[x + y * terrainWidth].Color = Color.Blue; }
+                    else if (heightData[x, y] < 8) { terrainVertices[x + y * terrainWidth].Color = Color.Aquamarine; }
+                    else if (heightData[x, y] < 10) { terrainVertices[x + y * terrainWidth].Color = Color.SandyBrown; }
+                    else if (heightData[x, y] < 15) { terrainVertices[x + y * terrainWidth].Color = Color.Green; }
+                    else if (heightData[x, y] < 18) { terrainVertices[x + y * terrainWidth].Color = Color.ForestGreen; }
+                    else if (heightData[x, y] < 25) { terrainVertices[x + y * terrainWidth].Color = Color.SaddleBrown; }
+                    else if (heightData[x, y] < 30) { terrainVertices[x + y * terrainWidth].Color = Color.DimGray; }
+                    else { terrainVertices[x + y * terrainWidth].Color = Color.White; }
                 }
             }
 
