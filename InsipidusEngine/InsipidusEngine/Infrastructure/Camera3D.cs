@@ -93,7 +93,7 @@ namespace InsipidusEngine.Infrastructure
             //Set the rotation as well as the speed.
             _XRotation = MathHelper.PiOver2;
             _YRotation = -MathHelper.Pi / 10.0f;
-            _MoveSpeed = .5f;
+            _MoveSpeed = 1.5f;
             _RotationSpeed = .02f;
 
             //Set the matrices.
