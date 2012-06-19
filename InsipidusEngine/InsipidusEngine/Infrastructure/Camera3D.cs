@@ -94,7 +94,7 @@ namespace InsipidusEngine.Infrastructure
             _XRotation = MathHelper.PiOver2;
             _YRotation = -MathHelper.Pi / 10.0f;
             _MoveSpeed = 1.5f;
-            _RotationSpeed = .02f;
+            _RotationSpeed = .05f;
 
             //Set the matrices.
             _View = Matrix.CreateLookAt(_Position, _Target, new Vector3(0, 1, 0));
