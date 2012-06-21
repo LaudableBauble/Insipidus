@@ -3,81 +3,49 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
+using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Audio;
+using Microsoft.Xna.Framework.Content;
+using Microsoft.Xna.Framework.GamerServices;
+using Microsoft.Xna.Framework.Graphics;
+using Microsoft.Xna.Framework.Input;
+using Microsoft.Xna.Framework.Net;
+using Microsoft.Xna.Framework.Storage;
+
 namespace InsipidusEngine.Physics
 {
-    /**
-     * A force instance is interpreted by the physics engine and is the only way unconnected bodies can communicate with each other in the game, ie. through collisions.
-     * 
-     * NOTE: CHANGE THIS INTO A STRUCT!!!
-     */
-    public class Force
+    /// <summary>
+    /// A force instance is interpreted by the physics engine and is the only way unconnected bodies can communicate with each other in the game, ie. through collisions.
+    /// </summary>
+    public struct Force
     {
-        // The target body, force direction and magnitude.
-        private Body _Body;
-        private Vector3 _Force;
-
-        /**
-         * Constructor for a force instance.
-         */
-        public Force()
-        {
-            this(new Body(), Vector3.empty());
-        }
-
-        /**
-         * Constructor for a force instance.
-         * 
-         * @param body
-         *            The target body.
-         * @param force
-         *            The velocity of the force.
-         */
+        /// <summary>
+        /// Constructor for a force instance.
+        /// </summary>
+        /// <param name="body">The target body.</param>
+        /// <param name="force">The velocity of the force.</param>
         public Force(Body body, Vector3 force)
         {
             // Set the variables.
-            _Body = body;
-            _Force = force;
+            Body = body;
+            Velocity = force;
         }
 
-        /**
-         * Constructor for a force instance.
-         * 
-         * @param body
-         *            The target body.
-         * @param force
-         *            The velocity of the force.
-         */
-        public Force(Body body, Vector2 force)
+        /// <summary>
+        /// The target body of the force.
+        /// </summary>
+        public Body Body
         {
-            // Set the variables.
-            _Body = body;
-            _Force = new Vector3(force);
+            get;
+            set;
         }
-
-        /**
-         * Get a blank force instance.
-         * 
-         * @return Blank force instance.
-         */
-        public static Force blank()
+        /// <summary>
+        /// The force's velocity.
+        /// </summary>
+        public Vector3 Velocity
         {
-            return new Force();
-        }
-
-        /**
-         * Get the force's target body.
-         */
-        public Body getBody()
-        {
-            return _Body;
-        }
-
-        /**
-         * Get the force's velocity.
-         */
-        public Vector3 getForce()
-        {
-            return _Force;
+            get;
+            set;
         }
     }
 

@@ -86,7 +86,7 @@ namespace InsipidusEngine.Physics
                         if (BroadPhase(b1, b2))
                         {
                             // Get the layered MTV by doing a narrow phase collision check.
-                            Vector2 mtv = narrowPhase(b1.getShape(), b2.getShape());
+                            Vector2 mtv = NarrowPhase(b1.getShape(), b2.getShape());
 
                             // Check for ground collision and alter bodies if necessary.
                             if (CheckGroundCollision(b1, b2, mtv))
@@ -112,7 +112,7 @@ namespace InsipidusEngine.Physics
                             else
                             {
                                 // Ensure that the would-be collision occurred in allowed height space.
-                                mtv = getLayeredCollision(b1, b2, mtv);
+                                mtv = GetLayeredCollision(b1, b2, mtv);
 
                                 // Check if the bodies intersect.
                                 if (mtv != null)
@@ -138,11 +138,11 @@ namespace InsipidusEngine.Physics
                     }
 
                     // Add the friction.
-                    addFrictionForce(GetBodyFriction(b1));
+                    AddFrictionForce(GetBodyFriction(b1));
                     // Add all forces to the body.
-                    addForcesToBody(GetForces(b1));
+                    AddForcesToBody(GetForces(b1));
                     // Update the body.
-                    b1.update();
+                    b1.Update();
                 }
 
                 // Clear the all forces.
@@ -240,7 +240,7 @@ namespace InsipidusEngine.Physics
         public Vector2 NarrowPhase(Shape s1, Shape s2)
         {
             // The minimum amount of overlap. Start real high.
-            float overlap = Double.MaxValue;
+            float overlap = float.MaxValue;
             // The smallest axis found.
             Vector2 smallest = null;
 
@@ -448,7 +448,7 @@ namespace InsipidusEngine.Physics
                 foreach (Force f in _Forces)
                 {
                     // Try to match the bodies in the Force.
-                    if (f.getBody() == body) { force.Add(f); }
+                    if (f.Body == body) { force.Add(f); }
                 }
             }
             // Catch the exception.
@@ -500,7 +500,7 @@ namespace InsipidusEngine.Physics
                     foreach (Force f in bodyForces)
                     {
                         // Add the Force to the body.
-                        f.getBody().setVelocity(Vector3.Add(f.getBody().getVelocity(), f.getForce()));
+                        f.Body.setVelocity(Vector3.Add(f.Body.Velocity, f.Velocity));
                     }
                 }
                 // Catch the exception.
@@ -533,11 +533,11 @@ namespace InsipidusEngine.Physics
                 // ////////////////////////////////////////////////////////
                 // System.out.println(this + ": The Friction: (" + f.getForce().toString() + ")");
                 // Calculate the Friction.
-                Vector2 friction = Vector3.Add(f.getBody().getVelocity(), f.getForce()).toVector2();
+                Vector2 friction = Vector3.Add(f.Body.Velocity, f.Velocity).toVector2();
                 // ////////////////////////////////////////////////////////
                 // System.out.println(this + ": Old Velocity: (" + f.body.velocity.toString() + ")");
                 // Clam the friction above or beneath zero and subtract it from the velocity.
-                f.getBody().setVelocity(new Vector3(Vector2.Clamp(f.getBody().getVelocity().toVector2(), friction, 0), f.getBody().getVelocity().z));
+                f.Body.Velocity(new Vector3(Vector2.Clamp(f.Body.Velocity.toVector2(), friction, 0), f.Body.Velocity.z));
                 // ////////////////////////////////////////////////////////
                 // System.out.println(this + ": Velocity with applied Friction: (" + friction.toString() + ")");
                 // System.out.println(this + ": ----------------------------------------------------------------------------");
