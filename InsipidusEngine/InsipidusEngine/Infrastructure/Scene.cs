@@ -12,6 +12,8 @@ using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework.Net;
 using Microsoft.Xna.Framework.Storage;
 
+using InsipidusEngine.Core;
+using InsipidusEngine.Physics;
 using InsipidusEngine.Tools;
 
 namespace InsipidusEngine.Infrastructure
@@ -48,7 +50,6 @@ namespace InsipidusEngine.Infrastructure
             _Entities = new RobustList<Entity>();
             _Physics = new PhysicsSimulator();
         }
-
         /// <summary>
         /// Load all content.
         /// </summary>
@@ -56,7 +57,6 @@ namespace InsipidusEngine.Infrastructure
         {
             // Load all entities' content.
         }
-
         /// <summary>
         /// Handle input.
         /// </summary>
@@ -66,7 +66,6 @@ namespace InsipidusEngine.Infrastructure
             // Let all entities respond to input.
             _Entities.ForEach(item => item.HandleInput(input));
         }
-
         /// <summary>
         /// Update the scene.
         /// </summary>
@@ -74,12 +73,11 @@ namespace InsipidusEngine.Infrastructure
         public void Update(GameTime gametime)
         {
             // Update the physics simulator.
-            _Physics.update();
+            _Physics.Update();
 
             // Update all entities.
             _Entities.ForEach(item => item.Update(gametime));
         }
-
         /// <summary>
         /// Draw the scene.
         /// </summary>
@@ -112,11 +110,10 @@ namespace InsipidusEngine.Infrastructure
         {
             _Entities.Add(entity);
             entity.setScene(this);
-            _Physics.addBody(entity.getBody());
+            _Physics.AddBody(entity.getBody());
             Collections.sort(_Entities, new EntityDepthComparator());
             return entity;
         }
-
         /// <summary>
         /// Remove an entity from the scene.
         /// </summary>
@@ -124,7 +121,7 @@ namespace InsipidusEngine.Infrastructure
         public void RemoveEntity(Entity entity)
         {
             _Entities.Remove(entity);
-            _Physics.removeBody(entity.getBody());
+            _Physics.RemoveBody(entity.getBody());
         }
         #endregion
 

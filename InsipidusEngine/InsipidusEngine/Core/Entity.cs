@@ -12,6 +12,7 @@ using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework.Net;
 using Microsoft.Xna.Framework.Storage;
 
+using InsipidusEngine.Physics;
 using InsipidusEngine.Infrastructure;
 using InsipidusEngine.Imagery;
 
@@ -57,7 +58,7 @@ namespace InsipidusEngine.Core
             _Scene = scene;
             _Sprites = new SpriteManager();
             _Body = new Body(_Scene != null ? _Scene.PhysicsSimulator : null);
-            _Body.setEntity(this);
+            _Body.SetEntity(this);
             _Body.addBody();
         }
 
@@ -100,32 +101,6 @@ namespace InsipidusEngine.Core
 		// Update the sprite's position offset.
 		_Sprites.[0].setPositionOffset(new Vector2(0, -_Sprites[0][_Sprites[0].CurrentFrameIndex].Origin.Y + (_Body.getShape().getHeight() / 2)));
 	}
-
-        /**
-         * Handle input.
-         * 
-         * @param input
-         *            The input manager.
-         */
-        public void HandleInput(InputState input)
-        {
-            // Check if the left mouse button is down.
-            if (input.IsNewLeftMousePress())
-            {
-                // Transform the mouse coordinates into world space.
-
-                // Check if the Body has been clicked on.
-                if ((input.mouseEventPosition().x <= (_Body.getLayeredPosition().x + (_Body.getShape().getWidth() / 2)))
-                        && (input.mouseEventPosition().x >= (_Body.getLayeredPosition().x - (_Body.getShape().getWidth() / 2)))
-                        && (input.mouseEventPosition().y <= (_Body.getLayeredPosition().y + (_Body.getShape().getHeight() / 2)))
-                        && (input.mouseEventPosition().y >= (_Body.getLayeredPosition().y - (_Body.getShape().getHeight() / 2))))
-                {
-                    // Turn the debug isClicked variable on.
-                    _Body._IsClicked = !_Body._IsClicked;
-                }
-            }
-        }
-
         /**
          * Update the entity.
          * 
@@ -162,7 +137,6 @@ namespace InsipidusEngine.Core
             get { return _Body; }
             set { _Body = value; }
         }
-
         /**
          * Get the manager of all this entity's sprites.
          * 
@@ -173,7 +147,6 @@ namespace InsipidusEngine.Core
             get { return _Sprites; }
             set { _Sprites = value; }
         }
-
         /**
          * Set the entity's depth. This also modifies its height as well as updates the main sprite.
          * 
