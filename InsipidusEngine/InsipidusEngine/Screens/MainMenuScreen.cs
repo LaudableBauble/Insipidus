@@ -29,6 +29,7 @@ namespace InsipidusEngine.Screens
         {
             // Create our menu entries.
             MenuEntry worldEntry = new MenuEntry("World");
+            MenuEntry rpgEntry = new MenuEntry("RPG");
             MenuEntry novelBattleEntry = new MenuEntry("Novel Battle");
             MenuEntry classicBattleEntry = new MenuEntry("Classic Battle");
             MenuEntry optionsMenuEntry = new MenuEntry("Options");
@@ -36,6 +37,7 @@ namespace InsipidusEngine.Screens
 
             // Hook up menu event handlers.
             worldEntry.Selected += OnWorldMenuEntrySelected;
+            rpgEntry.Selected += OnRPGMenuEntrySelected;
             novelBattleEntry.Selected += NovelBattleMenuEntrySelected;
             classicBattleEntry.Selected += ClassicBattleMenuEntrySelected;
             optionsMenuEntry.Selected += OptionsMenuEntrySelected;
@@ -43,6 +45,7 @@ namespace InsipidusEngine.Screens
 
             // Add entries to the menu.
             MenuEntries.Add(worldEntry);
+            MenuEntries.Add(rpgEntry);
             MenuEntries.Add(novelBattleEntry);
             MenuEntries.Add(classicBattleEntry);
             MenuEntries.Add(optionsMenuEntry);
@@ -57,6 +60,13 @@ namespace InsipidusEngine.Screens
         void OnWorldMenuEntrySelected(object sender, EventArgs e)
         {
             LoadingScreen.Load(ScreenManager, true, new WorldScreen());
+        }
+        /// <summary>
+        /// Event handler for when the RPG menu entry is selected.
+        /// </summary>
+        void OnRPGMenuEntrySelected(object sender, EventArgs e)
+        {
+            LoadingScreen.Load(ScreenManager, true, new RPGScreen());
         }
         /// <summary>
         /// Event handler for when the Novel Battle menu entry is selected.

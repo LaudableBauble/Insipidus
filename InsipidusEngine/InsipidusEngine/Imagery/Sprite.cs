@@ -355,7 +355,7 @@ namespace InsipidusEngine.Imagery
         /// </summary>
         public Vector2 Position
         {
-            get { return (_Position); }
+            get { return _Position; }
             set { _Position = value; }
         }
         /// <summary>
@@ -363,7 +363,7 @@ namespace InsipidusEngine.Imagery
         /// </summary>
         public string Name
         {
-            get { return (_Name); }
+            get { return _Name; }
             set { _Name = value; }
         }
         /// <summary>
@@ -371,7 +371,7 @@ namespace InsipidusEngine.Imagery
         /// </summary>
         public string Tag
         {
-            get { return (_Tag); }
+            get { return _Tag; }
             set { _Tag = value; }
         }
         /// <summary>
@@ -379,7 +379,7 @@ namespace InsipidusEngine.Imagery
         /// </summary>
         public List<Frame> Frames
         {
-            get { return (_Frames); }
+            get { return _Frames; }
             set { _Frames = value; }
         }
         /// <summary>
@@ -387,14 +387,14 @@ namespace InsipidusEngine.Imagery
         /// </summary>
         public int FrameCount
         {
-            get { return (_Frames.Count); }
+            get { return _Frames.Count; }
         }
         /// <summary>
         /// The current frame index.
         /// </summary>
         public int CurrentFrameIndex
         {
-            get { return (_FrameIndex); }
+            get { return _FrameIndex; }
             set { FrameChangedInvoke(value); }
         }
         /// <summary>
@@ -410,7 +410,7 @@ namespace InsipidusEngine.Imagery
         /// </summary>
         public int FrameStartIndex
         {
-            get { return (_FrameStartIndex); }
+            get { return _FrameStartIndex; }
             set { _FrameStartIndex = value; }
         }
         /// <summary>
@@ -418,7 +418,7 @@ namespace InsipidusEngine.Imagery
         /// </summary>
         public int FrameEndIndex
         {
-            get { return (_FrameEndIndex); }
+            get { return _FrameEndIndex; }
             set { _FrameEndIndex = value; }
         }
         /// <summary>
@@ -426,7 +426,7 @@ namespace InsipidusEngine.Imagery
         /// </summary>
         public bool EnableAnimation
         {
-            get { return (_EnableAnimation); }
+            get { return _EnableAnimation; }
             set { _EnableAnimation = value; }
         }
         /// <summary>
@@ -434,7 +434,7 @@ namespace InsipidusEngine.Imagery
         /// </summary>
         public bool AnimationDirection
         {
-            get { return (_AnimationDirection); }
+            get { return _AnimationDirection; }
             set { _AnimationDirection = value; }
         }
         /// <summary>
@@ -442,7 +442,7 @@ namespace InsipidusEngine.Imagery
         /// </summary>
         public float TotalElapsedTime
         {
-            get { return (_TotalElapsedTime); }
+            get { return _TotalElapsedTime; }
             set { _TotalElapsedTime = value; }
         }
         /// <summary>
@@ -474,7 +474,7 @@ namespace InsipidusEngine.Imagery
         /// </summary>
         public float PositionOffset
         {
-            get { return (_PositionOffset); }
+            get { return _PositionOffset; }
             set { _PositionOffset = value; }
         }
         /// <summary>
@@ -482,7 +482,7 @@ namespace InsipidusEngine.Imagery
         /// </summary>
         public float OrbitOffset
         {
-            get { return (_OrbitOffset); }
+            get { return _OrbitOffset; }
             set { _OrbitOffset = value; }
         }
         /// <summary>
@@ -490,7 +490,7 @@ namespace InsipidusEngine.Imagery
         /// </summary>
         public float RotationOffset
         {
-            get { return (_RotationOffset); }
+            get { return _RotationOffset; }
             set { _RotationOffset = value; }
         }
         /// <summary>
@@ -514,7 +514,7 @@ namespace InsipidusEngine.Imagery
         /// </summary>
         public Orientation Orientation
         {
-            get { return (_Orientation); }
+            get { return _Orientation; }
             set { _Orientation = value; }
         }
         #endregion
