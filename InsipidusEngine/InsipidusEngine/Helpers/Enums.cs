@@ -13,6 +13,13 @@ namespace InsipidusEngine
         Left, Right, Middle
     }
     /// <summary>
+    /// The type of depth destribution for a shape.
+    /// </summary>
+    public enum DepthDistribution
+    {
+        Uniform, Right, Left, Top, Bottom
+    }
+    /// <summary>
     /// Enum describes the screen transition state.
     /// </summary>
     public enum ScreenState

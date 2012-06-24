@@ -64,7 +64,7 @@ namespace InsipidusEngine.Physics
                 // Clear all bodies' record of collision.
                 foreach (Body b in _Bodies)
                 {
-                    b.clearCollisions();
+                    b.ClearCollisions();
                 }
 
                 // Loop through all bodies.
@@ -77,7 +77,7 @@ namespace InsipidusEngine.Physics
                     foreach (Body b2 in _Bodies)
                     {
                         // Check so it's not the same body, or if both bodies are set to static.
-                        if (b1 == b2 || (b1.getIsStatic() && b2.getIsStatic()))
+                        if (b1 == b2 || (b1.IsStatic && b2.IsStatic))
                         {
                             continue;
                         }
@@ -86,26 +86,26 @@ namespace InsipidusEngine.Physics
                         if (BroadPhase(b1, b2))
                         {
                             // Get the layered MTV by doing a narrow phase collision check.
-                            Vector2 mtv = NarrowPhase(b1.getShape(), b2.getShape());
+                            Vector2 mtv = NarrowPhase(b1.Shape, b2.Shape);
 
                             // Check for ground collision and alter bodies if necessary.
                             if (CheckGroundCollision(b1, b2, mtv))
                             {
                                 // Add the collision to the body.
-                                b1.addCollision(b2);
-                                b2.addCollision(b1);
+                                b1.AddCollision(b2);
+                                b2.AddCollision(b1);
 
-                                if (b1.getIsStatic() || b1.getIsImmaterial() || b2.getIsImmaterial())
+                                if (b1.IsStatic || b1.IsImmaterial || b2.IsImmaterial)
                                 {
                                     continue;
                                 }
 
                                 // Move body1 above body2 and null the movement on the z-axis (otherwise the body gets stuck).
-                                b1.getShape().setBottomDepth(b2.getShape().getTopDepth(b1.getLayeredPosition()) + _Gravity / 2);
-                                b1.getVelocity().setZ(0);
-                                if (b2.getShape().getDepthDistribution() != DepthDistribution.Uniform)
+                                b1.Shape.BottomDepth = b2.Shape.GetTopDepth(b1.LayeredPosition) + _Gravity / 2;
+                                b1.Velocity = new Vector3(b1.Velocity.X, b1.Velocity.Y, 0);
+                                if (b2.Shape.DepthDistribution != DepthDistribution.Uniform)
                                 {
-                                    b1.setVelocity(Vector3.Zero);
+                                    b1.Velocity = Vector3.Zero;
                                 }
                                 ground = true;
                             }
@@ -117,24 +117,24 @@ namespace InsipidusEngine.Physics
                                 // Check if the bodies intersect.
                                 if (mtv != null)
                                 {
-                                    if (!b1.getIsImmaterial() && !b2.getIsImmaterial())
+                                    if (!b1.IsImmaterial && !b2.IsImmaterial)
                                     {
                                         // Move the bodies so that they don't intersect each other anymore.
                                         ClearIntersection(b1, b2, mtv);
                                     }
 
                                     // Add the collision to the body.
-                                    b1.addCollision(b2);
-                                    b2.addCollision(b1);
+                                    b1.AddCollision(b2);
+                                    b2.AddCollision(b1);
                                 }
                             }
                         }
                     }
 
                     // If the entity is dynamic and not standing on the ground, apply gravity.
-                    if (!ground && !b1.getIsStatic() && !b1.getIsImmaterial())
+                    if (!ground && !b1.IsStatic && !b1.IsImmaterial)
                     {
-                        b1.addGravity(_Gravity);
+                        b1.Velocity = new Vector3(b1.Velocity.X, b1.Velocity.Y, b1.Velocity.Z - _Gravity);
                     }
 
                     // Add the friction.
@@ -168,7 +168,7 @@ namespace InsipidusEngine.Physics
                 if (!_Bodies.Contains(body))
                 {
                     _Bodies.Add(body);
-                    body.setPhysicsSimulator(this);
+                    body.PhysicsSimulator = this;
                 }
             }
             // Catch the exception and display relevant information.
@@ -217,8 +217,8 @@ namespace InsipidusEngine.Physics
             try
             {
                 // Check if the bodies are within range.
-                return Vector2.Distance(b1.getLayeredPosition(), b2.getLayeredPosition()) < (Math.Max(b1.getShape().getWidth(), b1.getShape().getHeight()) + Math.Max(b2
-                        .getShape().getWidth(), b2.getShape().getHeight()));
+                return Vector2.Distance(b1.LayeredPosition, b2.LayeredPosition) < (Math.Max(b1.Shape.Width, b1.Shape.Height) + Math.Max(b2
+                        .Shape.Width, b2.Shape.Height));
             }
             // Catch the exception and display relevant information.
             catch (Exception e)
@@ -247,7 +247,7 @@ namespace InsipidusEngine.Physics
             try
             {
                 // Get the axes of both bodies.
-                Vector2[][] axes = new Vector2[][] { s1.getAxes(), s2.getAxes() };
+                Vector2[][] axes = new Vector2[][] { s1.GetAxes(), s2.GetAxes() };
 
                 // Iterate over the axes of both bodies.
                 foreach (Vector2[] v in axes)
@@ -256,11 +256,11 @@ namespace InsipidusEngine.Physics
                     foreach (Vector2 a in v)
                     {
                         // Project both bodies onto the axis.
-                        Vector2 p1 = s1.project(a);
-                        Vector2 p2 = s2.project(a);
+                        Vector2 p1 = s1.Project(a);
+                        Vector2 p2 = s2.Project(a);
 
                         // Get the overlap.
-                        double o = Vector2.getOverlap(p1, p2);
+                        float o = Vector2.getOverlap(p1, p2);
 
                         // Do the projections overlap?
                         if (o == -1)
@@ -303,12 +303,12 @@ namespace InsipidusEngine.Physics
             if (mtv == null) { return null; }
 
             // Get the dynamic and static body.
-            Body a = b1.getIsStatic() ? b2 : b1;
+            Body a = b1.IsStatic ? b2 : b1;
             Body b = (a == b1) ? b2 : b1;
 
             // Get the min and max heights for both bodies.
-            Vector2 h1 = new Vector2(a.getShape().getBottomDepth(), a.getShape().getTopDepth(a.getLayeredPosition()));
-            Vector2 h2 = new Vector2(b.getShape().getBottomDepth(), b.getShape().getTopDepth(a.getLayeredPosition()));
+            Vector2 h1 = new Vector2(a.Shape.BottomDepth, a.Shape.GetTopDepth(a.LayeredPosition));
+            Vector2 h2 = new Vector2(b.Shape.BottomDepth, b.Shape.GetTopDepth(a.LayeredPosition));
 
             // Get min and max heights for possible collisions between the bodies.
             Vector2 heights = Vector2.getMiddleValues(h1, h2);
@@ -333,18 +333,18 @@ namespace InsipidusEngine.Physics
             if (mtv == null) { return false; }
 
             // Get the dynamic and static body.
-            Body a = b1.getIsStatic() ? b2 : b1;
+            Body a = b1.IsStatic ? b2 : b1;
             Body b = (a == b1) ? b2 : b1;
 
             // Both bodies' depth positions.
-            Vector2 h1 = new Vector2(a.getShape().getBottomDepth(), a.getShape().getTopDepth());
-            Vector2 h2 = new Vector2(b.getShape().getBottomDepth(), b.getShape().getTopDepth(a.getLayeredPosition()));
+            Vector2 h1 = new Vector2(a.Shape.BottomDepth, a.Shape.TopDepth);
+            Vector2 h2 = new Vector2(b.Shape.BottomDepth, b.Shape.GetTopDepth(a.LayeredPosition));
 
             // The difference in height.
             double diff = h1.X - h2.Y;
 
             // If the distance between the bodies is either greater than the threshold or less than the velocity needed to collide, no collision.
-            if (diff > Math.Max(-a.getVelocity().z + _Gravity, 0) || (h2.Y - h1.X) > 2) { return false; }
+            if (diff > Math.Max(-a.Velocity.Z + _Gravity, 0) || (h2.Y - h1.X) > 2) { return false; }
 
             // There must be a ground collision after all.
             return true;
@@ -362,15 +362,15 @@ namespace InsipidusEngine.Physics
             if (mtv == null) { return; }
 
             // Add the MTV to the first body and subtract it from the second. Only move dynamic bodies!
-            if (!b1.getIsStatic())
+            if (!b1.IsStatic)
             {
-                b1.getShape().setLayeredPosition(Vector2.Add(b1.getShape().getLayeredPosition(), mtv));
-                b1.setVelocity(Vector3.Zero);
+                b1.Shape.LayeredPosition = Vector2.Add(b1.Shape.LayeredPosition, mtv);
+                b1.Velocity = Vector3.Zero;
             }
-            if (!b2.getIsStatic())
+            if (!b2.IsStatic)
             {
-                b2.getShape().setLayeredPosition(Vector2.Subtract(b2.getShape().getLayeredPosition(), mtv));
-                b2.setVelocity(Vector3.Zero);
+                b2.Shape.LayeredPosition = Vector2.Subtract(b2.Shape.LayeredPosition, mtv);
+                b2.Velocity = Vector3.Zero;
             }
         }
         /// <summary>
@@ -382,23 +382,23 @@ namespace InsipidusEngine.Physics
         private Force ImpactForce(Body b1, Body b2)
         {
             // Calculate the Energy of the two bodies before impact.
-            Vector2 energyB1 = Vector3.Absolute(Vector3.Multiply(b1.getVelocity(), b1.getMass())).toVector2();
-            Vector2 energyB2 = Vector3.Absolute(Vector3.Multiply(b2.getVelocity(), b2.getMass())).toVector2();
+            Vector2 energyB1 = Vector3.Absolute(Vector3.Multiply(b1.Velocity, b1.Mass)).toVector2();
+            Vector2 energyB2 = Vector3.Absolute(Vector3.Multiply(b2.Velocity, b2.Mass)).toVector2();
             Vector2 energyBT = Vector2.Add(energyB1, energyB2);
 
             // Get the intersection rectangle.
-            Rectangle intersection = b1.getShape().getIntersection(b2.getShape());
+            Rectangle intersection = b1.Shape.getIntersection(b2.Shape);
             // Calculate the Collision point.
             Vector2 collision = Helper.ToCentroid(intersection);
 
             // The mass ratio between the objects.
-            float massRatio = b2.getMass() / b1.getMass();
+            float massRatio = b2.Mass / b1.Mass;
 
             // The average kinetic energy. Multiply with something to lower the collision force and also with the mass ratio.
             Vector2 averageEnergy = Vector2.Multiply(Vector2.Multiply(Vector2.Divide(energyBT, 2), _EnergyDecrease), massRatio);
 
             // Multiply the Average kinetic Energy with the collision vector direction relative to the body's position.
-            Vector2 impact = Vector2.Multiply(averageEnergy, Vector2.Direction(Vector2.Angle(collision, b1.getLayeredPosition())));
+            Vector2 impact = Vector2.Multiply(averageEnergy, Vector2.Direction(Vector2.Angle(collision, b1.LayeredPosition)));
 
             // Return the average vector.
             return new Force(b1, impact);
@@ -412,11 +412,11 @@ namespace InsipidusEngine.Physics
         private Force ImpactForceEnergy(Body b1, Body b2)
         {
             // Calculate the Kinetic Energy of the two bodies.
-            Vector2 energyB1 = Vector3.Divide(Vector3.Multiply(Vector3.absolute(Vector3.Multiply(b1.getVelocity(), b1.getVelocity())), b1.getMass()), 2).toVector2();
-            Vector2 energyB2 = Vector3.Divide(Vector3.Multiply(Vector3.absolute(Vector3.Multiply(b2.getVelocity(), b2.getVelocity())), b2.getMass()), 2).toVector2();
+            Vector2 energyB1 = Vector3.Divide(Vector3.Multiply(Vector3.absolute(Vector3.Multiply(b1.Velocity, b1.Velocity)), b1.Mass), 2).toVector2();
+            Vector2 energyB2 = Vector3.Divide(Vector3.Multiply(Vector3.absolute(Vector3.Multiply(b2.Velocity, b2.Velocity)), b2.Mass), 2).toVector2();
 
             // Get the intersection rectangle.
-            Rectangle intersection = b1.getShape().getIntersection(b2.getShape());
+            Rectangle intersection = b1.Shape.getIntersection(b2.Shape);
             // Calculate the Collision point.
             Vector2 collision = Helper.toCentroid(intersection);
 
@@ -426,7 +426,7 @@ namespace InsipidusEngine.Physics
 
             // Multiply the Average Kinetic Energy with the collision vector
             // direction relative to the body's position.
-            Vector2 impact = Vector2.Multiply(averageEnergy, Vector2.getDirection(Vector2.getAngle(collision, b1.getLayeredPosition())));
+            Vector2 impact = Vector2.Multiply(averageEnergy, Vector2.getDirection(Vector2.getAngle(collision, b1.LayeredPosition)));
 
             // Return the average vector.
             return new Force(b1, impact);
@@ -500,10 +500,9 @@ namespace InsipidusEngine.Physics
                     foreach (Force f in bodyForces)
                     {
                         // Add the Force to the body.
-                        f.Body.setVelocity(Vector3.Add(f.Body.Velocity, f.Velocity));
+                        f.Body.Velocity = Vector3.Add(f.Body.Velocity, f.Velocity);
                     }
                 }
-                // Catch the exception.
                 catch (Exception e) { Console.WriteLine(this + ": Adding Force to Body Error. (" + e + ")"); }
             }
         }
@@ -518,8 +517,8 @@ namespace InsipidusEngine.Physics
             // First, multiply the friction coefficient with the gravity's force exertion on the body (mass * gravity value),
             // then with the direction of the velocity. Inverse the vector and finally return the result.
             // return (new Force(b, Vector.multiply(Vector.getDirection(Vector.getAngle(b.position, b.velocity)), (b.frictionCoefficient * (b.mass * gravity)))));
-            return new Force(b, Vector2.Multiply(Vector2.Inverse(Vector2.getDirection(b.getVelocity().toVector2(), Vector3.Length(Vector3.absolute(b.getVelocity())))),
-                    (b.getFrictionCoefficient() * (b.getMass() * _Gravity))));
+            return new Force(b, Vector2.Multiply(Vector2.Inverse(Vector2.getDirection(b.Velocity.toVector2(), Vector3.Length(Vector3.absolute(b.Velocity)))),
+                    (b.FrictionCoefficient * b.Mass * _Gravity)));
         }
         /// <summary>
         /// Add a friction force to a body.
@@ -537,7 +536,7 @@ namespace InsipidusEngine.Physics
                 // ////////////////////////////////////////////////////////
                 // System.out.println(this + ": Old Velocity: (" + f.body.velocity.toString() + ")");
                 // Clam the friction above or beneath zero and subtract it from the velocity.
-                f.Body.Velocity(new Vector3(Vector2.Clamp(f.Body.Velocity.toVector2(), friction, 0), f.Body.Velocity.z));
+                f.Body.Velocity = new Vector3(Vector2.Clamp(f.Body.Velocity.toVector2(), friction, 0), f.Body.Velocity.Z);
                 // ////////////////////////////////////////////////////////
                 // System.out.println(this + ": Velocity with applied Friction: (" + friction.toString() + ")");
                 // System.out.println(this + ": ----------------------------------------------------------------------------");

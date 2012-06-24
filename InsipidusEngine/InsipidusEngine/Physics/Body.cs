@@ -25,11 +25,11 @@ namespace InsipidusEngine.Physics
         private PhysicsSimulator _Physics;
         private Entity _Entity;
         private Shape _Shape;
-        private double _FrictionCoefficient;
-        private double _Mass;
-        private double _AccelerationValue;
+        private float _FrictionCoefficient;
+        private float _Mass;
+        private float _AccelerationValue;
         private Vector3 _Velocity;
-        private double _MaxVelocity;
+        private float _MaxVelocity;
         private bool _IsStatic;
         private bool _IsImmaterial;
         private HashSet<Body> _Collisions;
@@ -56,7 +56,7 @@ namespace InsipidusEngine.Physics
         /// <param name="mass">The mass of the body.</param>
         /// <param name="friction">The friction of the body.</param>
         /// <param name="physics">The physics simulator that this body will be a part of.</param>
-        public Body(float width, float height, float depth, double mass, double friction, PhysicsSimulator physics)
+        public Body(float width, float height, float depth, float mass, float friction, PhysicsSimulator physics)
         {
             Initialize(width, height, depth, mass, friction, physics);
         }
@@ -72,20 +72,20 @@ namespace InsipidusEngine.Physics
         /// <param name="mass">The mass of the body.</param>
         /// <param name="friction">The friction of the body.</param>
         /// <param name="physics">The physics simulator that this body will be a part of.</param>
-        protected void Initialize(float width, float height, float depth, double mass, double friction, PhysicsSimulator physics)
-	{
-		// Initialize a couple of variables.
-		_Shape = new Shape(width, height, depth);
-		_IsStatic = false;
-		_IsImmaterial = false;
-		_MaxVelocity = 8;
-		_Mass = mass;
-		_Velocity = new Vector3(0, 0, 0);
-		_FrictionCoefficient = friction;
-		_AccelerationValue = 1;
-		_Physics = physics;
-		_Collisions = new HashSet<>();
-	}
+        protected void Initialize(float width, float height, float depth, float mass, float friction, PhysicsSimulator physics)
+        {
+            // Initialize a couple of variables.
+            _Shape = new Shape(width, height, depth);
+            _IsStatic = false;
+            _IsImmaterial = false;
+            _MaxVelocity = 8;
+            _Mass = mass;
+            _Velocity = new Vector3(0, 0, 0);
+            _FrictionCoefficient = friction;
+            _AccelerationValue = 1;
+            _Physics = physics;
+            _Collisions = new HashSet<Body>();
+        }
         /// <summary>
         /// Update the body.
         /// </summary>
@@ -131,205 +131,141 @@ namespace InsipidusEngine.Physics
                 Console.WriteLine(this + ": Error adding body. (" + e + ")");
             }
         }
-        /**
-         * Add a force to the physics simulator.
-         * 
-         * @param force
-         *            The force to add.
-         */
+        /// <summary>
+        /// Add a force to the physics simulator.
+        /// </summary>
+        /// <param name="force">The force to add.</param>
         public void AddForce(Vector3 force)
         {
             // Check if the PhysicsSimultor isn't null.
             if (_Physics != null)
             {
                 // Try to add the force.
-                try
-                {
-                    _Physics.addForce(new Force(this, force));
-                }
-                // Catch the Exceptions that may arise.
-                catch (Exception e)
-                {
-                    Console.WriteLine(this + ": Error adding force. (" + e + ")");
-                }
+                try { _Physics.AddForce(new Force(this, force)); }
+                catch (Exception e) { Console.WriteLine(this + ": Error adding force. (" + e + ")"); }
             }
             // Print out the error.
-            else
-            {
-                Console.WriteLine(this + ": Error with null physics simulator.");
-            }
+            else { Console.WriteLine(this + ": Error with null physics simulator."); }
         }
-
-        /**
-         * Add a body with which this body has collided with.
-         * 
-         * @param body
-         *            The other body in the collision.
-         */
-        public void addCollision(Body body)
+        /// <summary>
+        /// Add a body with which this body has collided with.
+        /// </summary>
+        /// <param name="body">The body with which a collisions has occurred.</param>
+        public void AddCollision(Body body)
         {
             _Collisions.Add(body);
         }
-
-        /**
-         * Get all of the body's collisions this update cycle.
-         * 
-         * @return All collisions this update cycle.
-         */
-        public HashSet<Body> getCollisions()
-        {
-            return _Collisions;
-        }
-
-        /**
-         * Clear all saved collisions. Usually done by the physics simulator each update.
-         */
-        public void clearCollisions()
+        /// <summary>
+        /// Clear all saved collisions. Usually done by the physics simulator each update.
+        /// </summary>
+        public void ClearCollisions()
         {
             _Collisions.Clear();
         }
         #endregion
 
         #region Properties
-        /**
-         * Get the body's physics simulator.
-         * 
-         * @return The physics simulator.
-         */
-        public PhysicsSimulator getPhysicsSimulator()
+        /// <summary>
+        /// The physics simulator of this body.
+        /// </summary>
+        public PhysicsSimulator PhysicsSimulator
         {
-            return _Physics;
+            get { return _Physics; }
+            set { _Physics = value; }
         }
-
-        /**
-         * Set the body's physics simulator.
-         * 
-         * @param physics
-         *            The new physics simulator.
-         */
-        public void setPhysicsSimulator(PhysicsSimulator physics)
+        /// <summary>
+        /// The shape of the body.
+        /// </summary>
+        public Shape Shape
         {
-            _Physics = physics;
+            get { return _Shape; }
+            set { _Shape = value; }
         }
-
-        /**
-         * Get the body's shape.
-         * 
-         * @return The shape of the body.
-         */
-        public Shape getShape()
+        /// <summary>
+        /// The body's layered position, ie. only the x and y-coordinates.
+        /// </summary>
+        public Vector2 LayeredPosition
         {
-            return _Shape;
+            get { return _Shape.LayeredPosition; }
         }
-
-        /**
-         * Get the body's layered position, ie. only the x and y-coordinates.
-         * 
-         * @return The position of the body.
-         */
-        public Vector2 getLayeredPosition()
+        /// <summary>
+        /// The position of the body.
+        /// </summary>
+        public Vector3 Position
         {
-            return _Shape.LayeredPosition;
+            get { return _Shape.Position; }
+            set { _Shape.Position = value; }
         }
-
-        /**
-         * Get the body's position, ie. all three dimensions.
-         * 
-         * @return The position of the body.
-         */
-        public Vector3 getPosition()
+        /// <summary>
+        /// The velocity of the body.
+        /// </summary>
+        public Vector3 Velocity
         {
-            return _Shape.Position;
+            get { return _Velocity; }
+            set { _Velocity = value; }
         }
-
-        /**
-         * Get the body's velocity.
-         * 
-         * @return The velocity of the body.
-         */
-        public Vector3 getVelocity()
+        /// <summary>
+        /// The maximum velocity of the body.
+        /// </summary>
+        public float MaxVelocity
         {
-            return _Velocity;
+            get { return _MaxVelocity; }
+            set { _Mass = value; }
         }
-
-        /**
-         * Get the body's maximum velocity.
-         * 
-         * @return The maximum velocity of the body.
-         */
-        public double getMaxVelocity()
+        /// <summary>
+        /// The mass of the body.
+        /// </summary>
+        public float Mass
         {
-            return _MaxVelocity;
+            get { return _Mass; }
+            set { _Mass = value; }
         }
-
-        /**
-         * Get the body's mass.
-         * 
-         * @return The mass of the body.
-         */
-        public double getMass()
+        /// <summary>
+        /// The friction coefficient of the body.
+        /// </summary>
+        public float FrictionCoefficient
         {
-            return _Mass;
+            get { return _FrictionCoefficient; }
+            set { _FrictionCoefficient = value; }
         }
-        /**
-         * Get the body's friction coefficient.
-         * 
-         * @return The friction coefficient of the body.
-         */
-        public double getFrictionCoefficient()
+        /// <summary>
+        /// The acceleration value of the body.
+        /// </summary>
+        public float AccelerationValue
         {
-            return _FrictionCoefficient;
+            get { return _AccelerationValue; }
+            set { _AccelerationValue = value; }
         }
-
-        /**
-         * Get the body's acceleration value.
-         * 
-         * @return The acceleration value of the body.
-         */
-        public double getAccelerationValue()
+        /// <summary>
+        /// Whether the body is static.
+        /// </summary>
+        public bool IsStatic
         {
-            return _AccelerationValue;
+            get { return _IsStatic; }
+            set { _IsStatic = value; }
         }
-
-        /**
-         * Add gravity (velocity on the z-axis) to the body's velocity.
-         * 
-         * @param gravity
-         *            The gravity to apply.
-         */
-        public void addGravity(float gravity)
+        /// <summary>
+        /// Whether the body is immaterial.
+        /// </summary>
+        public bool IsImmaterial
         {
-            _Velocity.Z = _Velocity.Z - gravity;
+            get { return _IsImmaterial; }
+            set { _IsImmaterial = value; }
         }
-
-        /**
-         * Get the body's staticness.
-         * 
-         * @return Whether the body is static or not.
-         */
-        public bool getIsStatic()
+        /// <summary>
+        /// All of the body's collisions this update cycle.
+        /// </summary>
+        public HashSet<Body> Collisions
         {
-            return _IsStatic;
+            get { return _Collisions; }
         }
-
-        /**
-         * Get whether the body is immaterial.
-         * 
-         * @return Whether the body is immaterial or not.
-         */
-        public bool getIsImmaterial()
+        /// <summary>
+        /// The entity of this body.
+        /// </summary>
+        public Entity Entity
         {
-            return _IsImmaterial;
-        }
-
-        /**
-         * Get the entity of this body.
-         * 
-         * @return The entity.
-         */
-        public Entity getEntity()
-        {
-            return _Entity;
+            get { return _Entity; }
+            set { _Entity = value; }
         }
         #endregion
     }

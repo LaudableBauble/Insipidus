@@ -14,7 +14,7 @@ using Microsoft.Xna.Framework.Storage;
 
 using InsipidusEngine.Infrastructure;
 
-namespace InsipidusEngine
+namespace InsipidusEngine.Obsolete
 {
     public class System
     {

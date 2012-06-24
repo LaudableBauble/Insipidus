@@ -85,20 +85,20 @@ namespace InsipidusEngine.Infrastructure
         public void Draw(SpriteBatch spriteBatch)
         {
             // Enable depth sorting by composite.
-            Composite old = spriteBatch.getComposite();
-            spriteBatch.setComposite(_Composite);
+            //Composite old = spriteBatch.getComposite();
+            //spriteBatch.setComposite(_Composite);
 
             // Draw all entities.
             foreach (Entity entity in _Entities)
             {
                 // Prepare the graphics device for depth-sorting.
-                ((DepthComposite)spriteBatch.getComposite()).setEntity(entity);
-                entity.draw(spriteBatch);
+                //((DepthComposite)spriteBatch.getComposite()).setEntity(entity);
+                entity.Draw(spriteBatch);
             }
 
             // Notify the depth composite that the frame has ended, at least for the scene.
-            _Composite.endFrame();
-            spriteBatch.setComposite(old);
+            //_Composite.endFrame();
+            //spriteBatch.setComposite(old);
         }
 
         /// <summary>
@@ -109,9 +109,9 @@ namespace InsipidusEngine.Infrastructure
         public Entity AddEntity(Entity entity)
         {
             _Entities.Add(entity);
-            entity.setScene(this);
-            _Physics.AddBody(entity.getBody());
-            Collections.sort(_Entities, new EntityDepthComparator());
+            entity.Scene = this;
+            _Physics.AddBody(entity.Body);
+            //Collections.sort(_Entities, new EntityDepthComparator());
             return entity;
         }
         /// <summary>
@@ -121,7 +121,7 @@ namespace InsipidusEngine.Infrastructure
         public void RemoveEntity(Entity entity)
         {
             _Entities.Remove(entity);
-            _Physics.RemoveBody(entity.getBody());
+            _Physics.RemoveBody(entity.Body);
         }
         #endregion
 
