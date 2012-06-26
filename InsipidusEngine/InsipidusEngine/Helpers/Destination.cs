@@ -12,7 +12,7 @@ using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework.Net;
 using Microsoft.Xna.Framework.Storage;
 
-namespace InsipidusEngine.Helpers
+namespace InsipidusEngine.Infrastructure
 {
     /// <summary>
     /// A destination is basically a class that keeps track of a destination point.
@@ -21,7 +21,7 @@ namespace InsipidusEngine.Helpers
     {
         #region Fields
         private Vector2 _Position;
-        private Character _Character;
+        private Creature _Character;
         #endregion
 
         #region Constructors
@@ -38,7 +38,7 @@ namespace InsipidusEngine.Helpers
         /// Constructor for a destination.
         /// </summary>
         /// <param name="character">The dynamic destination character.</param>
-        public Destination(Character character)
+        public Destination(Creature character)
         {
             _Position = Vector2.Zero;
             _Character = character;

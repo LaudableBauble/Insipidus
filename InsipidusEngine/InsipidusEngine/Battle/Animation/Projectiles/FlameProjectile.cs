@@ -13,7 +13,7 @@ using Microsoft.Xna.Framework.Net;
 using Microsoft.Xna.Framework.Storage;
 
 using InsipidusEngine.Imagery;
-using InsipidusEngine.Helpers;
+using InsipidusEngine.Infrastructure;
 
 namespace InsipidusEngine.Battle.Projectiles
 {
@@ -42,7 +42,7 @@ namespace InsipidusEngine.Battle.Projectiles
         public override void LoadContent(ContentManager content)
         {
             //Add a flame sprite to the collection.
-            Sprite sprite = _Sprite.AddSprite(new Sprite(_Sprite, "Flame"));
+            Sprite sprite = _Sprite.Add(new Sprite(_Sprite, "Flame"));
             sprite.AddFrame(@"Battle\Misc\Flame[1]");
 
             //Call the base method.

@@ -35,16 +35,25 @@ namespace InsipidusEngine.Imagery
         private float _Rotation;
         private float _Scale;
         private int _Depth;
-        private float _PositionOffset;
+        private Vector2 _PositionOffset;
         private float _OrbitOffset;
         private float _RotationOffset;
         private float _Transparence;
         private Visibility _Visibility;
         private Orientation _Orientation;
+        #endregion
 
+        #region Events
         public delegate void BoundsChangedHandler(object obj, BoundsChangedEventArgs e);
         public delegate void FrameChangedHandler(object obj, EventArgs e);
+
+        /// <summary>
+        /// An event fired when the bounds of the sprite has changed.
+        /// </summary>
         public event BoundsChangedHandler BoundsChanged;
+        /// <summary>
+        /// An event fired when the frame of the sprite has changed.
+        /// </summary>
         public event FrameChangedHandler FrameChanged;
         #endregion
 
@@ -89,7 +98,7 @@ namespace InsipidusEngine.Imagery
             _Scale = 1;
             _Depth = 0;
             _Rotation = 0;
-            _PositionOffset = 0;
+            _PositionOffset = Vector2.Zero;
             _OrbitOffset = 0;
             _RotationOffset = 0;
             _Tag = "";
@@ -107,8 +116,8 @@ namespace InsipidusEngine.Imagery
             foreach (Frame frame in _Frames)
             {
                 //The width and the height.
-                frame.Width = _Manager.GetTextureBounds(frame.Name).Width;
-                frame.Height = _Manager.GetTextureBounds(frame.Name).Height;
+                frame.Width = _Manager.GetTextureBounds(frame.Path).Width;
+                frame.Height = _Manager.GetTextureBounds(frame.Path).Height;
             }
 
             //Load the first frame.
@@ -154,7 +163,7 @@ namespace InsipidusEngine.Imagery
             //If a frame has a texture already stored on its premises, load that texture.
             if (_Frames[_FrameIndex].Texture != null) { _Texture = _Frames[_FrameIndex].Texture; }
             //Otherwise load one by using the name of the frame.
-            else { _Texture = _Manager.ContentManager.Load<Texture2D>(_Frames[_FrameIndex].Name); }
+            else { _Texture = _Manager.ContentManager.Load<Texture2D>(_Frames[_FrameIndex].Path); }
 
             //The bounds of the sprite has changed, invoke the appropriate event.
             BoundsChangedInvoke();
@@ -223,16 +232,39 @@ namespace InsipidusEngine.Imagery
         /// <summary>
         /// Add a frame to the sprite.
         /// </summary>
+        /// <param name="frame">The frame to add.</param>
+        public void AddFrame(Frame frame)
+        {
+            //Add the frame to the list of frames.
+            _Frames.Add(frame);
+
+            //Increment the animation end index.
+            _FrameEndIndex++;
+        }
+        /// <summary>
+        /// Add a frame to the sprite.
+        /// </summary>
         /// <param name="path">The path of the frame.</param>
         public void AddFrame(string path)
         {
             //Get the bounds of the frame.
             Rectangle rectangle = _Manager.GetTextureBounds(path);
-            //Add the frame to the list of frames.
-            _Frames.Add(new Frame(path, rectangle.Width, rectangle.Height));
 
-            //Increment the animation end index.
-            _FrameEndIndex++;
+            //Add the frame.
+            AddFrame(new Frame(path, rectangle.Width, rectangle.Height));
+        }
+        /// <summary>
+        /// Add a frame to the sprite.
+        /// </summary>
+        /// <param name="path">The path of the frame.</param>
+        /// <param name="origin">The origin of the frame.</param>
+        public void AddFrame(string path, Vector2 origin)
+        {
+            //Get the bounds of the frame.
+            Rectangle rectangle = _Manager.GetTextureBounds(path);
+
+            //Add the frame.
+            AddFrame(new Frame(path, rectangle.Width, rectangle.Height, origin));
         }
         /// <summary>
         /// Add a frame to the sprite.
@@ -242,26 +274,22 @@ namespace InsipidusEngine.Imagery
         {
             //Get the bounds of the frame.
             Rectangle rectangle = _Manager.GetTextureBounds(texture);
-            //Add the frame to the list of frames.
-            _Frames.Add(new Frame(texture, rectangle.Width, rectangle.Height));
 
-            //Increment the animation end index.
-            _FrameEndIndex++;
+            //Add the frame.
+            AddFrame(new Frame(texture, rectangle.Width, rectangle.Height));
         }
         /// <summary>
         /// Add a frame to the sprite.
         /// </summary>
-        /// <param name="frameName">The name of the frame.</param>
+        /// <param name="texture">The texture of the frame.</param>
         /// <param name="origin">The origin of the frame.</param>
-        public void AddFrame(string frameName, Vector2 origin)
+        public void AddFrame(Texture2D texture, Vector2 origin)
         {
             //Get the bounds of the frame.
-            Rectangle rectangle = _Manager.GetTextureBounds(frameName);
-            //Add the frame to the list of frames.
-            _Frames.Add(new Frame(frameName, rectangle.Width, rectangle.Height, origin));
+            Rectangle rectangle = _Manager.GetTextureBounds(texture);
 
-            //Increment the animation end index.
-            _FrameEndIndex++;
+            //Add the frame.
+            AddFrame(new Frame(texture, rectangle.Width, rectangle.Height, origin));
         }
         /// <summary>
         /// Find a frame's index.
@@ -274,7 +302,7 @@ namespace InsipidusEngine.Imagery
             Frame frame = null;
 
             //Loop through the list of frames and find the one with the right name.
-            _Frames.ForEach(item => { if (item.Name == frameName) { frame = item; } });
+            _Frames.ForEach(item => { if (item.Path == frameName) { frame = item; } });
 
             //Return it.
             return _Frames.IndexOf(frame);
@@ -472,7 +500,7 @@ namespace InsipidusEngine.Imagery
         /// <summary>
         /// The sprite offset.
         /// </summary>
-        public float PositionOffset
+        public Vector2 PositionOffset
         {
             get { return _PositionOffset; }
             set { _PositionOffset = value; }

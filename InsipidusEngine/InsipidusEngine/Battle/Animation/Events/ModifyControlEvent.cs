@@ -23,7 +23,7 @@ namespace InsipidusEngine.Battle.Animation.Events
     {
         #region Fields
         private BattleMove _Move;
-        private Character _Character;
+        private Creature _Character;
         private bool _HasControl;
         #endregion
 
@@ -37,7 +37,7 @@ namespace InsipidusEngine.Battle.Animation.Events
         /// <param name="move">The move to modify.</param>
         /// <param name="character">The character whos state of control will be modified.</param>
         /// <param name="control">The new state of control.</param>
-        public ModifyControlEvent(Timeline timeline, float start, TimelineEvent dependentOn, BattleMove move, Character character, bool control)
+        public ModifyControlEvent(Timeline timeline, float start, TimelineEvent dependentOn, BattleMove move, Creature character, bool control)
         {
             Initialize(timeline, start, dependentOn, move, character, control);
         }
@@ -53,7 +53,7 @@ namespace InsipidusEngine.Battle.Animation.Events
         /// <param name="move">The move to modify.</param>
         /// <param name="character">The character whos state of control will be modified.</param>
         /// <param name="control">The new state of control.</param>
-        protected virtual void Initialize(Timeline timeline, float start, TimelineEvent dependentOn, BattleMove move, Character character, bool control)
+        protected virtual void Initialize(Timeline timeline, float start, TimelineEvent dependentOn, BattleMove move, Creature character, bool control)
         {
             //Call the base method.
             base.Initialize(timeline, start, dependentOn);

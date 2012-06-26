@@ -37,8 +37,8 @@ namespace InsipidusEngine.Screens
         #region Fields
         ContentManager content;
         Camera2D _Camera;
-        Character pokemon1;
-        Character pokemon2;
+        Creature pokemon1;
+        Creature pokemon2;
         HealthBar healthbar1;
         HealthBar healthbar2;
         Bar energybar1;
@@ -88,44 +88,44 @@ namespace InsipidusEngine.Screens
             BattleCoordinator.Instance.LoadContent(content);
 
             //Bulbasaur's sprites.
-            Sprite front = pokemon1.Sprite.AddSprite(new Sprite(pokemon1.Sprite, "Front"));
+            Sprite front = pokemon1.Sprite.Add(new Sprite(pokemon1.Sprite, "Front"));
             front.AddFrame(@"Characters\Bulbasaur\Bulbasaur_Front[1]");
             front.AddFrame(@"Characters\Bulbasaur\Bulbasaur_Front[2]");
             front.AddFrame(@"Characters\Bulbasaur\Bulbasaur_Front[1]");
             front.AddFrame(@"Characters\Bulbasaur\Bulbasaur_Front[3]");
-            Sprite back = pokemon1.Sprite.AddSprite(new Sprite(pokemon1.Sprite, "Back"));
+            Sprite back = pokemon1.Sprite.Add(new Sprite(pokemon1.Sprite, "Back"));
             back.AddFrame(@"Characters\Bulbasaur\Bulbasaur_Back[1]");
             back.AddFrame(@"Characters\Bulbasaur\Bulbasaur_Back[2]");
             back.AddFrame(@"Characters\Bulbasaur\Bulbasaur_Back[1]");
             back.AddFrame(@"Characters\Bulbasaur\Bulbasaur_Back[3]");
-            Sprite left = pokemon1.Sprite.AddSprite(new Sprite(pokemon1.Sprite, "Left"));
+            Sprite left = pokemon1.Sprite.Add(new Sprite(pokemon1.Sprite, "Left"));
             left.AddFrame(@"Characters\Bulbasaur\Bulbasaur_Left[1]");
             left.AddFrame(@"Characters\Bulbasaur\Bulbasaur_Left[2]");
             left.AddFrame(@"Characters\Bulbasaur\Bulbasaur_Left[1]");
             left.AddFrame(@"Characters\Bulbasaur\Bulbasaur_Left[3]");
-            Sprite right = pokemon1.Sprite.AddSprite(new Sprite(pokemon1.Sprite, "Right"));
+            Sprite right = pokemon1.Sprite.Add(new Sprite(pokemon1.Sprite, "Right"));
             right.AddFrame(@"Characters\Bulbasaur\Bulbasaur_Right[1]");
             right.AddFrame(@"Characters\Bulbasaur\Bulbasaur_Right[2]");
             right.AddFrame(@"Characters\Bulbasaur\Bulbasaur_Right[1]");
             right.AddFrame(@"Characters\Bulbasaur\Bulbasaur_Right[3]");
 
             //Charizard's sprites.
-            front = pokemon2.Sprite.AddSprite(new Sprite(pokemon2.Sprite, "Front"));
+            front = pokemon2.Sprite.Add(new Sprite(pokemon2.Sprite, "Front"));
             front.AddFrame(@"Characters\Charizard\Charizard_Front[1]");
             front.AddFrame(@"Characters\Charizard\Charizard_Front[2]");
             front.AddFrame(@"Characters\Charizard\Charizard_Front[1]");
             front.AddFrame(@"Characters\Charizard\Charizard_Front[3]");
-            back = pokemon2.Sprite.AddSprite(new Sprite(pokemon2.Sprite, "Back"));
+            back = pokemon2.Sprite.Add(new Sprite(pokemon2.Sprite, "Back"));
             back.AddFrame(@"Characters\Charizard\Charizard_Back[1]");
             back.AddFrame(@"Characters\Charizard\Charizard_Back[2]");
             back.AddFrame(@"Characters\Charizard\Charizard_Back[1]");
             back.AddFrame(@"Characters\Charizard\Charizard_Back[3]");
-            left = pokemon2.Sprite.AddSprite(new Sprite(pokemon2.Sprite, "Left"));
+            left = pokemon2.Sprite.Add(new Sprite(pokemon2.Sprite, "Left"));
             left.AddFrame(@"Characters\Charizard\Charizard_Left[1]");
             left.AddFrame(@"Characters\Charizard\Charizard_Left[2]");
             left.AddFrame(@"Characters\Charizard\Charizard_Left[1]");
             left.AddFrame(@"Characters\Charizard\Charizard_Left[3]");
-            right = pokemon2.Sprite.AddSprite(new Sprite(pokemon2.Sprite, "Right"));
+            right = pokemon2.Sprite.Add(new Sprite(pokemon2.Sprite, "Right"));
             right.AddFrame(@"Characters\Charizard\Charizard_Right[1]");
             right.AddFrame(@"Characters\Charizard\Charizard_Right[2]");
             right.AddFrame(@"Characters\Charizard\Charizard_Right[1]");

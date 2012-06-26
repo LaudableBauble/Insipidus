@@ -8,11 +8,11 @@ namespace InsipidusEngine
     abstract class CharacterList
     {
         #region Fields
-        private List<Character> _ListOfPokemon;
+        private List<Creature> _ListOfPokemon;
         #endregion
 
         #region Poperties
-        public List<Character> ListOfPokemon
+        public List<Creature> ListOfPokemon
         {
             get { return _ListOfPokemon; }
             set { _ListOfPokemon = value; }
@@ -31,22 +31,22 @@ namespace InsipidusEngine
         #region Constructors
         public CharacterList()
         {
-            _ListOfPokemon = new List<Character>();
+            _ListOfPokemon = new List<Creature>();
         }
         public CharacterList(int capacity)
         {
-            _ListOfPokemon = new List<Character>();
+            _ListOfPokemon = new List<Creature>();
             _ListOfPokemon.Capacity = capacity;
         }
         #endregion
 
         #region Methods
-        public void Add(Character pokemon)
+        public void Add(Creature pokemon)
         {
             //Add the Pokemon to the list.
             _ListOfPokemon.Add(pokemon);
         }
-        public void Remove(Character pokemon)
+        public void Remove(Creature pokemon)
         {
             //Remove the Pokemon from the list.
             _ListOfPokemon.Remove(pokemon);

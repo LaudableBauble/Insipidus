@@ -13,7 +13,7 @@ using Microsoft.Xna.Framework.Net;
 using Microsoft.Xna.Framework.Storage;
 
 using InsipidusEngine.Imagery;
-using InsipidusEngine.Helpers;
+using InsipidusEngine.Infrastructure;
 using InsipidusEngine.Battle.Projectiles;
 
 namespace InsipidusEngine.Battle.Animation.Events
@@ -26,7 +26,7 @@ namespace InsipidusEngine.Battle.Animation.Events
         #region Fields
         protected Vector2 _Position;
         protected Destination _Destination;
-        protected Character _Target;
+        protected Creature _Target;
         protected Projectile _Projectile;
         #endregion
 
@@ -114,7 +114,7 @@ namespace InsipidusEngine.Battle.Animation.Events
         /// </summary>
         /// <param name="projectile">The projectile in question.</param>
         /// <param name="character">The character which the projectile collided with.</param>
-        protected void OnProjectileCollided(Projectile projectile, Character character)
+        protected void OnProjectileCollided(Projectile projectile, Creature character)
         {
             //Conclude this event.
             EventConcludedInvoke();

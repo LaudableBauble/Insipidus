@@ -160,7 +160,7 @@ namespace InsipidusEngine.Battle
         /// <summary>
         /// The user of the move.
         /// </summary>
-        public Character User
+        public Creature User
         {
             get { return _Move.User; }
             set { _Move.User = value; }
@@ -168,7 +168,7 @@ namespace InsipidusEngine.Battle
         /// <summary>
         /// The target of the move.
         /// </summary>
-        public Character Target
+        public Creature Target
         {
             get { return _Move.Target; }
             set { _Move.Target = value; }

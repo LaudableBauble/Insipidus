@@ -22,8 +22,8 @@ using Microsoft.Xna.Framework.Net;
 using Microsoft.Xna.Framework.Storage;
 
 using InsipidusEngine.Imagery;
-using InsipidusEngine.Battle;
 using InsipidusEngine.Infrastructure;
+using InsipidusEngine.Scenes;
 #endregion
 
 namespace InsipidusEngine.Screens
@@ -34,24 +34,10 @@ namespace InsipidusEngine.Screens
     class RPGScreen : GameScreen
     {
         #region Fields
-        GraphicsDevice device;
-        ContentManager content;
-
-        Camera3D _Camera;
-
-        int terrainWidth;
-        int terrainLength;
-        float[,] heightData;
-
-        private ManualCube _Cube;
-        private EntityModel _Model;
-        private Texture2D _CubeTexture;
-        private BasicEffect _CubeEffect;
-
-        VertexBuffer terrainVertexBuffer;
-        IndexBuffer terrainIndexBuffer;
-
-        Effect effect;
+        private GraphicsDevice device;
+        private ContentManager content;
+        private Scene _Scene;
+        private Camera2D _Camera;
         #endregion
 
         #region Constructors
@@ -77,11 +63,18 @@ namespace InsipidusEngine.Screens
             //Store the device.
             device = ScreenManager.GraphicsDevice;
 
+            //Create the scene.
+            _Scene = new LargeDemoScene();
+
             //Create the camera.
-            _Camera = new Camera3D(device);
+            _Camera = new Camera2D(new Rectangle(0, 0, ScreenManager.Game.Window.ClientBounds.Width, ScreenManager.Game.Window.ClientBounds.Height),
+                new Rectangle(0, 0, 2000, 2000));
+            _Camera.Position = new Vector2(1000, 1000);
             #endregion
 
             #region LoadContent
+            //Load the scene's content.
+            _Scene.LoadContent(content);
             #endregion
 
             // Once the load has finished, we use ResetElapsedTime to tell the game's
@@ -111,8 +104,14 @@ namespace InsipidusEngine.Screens
             }
             else
             {
-                //Let the camera handle input.
-                _Camera.HandleInput(input);
+                //Let the scene handle input.
+                _Scene.HandleInput(input);
+
+                //Move the camera.
+                if (input.IsKeyDown(Keys.A)) { _Camera.Move(new Vector2(-1, 0)); }
+                else if (input.IsKeyDown(Keys.S)) { _Camera.Move(new Vector2(0, 1)); }
+                else if (input.IsKeyDown(Keys.D)) { _Camera.Move(new Vector2(1, 0)); }
+                else if (input.IsKeyDown(Keys.W)) { _Camera.Move(new Vector2(0, -1)); }
             }
         }
         /// <summary>
@@ -126,6 +125,8 @@ namespace InsipidusEngine.Screens
 
             if (IsActive)
             {
+                //Update the scene.
+                _Scene.Update(gameTime);
                 //Update the camera.
                 _Camera.Update(gameTime);
             }
@@ -140,6 +141,18 @@ namespace InsipidusEngine.Screens
             device.DepthStencilState = new DepthStencilState();
 
             device.Clear(ClearOptions.Target | ClearOptions.DepthBuffer, Color.Black, 1, 0);
+
+            //The sprite batch to use.
+            SpriteBatch spriteBatch = new SpriteBatch(device);
+
+            //Begin drawing.
+            spriteBatch.Begin(SpriteSortMode.Immediate, BlendState.AlphaBlend, null, null, null, null, _Camera.Transform);
+
+            //Draw the scene.
+            _Scene.Draw(spriteBatch);
+
+            //End the drawing.
+            spriteBatch.End();
 
             // If the game is transitioning on or off, fade it out to black.
             if (TransitionPosition > 0) { ScreenManager.FadeBackBufferToBlack(255 - TransitionAlpha); }

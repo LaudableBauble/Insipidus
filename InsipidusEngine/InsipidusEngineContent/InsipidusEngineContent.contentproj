@@ -341,6 +341,225 @@
       <Processor>TextureProcessor</Processor>
     </Compile>
   </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Characters\ZombieGuy\ZombieGuy1_Back[0].png">
+      <Name>ZombieGuy1_Back[0]</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="Characters\ZombieGuy\ZombieGuy1_Back[1].png">
+      <Name>ZombieGuy1_Back[1]</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="Characters\ZombieGuy\ZombieGuy1_Back[2].png">
+      <Name>ZombieGuy1_Back[2]</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="Characters\ZombieGuy\ZombieGuy1_Back[3].png">
+      <Name>ZombieGuy1_Back[3]</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="Characters\ZombieGuy\ZombieGuy1_Front[0].png">
+      <Name>ZombieGuy1_Front[0]</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="Characters\ZombieGuy\ZombieGuy1_Front[1].png">
+      <Name>ZombieGuy1_Front[1]</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="Characters\ZombieGuy\ZombieGuy1_Front[2].png">
+      <Name>ZombieGuy1_Front[2]</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="Characters\ZombieGuy\ZombieGuy1_Front[3].png">
+      <Name>ZombieGuy1_Front[3]</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="Characters\ZombieGuy\ZombieGuy1_Left[0].png">
+      <Name>ZombieGuy1_Left[0]</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="Characters\ZombieGuy\ZombieGuy1_Left[1].png">
+      <Name>ZombieGuy1_Left[1]</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="Characters\ZombieGuy\ZombieGuy1_Left[2].png">
+      <Name>ZombieGuy1_Left[2]</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="Characters\ZombieGuy\ZombieGuy1_Right[0].png">
+      <Name>ZombieGuy1_Right[0]</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="Characters\ZombieGuy\ZombieGuy1_Right[1].png">
+      <Name>ZombieGuy1_Right[1]</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="Characters\ZombieGuy\ZombieGuy1_Right[2].png">
+      <Name>ZombieGuy1_Right[2]</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Entities\Bookshelf[1].png">
+      <Name>Bookshelf[1]</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="Entities\DarkTiledBlock[1].png">
+      <Name>DarkTiledBlock[1]</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="Entities\DarkTiledBlock[2].png">
+      <Name>DarkTiledBlock[2]</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="Entities\DarkTiledBlock[3].png">
+      <Name>DarkTiledBlock[3]</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="Entities\DarkTiledFloor[1].png">
+      <Name>DarkTiledFloor[1]</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="Entities\DarkTiledFloor[2].png">
+      <Name>DarkTiledFloor[2]</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="Entities\ElevatedBlock[1].png">
+      <Name>ElevatedBlock[1]</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="Entities\ElevatedBlock[2].png">
+      <Name>ElevatedBlock[2]</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="Entities\ElevatedBlock[3].png">
+      <Name>ElevatedBlock[3]</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="Entities\ElevatedBlock[4].png">
+      <Name>ElevatedBlock[4]</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="Entities\MarbleArch[1].png">
+      <Name>MarbleArch[1]</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="Entities\MarblePillar[1].png">
+      <Name>MarblePillar[1]</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="Entities\MarbleWall[1].png">
+      <Name>MarbleWall[1]</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="Entities\MarbleWall[2].png">
+      <Name>MarbleWall[2]</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="Entities\MarbleWall[3].png">
+      <Name>MarbleWall[3]</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="Entities\MarbleWall[4].png">
+      <Name>MarbleWall[4]</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="Entities\StonePathwayArch[1].png">
+      <Name>StonePathwayArch[1]</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="Entities\StonePathwayBlock[1].png">
+      <Name>StonePathwayBlock[1]</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="Entities\StonePathwayBlock[2].png">
+      <Name>StonePathwayBlock[2]</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="Entities\StonePathwayBlock[3].png">
+      <Name>StonePathwayBlock[3]</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="Entities\StonePathwayBlock[4].png">
+      <Name>StonePathwayBlock[4]</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="Entities\StoneStairsLeft[1].png">
+      <Name>StoneStairsLeft[1]</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="Entities\StoneStairsRight[1].png">
+      <Name>StoneStairsRight[1]</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="Entities\StoneStairsRight[2].png">
+      <Name>StoneStairsRight[2]</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="Entities\StoneStairsRight[3].png">
+      <Name>StoneStairsRight[3]</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="Entities\StoneStairsRight[4].png">
+      <Name>StoneStairsRight[4]</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="Entities\StoneStairsTop[1].png">
+      <Name>StoneStairsTop[1]</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="Entities\StoneStairsTop[2].png">
+      <Name>StoneStairsTop[2]</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="Entities\WoodTiledFloor[1].png">
+      <Name>WoodTiledFloor[1]</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+  </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Microsoft\XNA Game Studio\$(XnaFrameworkVersion)\Microsoft.Xna.GameStudio.ContentPipeline.targets" />
   <!--  To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

@@ -13,7 +13,7 @@ using Microsoft.Xna.Framework.Net;
 using Microsoft.Xna.Framework.Storage;
 
 using InsipidusEngine.Imagery;
-using InsipidusEngine.Helpers;
+using InsipidusEngine.Infrastructure;
 
 namespace InsipidusEngine.Battle.Projectiles
 {
@@ -31,7 +31,7 @@ namespace InsipidusEngine.Battle.Projectiles
         #endregion
 
         #region Events
-        public delegate void ProjectileEventHandler(Projectile projectile, Character character);
+        public delegate void ProjectileEventHandler(Projectile projectile, Creature character);
         public event ProjectileEventHandler OnCollision;
         #endregion
 
@@ -88,7 +88,7 @@ namespace InsipidusEngine.Battle.Projectiles
         /// Invoke the collision event.
         /// </summary>
         /// <param name="character">The character this projectile collided with.</param>
-        protected virtual void CollisionInvoke(Character character)
+        protected virtual void CollisionInvoke(Creature character)
         {
             //If someone has hooked up a delegate to the event, fire it.
             if (OnCollision != null) { OnCollision(this, character); }

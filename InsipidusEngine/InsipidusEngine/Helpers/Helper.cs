@@ -23,9 +23,22 @@ namespace InsipidusEngine.Infrastructure
     {
         #region Fields
         private static Random _Random = new Random();
+        /// <summary>
+        /// The ratio between height (Y-coordinate) and depth (Z-coordinate). Used to simulate depth. Positive depth is 'upwards'.
+        /// </summary>
+        public static float HeightPerDepthRatio = 1 / 1;
         #endregion
 
         #region Methods
+        /// <summary>
+        /// Get the 2D screen position from a 3D vector.
+        /// </summary>
+        /// <param name="v">The 3D vector.</param>
+        /// <returns>The 3D vector projected into 2D.</returns>
+        public static Vector2 GetScreenPosition(Vector3 v)
+        {
+            return new Vector2(v.X, v.Y - v.Z * HeightPerDepthRatio);
+        }
         /// <summary>
         /// Calculates the angle that an object should face, given its position, its
         /// target's position, its current angle, and its maximum turning speed.

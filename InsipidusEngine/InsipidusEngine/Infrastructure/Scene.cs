@@ -43,7 +43,7 @@ namespace InsipidusEngine.Infrastructure
         /// <summary>
         /// Initialize the scene.
         /// </summary>
-        protected void Initialize()
+        protected virtual void Initialize()
         {
             // Initialize the variables.
             _Name = "Scene";
@@ -53,7 +53,8 @@ namespace InsipidusEngine.Infrastructure
         /// <summary>
         /// Load all content.
         /// </summary>
-        public void LoadContent()
+        /// <param name="content">The content manager to use.</param>
+        public virtual void LoadContent(ContentManager content)
         {
             // Load all entities' content.
         }
@@ -61,7 +62,7 @@ namespace InsipidusEngine.Infrastructure
         /// Handle input.
         /// </summary>
         /// <param name="input">The current input state.</param>
-        public void HandleInput(InputState input)
+        public virtual void HandleInput(InputState input)
         {
             // Let all entities respond to input.
             _Entities.ForEach(item => item.HandleInput(input));
@@ -70,10 +71,13 @@ namespace InsipidusEngine.Infrastructure
         /// Update the scene.
         /// </summary>
         /// <param name="gametime">The game time.</param>
-        public void Update(GameTime gametime)
+        public virtual void Update(GameTime gametime)
         {
             // Update the physics simulator.
             _Physics.Update();
+
+            //Update the list of entities.
+            _Entities.Update();
 
             // Update all entities.
             _Entities.ForEach(item => item.Update(gametime));
@@ -82,7 +86,7 @@ namespace InsipidusEngine.Infrastructure
         /// Draw the scene.
         /// </summary>
         /// <param name="spriteBatch">The sprite batch responsible for drawing the scene.</param>
-        public void Draw(SpriteBatch spriteBatch)
+        public virtual void Draw(SpriteBatch spriteBatch)
         {
             // Enable depth sorting by composite.
             //Composite old = spriteBatch.getComposite();

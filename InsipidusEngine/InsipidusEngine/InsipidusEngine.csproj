@@ -130,12 +130,13 @@
     <Compile Include="Battle\ExperienceBar.cs" />
     <Compile Include="Battle\HealthBar.cs" />
     <Compile Include="Battle\Animation\Projectiles\Projectile.cs" />
+    <Compile Include="Core\Player.cs" />
     <Compile Include="Core\Entity.cs" />
     <Compile Include="EntityModel.cs" />
     <Compile Include="Helpers\Structs.cs" />
     <Compile Include="Helpers\Destination.cs" />
     <Compile Include="Infrastructure\Camera2D.cs" />
-    <Compile Include="Character.cs" />
+    <Compile Include="Creature.cs" />
     <Compile Include="CharacterList.cs" />
     <Compile Include="Effect.cs" />
     <Compile Include="Factory.cs" />
@@ -146,9 +147,11 @@
     <Compile Include="Infrastructure\ScreenManager.cs" />
     <Compile Include="ManualCube.cs" />
     <Compile Include="Physics\Body.cs" />
+    <Compile Include="Physics\CollisionData.cs" />
     <Compile Include="Physics\Force.cs" />
     <Compile Include="Physics\PhysicsSimulator.cs" />
     <Compile Include="Physics\Shape.cs" />
+    <Compile Include="Scenes\LargeDemoScene.cs" />
     <Compile Include="Screens\BackgroundScreen.cs" />
     <Compile Include="Screens\BattleScreen.cs" />
     <Compile Include="Screens\RPGScreen.cs" />
@@ -171,7 +174,7 @@
     <Compile Include="Imagery\Sprite.cs" />
     <Compile Include="Imagery\SpriteManager.cs" />
     <Compile Include="Imagery\SpriteOld.cs" />
-    <Compile Include="Infrastructure\Helper.cs" />
+    <Compile Include="Helpers\Helper.cs" />
     <Compile Include="Main.cs" />
     <Compile Include="Move.cs" />
     <Compile Include="Party.cs" />

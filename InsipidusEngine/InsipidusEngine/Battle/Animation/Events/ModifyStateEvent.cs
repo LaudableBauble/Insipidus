@@ -22,7 +22,7 @@ namespace InsipidusEngine.Battle.Animation.Events
     public class ModifyStateEvent : TimelineEvent
     {
         #region Fields
-        private Character _Character;
+        private Creature _Character;
         private BattleState _ChangeState;
         #endregion
 
@@ -35,7 +35,7 @@ namespace InsipidusEngine.Battle.Animation.Events
         /// <param name="dependentOn">An optional event to be dependent upon, ie. wait for.</param>
         /// <param name="character">The character who health will be modified.</param>
         /// <param name="state">The state to change into.</param>
-        public ModifyStateEvent(Timeline timeline, float start, TimelineEvent dependentOn, Character character, BattleState state)
+        public ModifyStateEvent(Timeline timeline, float start, TimelineEvent dependentOn, Creature character, BattleState state)
         {
             Initialize(timeline, start, dependentOn, character, state);
         }
@@ -50,7 +50,7 @@ namespace InsipidusEngine.Battle.Animation.Events
         /// <param name="dependentOn">An optional event to be dependent upon, ie. wait for.</param>
         /// <param name="character">The character who health will be modified.</param>
         /// <param name="state">The state to change into.</param>
-        protected virtual void Initialize(Timeline timeline, float start, TimelineEvent dependentOn, Character character, BattleState state)
+        protected virtual void Initialize(Timeline timeline, float start, TimelineEvent dependentOn, Creature character, BattleState state)
         {
             //Call the base method.
             base.Initialize(timeline, start, dependentOn);

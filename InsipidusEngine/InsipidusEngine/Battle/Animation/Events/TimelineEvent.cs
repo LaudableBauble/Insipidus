@@ -189,14 +189,14 @@ namespace InsipidusEngine.Battle.Animation.Events
         /// <summary>
         /// The user of the battle animation.
         /// </summary>
-        public Character User
+        public Creature User
         {
             get { return _Timeline.User; }
         }
         /// <summary>
         /// The target of the battle animation.
         /// </summary>
-        public Character Target
+        public Creature Target
         {
             get { return _Timeline.Target; }
         }

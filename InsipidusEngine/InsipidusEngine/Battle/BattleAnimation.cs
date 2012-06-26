@@ -24,8 +24,8 @@ namespace InsipidusEngine.Battle
     public class BattleAnimation
     {
         #region Fields
-        protected Character _User;
-        protected Character _Target;
+        protected Creature _User;
+        protected Creature _Target;
         protected Timeline _Timeline;
         #endregion
 
@@ -83,7 +83,7 @@ namespace InsipidusEngine.Battle
         /// <summary>
         /// The user of the battle animation.
         /// </summary>
-        public Character User
+        public Creature User
         {
             get { return _User; }
             set { _User = value; }
@@ -91,7 +91,7 @@ namespace InsipidusEngine.Battle
         /// <summary>
         /// The target of the battle animation.
         /// </summary>
-        public Character Target
+        public Creature Target
         {
             get { return _Target; }
             set { _Target = value; }

@@ -25,6 +25,7 @@ namespace InsipidusEngine.Physics
         /// <param name="body">The target body.</param>
         /// <param name="force">The velocity of the force.</param>
         public Force(Body body, Vector3 force)
+            : this()
         {
             // Set the variables.
             Body = body;

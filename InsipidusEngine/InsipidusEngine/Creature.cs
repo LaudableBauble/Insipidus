@@ -19,9 +19,9 @@ using InsipidusEngine.Battle;
 namespace InsipidusEngine
 {
     /// <summary>
-    /// A character is a creature and is primarily used for battling with other characters.
+    /// A creature is primarily used for battling with other creatures.
     /// </summary>
-    public class Character
+    public class Creature
     {
         #region Fields
         private string _Name;
@@ -40,7 +40,7 @@ namespace InsipidusEngine
         private float _CurrentEnergy;
         private float _MaxEnergy;
         private SpriteManager _Sprite;
-        private Character _Target;
+        private Creature _Target;
         private Vector2 _Position;
         private Vector2 _Velocity;
         private float _ElapsedMovementTime;
@@ -54,9 +54,9 @@ namespace InsipidusEngine
 
         #region Constructors
         /// <summary>
-        /// Constructor for a character.
+        /// Constructor for a creature.
         /// </summary>
-        public Character()
+        public Creature()
         {
             Initialize();
         }
@@ -64,7 +64,7 @@ namespace InsipidusEngine
 
         #region Methods
         /// <summary>
-        /// Initialize the character.
+        /// Initialize the creature.
         /// </summary>
         private void Initialize()
         {
@@ -86,7 +86,7 @@ namespace InsipidusEngine
             _MovementSpeed = InsipidusEngine.SpeedType.Still;
         }
         /// <summary>
-        /// Load the character's content.
+        /// Load the creature's content.
         /// </summary>
         /// <param name="content">The content manager to use.</param>
         public void LoadContent(ContentManager content)
@@ -96,7 +96,7 @@ namespace InsipidusEngine
             _Moves.ForEach(item => item.LoadContent(content));
         }
         /// <summary>
-        /// Update the character.
+        /// Update the creature.
         /// </summary>
         /// <param name="gametime">The time that has passed.</param>
         public void Update(GameTime gametime)
@@ -115,14 +115,14 @@ namespace InsipidusEngine
                 _ElapsedEnergyTime -= _EnergyRecoverySpeed;
             }
 
-            //If the character is currently trading blows, let him be guided by the battle animation.
+            //If the creature is currently trading blows, let him be guided by the battle animation.
             if (_BattleState != BattleState.Active)
             {
                 //Can we attack? If yes, do so.
                 if (_CurrentEnergy >= _MaxEnergy) { LaunchAttack(_Moves[Calculator.RandomNumber(0, _Moves.Count - 1)], _Target); }
             }
 
-            //Update the character's movement.
+            //Update the creature's movement.
             UpdateMovement();
             //Determine the sprite to display.
             DetermineSprite();
@@ -131,7 +131,7 @@ namespace InsipidusEngine
             _Sprite.Update(gametime, _Position, 0);
         }
         /// <summary>
-        /// Draw the character.
+        /// Draw the creature.
         /// </summary>
         /// <param name="spritebatch">The sprite batch to use.</param>
         public void Draw(SpriteBatch spritebatch)
@@ -142,11 +142,11 @@ namespace InsipidusEngine
         }
 
         /// <summary>
-        /// Launch an attack on a character with a move.
+        /// Launch an attack on a creature with a move.
         /// </summary>
         /// <param name="move">The move to attack with.</param>
         /// <param name="target">The target to attack.</param>
-        public void LaunchAttack(Move move, Character target)
+        public void LaunchAttack(Move move, Creature target)
         {
             //Stop here if the move or target isn't valid, or if a move already has been set in motion.
             if (move == null || target == null || _BattleState != BattleState.Idle) { return; }
@@ -165,7 +165,7 @@ namespace InsipidusEngine
         /// <param name="power">The power of the recoil.</param>
         public void RecieveImpact(Vector2 power)
         {
-            //Move the character according to the recoil.
+            //Move the creature according to the recoil.
             _Velocity += power;
             //Decrease the energy a bit.
             _CurrentEnergy -= 10;
@@ -179,15 +179,15 @@ namespace InsipidusEngine
         private void DetermineSprite()
         {
             //Create the sprite placeholder.
-            Sprite sprite = _Sprite.GetSprite(0);
+            Sprite sprite = _Sprite[0];
 
             //Determine the sprite to display.
             switch (_FacingDirection)
             {
-                case Direction.Down: { sprite = _Sprite.GetSprite("Front"); break; }
-                case Direction.Up: { sprite = _Sprite.GetSprite("Back"); break; }
-                case Direction.Right: { sprite = _Sprite.GetSprite("Right"); break; }
-                case Direction.Left: { sprite = _Sprite.GetSprite("Left"); break; }
+                case Direction.Down: { sprite = _Sprite.Find("Front"); break; }
+                case Direction.Up: { sprite = _Sprite.Find("Back"); break; }
+                case Direction.Right: { sprite = _Sprite.Find("Right"); break; }
+                case Direction.Left: { sprite = _Sprite.Find("Left"); break; }
             }
 
             //Determine the animation speed of the current sprite.
@@ -207,7 +207,7 @@ namespace InsipidusEngine
             sprite.Visibility = Visibility.Visible;
         }
         /// <summary>
-        /// Update the character's movement.
+        /// Update the creature's movement.
         /// </summary>
         private void UpdateMovement()
         {
@@ -349,7 +349,7 @@ namespace InsipidusEngine
             get { return _Moves; }
             set { _Moves = value; }
         }
-        public Character Target
+        public Creature Target
         {
             get { return _Target; }
             set { _Target = value; }
@@ -365,7 +365,7 @@ namespace InsipidusEngine
             set { _Velocity = value; }
         }
         /// <summary>
-        /// The state of battle for this character.
+        /// The state of battle for this creature.
         /// </summary>
         public BattleState BattleState
         {

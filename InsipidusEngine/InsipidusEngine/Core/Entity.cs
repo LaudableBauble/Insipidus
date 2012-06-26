@@ -46,7 +46,7 @@ namespace InsipidusEngine.Core
         /// Initialize the scene.
         /// </summary>
         /// <param name="scene">The scene this entity is part of.</param>
-        protected void Initialize(Scene scene)
+        protected virtual void Initialize(Scene scene)
         {
             // Initialize the variables.
             _Name = "";
@@ -59,51 +59,61 @@ namespace InsipidusEngine.Core
         /// <summary>
         /// Load content and add a sprite. This uses default body shape values.
         /// </summary>
+        /// <param name="contentManager">The content manager to use.</param>
         /// <param name="spritePath">The path to the main sprite.</param>
-        public void LoadContent(String spritePath)
+        public virtual void LoadContent(ContentManager contentManager, String spritePath)
         {
-            LoadContent(spritePath, -1);
+            LoadContent(contentManager, spritePath, -1);
         }
         /// <summary>
         /// Load content and add a sprite.
         /// </summary>
+        /// <param name="contentManager">The content manager to use.</param>
         /// <param name="spritePath">The path to the main sprite.</param>
         /// <param name="height">The height of the shape as seen on picture. This is used for collision data.
         /// -1 results in the use of the full height of the sprite and a depth of 1.</param>
-        public void LoadContent(String spritePath, float height)
+        public virtual void LoadContent(ContentManager contentManager, String spritePath, float height)
         {
             // Clear all sprites.
             _Sprites = new SpriteManager();
 
             // Add a sprite.
-            _Sprites.AddSprite(new Sprite(_Sprites, "Entity"));
-            _Sprites[0].AddFrame(new Frame(spritePath));
+            Sprite sprite = _Sprites.Add(new Sprite(_Sprites, "Entity"));
+            sprite.AddFrame(spritePath);
 
             // Load all sprites' content.
-            _Sprites.LoadContent();
+            _Sprites.LoadContent(contentManager);
 
             // Set the shape of the body.
-            _Body.Shape.Width = _Sprites[0][_Sprites[0].CurrentFrameIndex].Width;
-            _Body.Shape.Height = (height == -1) ? _Sprites[0][_Sprites[0].CurrentFrameIndex].Height : height;
-            _Body.Shape.Depth = (height == -1) ? 1 : _Sprites[0][_Sprites[0].CurrentFrameIndex].Height - height;
+            _Body.Shape.Width = sprite[sprite.CurrentFrameIndex].Width;
+            _Body.Shape.Height = (height == -1) ? sprite[sprite.CurrentFrameIndex].Height : height;
+            _Body.Shape.Depth = (height == -1) ? 1 : sprite[sprite.CurrentFrameIndex].Height - height;
 
             // Update the sprite's position offset.
-            _Sprites[0].PositionOffset = new Vector2(0, -_Sprites[0][_Sprites[0].CurrentFrameIndex].Origin.Y + (_Body.Shape.Height / 2));
+            _Sprites[0].PositionOffset = new Vector2(0, -sprite[sprite.CurrentFrameIndex].Origin.Y + (_Body.Shape.Height / 2));
+        }
+        /// <summary>
+        /// Handle input.
+        /// </summary>
+        /// <param name="input">The current input state.</param>
+        public virtual void HandleInput(InputState input)
+        {
+
         }
         /// <summary>
         /// Update the entity.
         /// </summary>
         /// <param name="gameTime">The game's time.</param>
-        public void Update(GameTime gameTime)
+        public virtual void Update(GameTime gameTime)
         {
             // Update the sprites.
-            _Sprites.Update(gameTime, Helper.getScreenPosition(new Vector3(_Body.LayeredPosition, _Body.Shape.BottomDepth)));
+            _Sprites.Update(gameTime, Helper.GetScreenPosition(new Vector3(_Body.LayeredPosition, _Body.Shape.BottomDepth)), 0);
         }
         /// <summary>
         /// Draw the entity.
         /// </summary>
         /// <param name="spriteBatch">The sprite batch to use.</param>
-        public void Draw(SpriteBatch spriteBatch)
+        public virtual void Draw(SpriteBatch spriteBatch)
         {
             // Draw the sprite.
             _Sprites.Draw(spriteBatch);

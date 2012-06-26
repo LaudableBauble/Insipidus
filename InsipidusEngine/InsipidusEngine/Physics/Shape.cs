@@ -103,14 +103,15 @@ namespace InsipidusEngine.Physics
         /// </summary>
         /// <param name="shape">The shape to get an intersection from.</param>
         /// <returns>The intersection rectangle.</returns>
-        public Rectangle getIntersection(Shape shape)
+        public Rectangle GetIntersection(Shape shape)
         {
             // Create the two base rectangles.
             Rectangle rect1 = new Rectangle((int)shape.Position.X, (int)shape.Position.Y, (int)shape.Width, (int)shape.Height);
             Rectangle rect2 = new Rectangle((int)_Position.X, (int)_Position.Y, (int)_Width, (int)_Height);
 
             // Return the intersection rectangle.
-            return rect1.Intersection(rect2);
+            //return rect1.Intersection(rect2);
+            return rect1;
         }
         /// <summary>
         /// Compare two shapes by their depth values. Allows margin overlap, ie. same end-point position.
@@ -118,14 +119,14 @@ namespace InsipidusEngine.Physics
         /// <param name="s1">The first shape.</param>
         /// <param name="s2">The second shape.</param>
         /// <returns>1 if the first shape is located 'higher', -1 if the second shape is 'located' higher and 0 if the shapes overlap.</returns>
-        public static int IsOverlaping(Shape s1, Shape s2)
+        public static int IsOverlapping(Shape s1, Shape s2)
         {
             // The entities' depth data.
             Vector2 v1 = new Vector2(s1.BottomDepth, Math.Min(s1.GetTopDepth(s1.LayeredPosition), s1.GetTopDepth(s2.LayeredPosition)));
             Vector2 v2 = new Vector2(s2.BottomDepth, Math.Min(s2.GetTopDepth(s1.LayeredPosition), s2.GetTopDepth(s2.LayeredPosition)));
 
             // Compare the shapes to each other.
-            if (!v1.overlap(v2, false))
+            if (!Calculator.IsOverlapping(v1, v2, false))
             {
                 if (s1.Position.Z < s2.Position.Z) { return -1; }
                 else if (s1.Position.Z > s2.Position.Z) { return 1; }
@@ -150,8 +151,7 @@ namespace InsipidusEngine.Physics
         public Vector2[] GetAxes()
         {
             // Note that because of parallel edges in a rectangle only two edges have to be returned.
-            return new Vector2[] { Vector2.Subtract(TopRight, TopLeft).Perpendicular().normalize(),
-				Vector2.Subtract(BottomRight, TopRight).perpendicular().normalize() };
+            return new Vector2[] { Vector2.Normalize(Calculator.Perpendicular(TopRight - TopLeft)), Vector2.Normalize(Calculator.Perpendicular(BottomRight - TopRight)) };
         }
         /// <summary>
         /// Get the vertices of this shape. Uses clockwise ordering.
@@ -170,14 +170,14 @@ namespace InsipidusEngine.Physics
         public Vector2 Project(Vector2 axis)
         {
             // Set up the end points of the projection.
-            float min = axis.Dot(TopLeft);
+            float min = Vector2.Dot(axis, TopLeft);
             float max = min;
 
             // Iterate through every vertex in the shape.
             foreach (Vector2 v in GetVertices())
             {
                 // Get the dot product.
-                float p = axis.dot(v);
+                float p = Vector2.Dot(axis, v);
 
                 // See if any new end points have emerged.
                 if (p < min) { min = p; }
@@ -254,7 +254,7 @@ namespace InsipidusEngine.Physics
                 default:
                     {
                         // Uniform depth distribution.
-                        return new Shape(new Vector3(_Position.toVector2(), z), _Width, _Height, 1f);
+                        return new Shape(new Vector3(_Position.X, _Position.Y, z), _Width, _Height, 1f);
                     }
             }
         }
@@ -406,8 +406,8 @@ namespace InsipidusEngine.Physics
         {
             get
             {
-                Vector2 topLeft = Helper.toTopLeft(this);
-                return Helper.rotateVector(topLeft, Vector2.Add(topLeft, _Origin), _Rotation);
+                Vector2 topLeft = Calculator.ToTopLeft(this);
+                return Calculator.RotateVector(topLeft, Vector2.Add(topLeft, _Origin), _Rotation);
             }
         }
         /// <summary>
@@ -417,8 +417,8 @@ namespace InsipidusEngine.Physics
         {
             get
             {
-                Vector2 topRight = Helper.toTopRight(this);
-                return Helper.rotateVector(topRight, Vector2.Add(topRight, new Vector2(-_Origin.X, _Origin.Y)), _Rotation);
+                Vector2 topRight = Calculator.ToTopRight(this);
+                return Calculator.RotateVector(topRight, Vector2.Add(topRight, new Vector2(-_Origin.X, _Origin.Y)), _Rotation);
             }
         }
         /// <summary>
@@ -428,8 +428,8 @@ namespace InsipidusEngine.Physics
         {
             get
             {
-                Vector2 bottomLeft = Helper.toBottomLeft(this);
-                return Helper.rotateVector(bottomLeft, Vector2.Add(bottomLeft, new Vector2(_Origin.X, -_Origin.Y)), _Rotation);
+                Vector2 bottomLeft = Calculator.ToBottomLeft(this);
+                return Calculator.RotateVector(bottomLeft, Vector2.Add(bottomLeft, new Vector2(_Origin.X, -_Origin.Y)), _Rotation);
             }
         }
         /// <summary>
@@ -439,8 +439,8 @@ namespace InsipidusEngine.Physics
         {
             get
             {
-                Vector2 bottomRight = Helper.toBottomRight(this);
-                return Helper.rotateVector(bottomRight, Vector2.Add(bottomRight, new Vector2(-_Origin.X, -_Origin.Y)), _Rotation);
+                Vector2 bottomRight = Calculator.ToBottomRight(this);
+                return Calculator.RotateVector(bottomRight, Vector2.Add(bottomRight, new Vector2(-_Origin.X, -_Origin.Y)), _Rotation);
             }
         }
         /// <summary>
@@ -464,6 +464,7 @@ namespace InsipidusEngine.Physics
         public DepthDistribution DepthDistribution
         {
             get { return _DepthDistribution; }
+            set { _DepthDistribution = value; }
         }
         #endregion
     }

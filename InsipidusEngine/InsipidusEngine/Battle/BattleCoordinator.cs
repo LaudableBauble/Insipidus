@@ -128,7 +128,7 @@ namespace InsipidusEngine.Battle
         /// Try to cancel a character's moves.
         /// </summary>
         /// <param name="move">The move to cancel.</param>
-        public void CancelMoves(Character character)
+        public void CancelMoves(Creature character)
         {
             //Try to cancel all moves.
             FindUserMoves(character).ForEach(item => item.Cancel());
@@ -138,7 +138,7 @@ namespace InsipidusEngine.Battle
         /// </summary>
         /// <param name="user">The user of the moves.</param>
         /// <returns>The moves.</returns>
-        public List<BattleMove> FindUserMoves(Character user)
+        public List<BattleMove> FindUserMoves(Creature user)
         {
             return (new List<BattleMove>(_Moves)).FindAll(item => item.User == user);
         }
@@ -147,7 +147,7 @@ namespace InsipidusEngine.Battle
         /// </summary>
         /// <param name="character">The character to base the search on.</param>
         /// <returns>Whether any move has control over the character.</returns>
-        public bool HasMoveControl(Character character)
+        public bool HasMoveControl(Creature character)
         {
             //The result.
             bool result = false;
@@ -165,7 +165,7 @@ namespace InsipidusEngine.Battle
         /// Update a character's state by looking at all active moves' state of control.
         /// </summary>
         /// <param name="character">The character whos state to update.</param>
-        public void UpdateControlState(Character character)
+        public void UpdateControlState(Creature character)
         {
             //If any active move has control over the character, set its state to active.
             if (HasMoveControl(character)) { character.BattleState = BattleState.Active; }

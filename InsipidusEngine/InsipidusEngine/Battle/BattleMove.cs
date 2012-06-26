@@ -26,8 +26,8 @@ namespace InsipidusEngine.Battle
         #region Fields
         private Move _Move;
         private Timeline _Timeline;
-        private Character _User;
-        private Character _Target;
+        private Creature _User;
+        private Creature _Target;
         private bool _IsCancelable;
         private bool _HasUserControl;
         private bool _HasTargetControl;
@@ -45,7 +45,7 @@ namespace InsipidusEngine.Battle
         /// <param name="move">The move to use in battle.</param>
         /// <param name="user">The user of the move.</param>
         /// <param name="target">The target for the move.</param>
-        public BattleMove(Move move, Character user, Character target)
+        public BattleMove(Move move, Creature user, Creature target)
         {
             //Initialize a few things.
             Initialize(move, user, target);
@@ -59,7 +59,7 @@ namespace InsipidusEngine.Battle
         /// <param name="move">The move to use in battle.</param>
         /// <param name="user">The user of the move.</param>
         /// <param name="target">The target for the move.</param>
-        protected void Initialize(Move move, Character user, Character target)
+        protected void Initialize(Move move, Creature user, Creature target)
         {
             //Initialize the class.
             _Move = move;
@@ -244,12 +244,12 @@ namespace InsipidusEngine.Battle
             get { return _Move; }
             set { _Move = value; }
         }
-        public Character User
+        public Creature User
         {
             get { return _User; }
             set { _User = value; }
         }
-        public Character Target
+        public Creature Target
         {
             get { return _Target; }
             set { _Target = value; }

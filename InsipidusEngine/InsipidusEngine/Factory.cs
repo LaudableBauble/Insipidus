@@ -15,7 +15,7 @@ using Microsoft.Xna.Framework.Storage;
 using InsipidusEngine.Battle;
 using InsipidusEngine.Battle.Animation.Events;
 using InsipidusEngine.Imagery;
-using InsipidusEngine.Helpers;
+using InsipidusEngine.Infrastructure;
 
 namespace InsipidusEngine
 {
@@ -179,7 +179,7 @@ namespace InsipidusEngine
         /// <param name="moves">The moves that this pokémon knows.</param>
         /// <param name="maxEnergy">The max energy of the pokémon.</param>
         /// <returns>The pokémon created with the given data.</returns>
-        public Character CreatePokemon(string name, Gender gender, PokemonType type, float hp, float attackPhysical, float defensePhysical,
+        public Creature CreatePokemon(string name, Gender gender, PokemonType type, float hp, float attackPhysical, float defensePhysical,
             float specialAttack, float specialDefense, float speed, int level, List<Move> moves, float maxEnergy)
         {
             //Create the list of types.
@@ -207,11 +207,11 @@ namespace InsipidusEngine
         /// <param name="moves">The moves that this pokémon knows.</param>
         /// <param name="maxEnergy">The max energy of the pokémon.</param>
         /// <returns>The pokémon created with the given data.</returns>
-        public Character CreatePokemon(string name, Gender gender, List<PokemonType> types, float hp, float attackPhysical, float defensePhysical,
+        public Creature CreatePokemon(string name, Gender gender, List<PokemonType> types, float hp, float attackPhysical, float defensePhysical,
             float specialAttack, float specialDefense, float speed, int level, List<Move> moves, float maxEnergy)
         {
             //Create the Pokémon.
-            Character pokemon = new Character();
+            Creature pokemon = new Creature();
 
             //Set the stats accordingly.
             pokemon.Name = name;
@@ -365,7 +365,7 @@ namespace InsipidusEngine
         /// <summary>
         /// Get a new Snivy pokémon.
         /// </summary>
-        public Character Snivy
+        public Creature Snivy
         {
             get
             {
@@ -375,7 +375,7 @@ namespace InsipidusEngine
         /// <summary>
         /// Get a new Pansear pokémon.
         /// </summary>
-        public Character Pansear
+        public Creature Pansear
         {
             get
             {

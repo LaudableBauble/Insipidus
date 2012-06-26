@@ -22,7 +22,7 @@ namespace InsipidusEngine.Battle.Animation.Events
     public class ModifyEnergyEvent : TimelineEvent
     {
         #region Fields
-        private Character _Character;
+        private Creature _Character;
         private float _Amount;
         #endregion
 
@@ -35,7 +35,7 @@ namespace InsipidusEngine.Battle.Animation.Events
         /// <param name="dependentOn">An optional event to be dependent upon, ie. wait for.</param>
         /// <param name="character">The character whos energy will be modified.</param>
         /// <param name="amount">The amount to add to the energy.</param>
-        public ModifyEnergyEvent(Timeline timeline, float start, TimelineEvent dependentOn, Character character, float amount)
+        public ModifyEnergyEvent(Timeline timeline, float start, TimelineEvent dependentOn, Creature character, float amount)
         {
             Initialize(timeline, start, dependentOn, character, amount);
         }
@@ -50,7 +50,7 @@ namespace InsipidusEngine.Battle.Animation.Events
         /// <param name="dependentOn">An optional event to be dependent upon, ie. wait for.</param>
         /// <param name="character">The character whos energy will be modified.</param>
         /// <param name="amount">The amount to add to the energy.</param>
-        protected virtual void Initialize(Timeline timeline, float start, TimelineEvent dependentOn, Character character, float amount)
+        protected virtual void Initialize(Timeline timeline, float start, TimelineEvent dependentOn, Creature character, float amount)
         {
             //Call the base method.
             base.Initialize(timeline, start, dependentOn);
