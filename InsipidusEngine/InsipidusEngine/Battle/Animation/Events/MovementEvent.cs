@@ -13,7 +13,7 @@ using Microsoft.Xna.Framework.Net;
 using Microsoft.Xna.Framework.Storage;
 
 using InsipidusEngine.Imagery;
-using InsipidusEngine.Infrastructure;
+using InsipidusEngine.Helpers;
 
 namespace InsipidusEngine.Battle.Animation.Events
 {

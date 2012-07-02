@@ -12,7 +12,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
 #endregion
 
-namespace InsipidusEngine.Infrastructure
+namespace InsipidusEngine.Helpers
 {
     /// <summary>
     /// Helper for reading input from mouse, keyboard and gamepad. This class tracks both the current and previous state of both input devices, and implements query

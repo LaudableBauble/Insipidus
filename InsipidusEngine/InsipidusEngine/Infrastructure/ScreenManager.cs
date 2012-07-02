@@ -16,7 +16,7 @@ using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 #endregion
 
-namespace InsipidusEngine.Infrastructure
+namespace InsipidusEngine.Helpers
 {
     /// <summary>
     /// The screen manager is a component which manages one or more GameScreen

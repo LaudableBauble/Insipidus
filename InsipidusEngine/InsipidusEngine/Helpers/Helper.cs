@@ -14,7 +14,7 @@ using Microsoft.Xna.Framework.Storage;
 
 using InsipidusEngine.Imagery;
 
-namespace InsipidusEngine.Infrastructure
+namespace InsipidusEngine.Helpers
 {
     /// <summary>
     /// A class that serves as a helper in varying forms to other instances in the game.
@@ -27,6 +27,10 @@ namespace InsipidusEngine.Infrastructure
         /// The ratio between height (Y-coordinate) and depth (Z-coordinate). Used to simulate depth. Positive depth is 'upwards'.
         /// </summary>
         public static float HeightPerDepthRatio = 1 / 1;
+        /// <summary>
+        /// The path to the dummy normal map. This is to be used when no other normal map is present for a sprite.
+        /// </summary>
+        public static string DummyNormalMap = @"Misc\Dummy_NormalMap";
         /// <summary>
         /// A blend state called belding, ie. a black background.
         /// </summary>

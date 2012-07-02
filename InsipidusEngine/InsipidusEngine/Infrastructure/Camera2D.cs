@@ -10,7 +10,7 @@ using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework.Net;
 using Microsoft.Xna.Framework.Storage;
 
-namespace InsipidusEngine.Infrastructure
+namespace InsipidusEngine.Helpers
 {
     /// <summary>
     /// This is the camera used in the game.
@@ -257,7 +257,7 @@ namespace InsipidusEngine.Infrastructure
         /// </summary>
         public Vector2 Position
         {
-            get { return (_Position); }
+            get { return _Position; }
             set { UpdateCamera(value, _ZoomValue, _Rotation); }
         }
         /// <summary>
@@ -265,7 +265,7 @@ namespace InsipidusEngine.Infrastructure
         /// </summary>
         public float ZoomValue
         {
-            get { return (_ZoomValue); }
+            get { return _ZoomValue; }
             set { UpdateCamera(_Position, value, _Rotation); }
         }
         /// <summary>
@@ -273,7 +273,7 @@ namespace InsipidusEngine.Infrastructure
         /// </summary>
         public float Rotation
         {
-            get { return (_Rotation); }
+            get { return _Rotation; }
             set { UpdateCamera(_Position, _ZoomValue, value); }
         }
         /// <summary>
@@ -281,7 +281,7 @@ namespace InsipidusEngine.Infrastructure
         /// </summary>
         public Vector2 Origin
         {
-            get { return (_Origin); }
+            get { return _Origin; }
             set { _Origin = value; ; }
         }
         /// <summary>
@@ -289,7 +289,7 @@ namespace InsipidusEngine.Infrastructure
         /// </summary>
         public float CameraSpeed
         {
-            get { return (_CameraSpeed); }
+            get { return _CameraSpeed; }
             set { _CameraSpeed = value; }
         }
         /// <summary>
@@ -297,7 +297,7 @@ namespace InsipidusEngine.Infrastructure
         /// </summary>
         public float MaxZoom
         {
-            get { return (_MaxZoom); }
+            get { return _MaxZoom; }
             set { _MaxZoom = value; }
         }
         /// <summary>
@@ -305,7 +305,7 @@ namespace InsipidusEngine.Infrastructure
         /// </summary>
         public float MinZoom
         {
-            get { return (_MinZoom); }
+            get { return _MinZoom; }
             set { _MinZoom = value; }
         }
         /// <summary>
@@ -313,7 +313,7 @@ namespace InsipidusEngine.Infrastructure
         /// </summary>
         public Rectangle Viewport
         {
-            get { return (_Viewport); }
+            get { return _Viewport; }
             set { _Viewport = value; }
         }
         /// <summary>
@@ -321,7 +321,7 @@ namespace InsipidusEngine.Infrastructure
         /// </summary>
         public Rectangle WorldRect
         {
-            get { return (_WorldRect); }
+            get { return _WorldRect; }
             set { _WorldRect = value; }
         }
         /// <summary>
@@ -329,7 +329,7 @@ namespace InsipidusEngine.Infrastructure
         /// </summary>
         public Matrix Transform
         {
-            get { return (_Transform); }
+            get { return _Transform; }
             set { _Transform = value; }
         }
         /// <summary>
@@ -337,7 +337,7 @@ namespace InsipidusEngine.Infrastructure
         /// </summary>
         public Matrix Projection
         {
-            get { return (_Projection); }
+            get { return _Projection; }
             set { _Projection = value; }
         }
         #endregion

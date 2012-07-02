@@ -15,7 +15,7 @@ using Microsoft.Xna.Framework.Storage;
 using InsipidusEngine.Battle;
 using InsipidusEngine.Battle.Animation.Events;
 using InsipidusEngine.Imagery;
-using InsipidusEngine.Infrastructure;
+using InsipidusEngine.Helpers;
 
 namespace InsipidusEngine
 {

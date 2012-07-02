@@ -12,7 +12,7 @@ using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework.Net;
 using Microsoft.Xna.Framework.Storage;
 
-using InsipidusEngine.Infrastructure;
+using InsipidusEngine.Helpers;
 
 namespace InsipidusEngine.Obsolete
 {

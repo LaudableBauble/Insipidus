@@ -12,7 +12,7 @@ using System;
 using Microsoft.Xna.Framework;
 #endregion
 
-namespace InsipidusEngine.Infrastructure
+namespace InsipidusEngine.Helpers
 {
     /// <summary>
     /// A screen is a single layer that has update and draw logic, and which

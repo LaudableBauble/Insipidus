@@ -22,7 +22,7 @@ using Microsoft.Xna.Framework.Net;
 using Microsoft.Xna.Framework.Storage;
 
 using InsipidusEngine.Imagery;
-using InsipidusEngine.Infrastructure;
+using InsipidusEngine.Helpers;
 using InsipidusEngine.Scenes;
 #endregion
 
@@ -146,13 +146,13 @@ namespace InsipidusEngine.Screens
             SpriteBatch spriteBatch = new SpriteBatch(device);
 
             //Begin drawing.
-            spriteBatch.Begin(SpriteSortMode.Immediate, BlendState.AlphaBlend, SamplerState.PointWrap, null, null, null, _Camera.Transform);
+            //spriteBatch.Begin(SpriteSortMode.Immediate, BlendState.AlphaBlend, SamplerState.PointWrap, null, null, null, _Camera.Transform);
 
             //Draw the scene.
-            _Scene.Draw(spriteBatch);
+            _Scene.Draw(spriteBatch, _Camera.Transform);
 
             //End the drawing.
-            spriteBatch.End();
+            //spriteBatch.End();
 
             // If the game is transitioning on or off, fade it out to black.
             if (TransitionPosition > 0) { ScreenManager.FadeBackBufferToBlack(255 - TransitionAlpha); }

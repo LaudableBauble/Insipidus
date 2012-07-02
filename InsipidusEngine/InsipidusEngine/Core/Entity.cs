@@ -13,7 +13,7 @@ using Microsoft.Xna.Framework.Net;
 using Microsoft.Xna.Framework.Storage;
 
 using InsipidusEngine.Physics;
-using InsipidusEngine.Infrastructure;
+using InsipidusEngine.Helpers;
 using InsipidusEngine.Imagery;
 
 namespace InsipidusEngine.Core

@@ -22,7 +22,7 @@ using Microsoft.Xna.Framework.Net;
 using Microsoft.Xna.Framework.Storage;
 using InsipidusEngine.Imagery;
 using InsipidusEngine.Battle;
-using InsipidusEngine.Infrastructure;
+using InsipidusEngine.Helpers;
 #endregion
 
 namespace InsipidusEngine.Screens

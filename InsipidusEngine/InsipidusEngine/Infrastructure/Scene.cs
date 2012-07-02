@@ -16,7 +16,7 @@ using InsipidusEngine.Core;
 using InsipidusEngine.Physics;
 using InsipidusEngine.Tools;
 
-namespace InsipidusEngine.Infrastructure
+namespace InsipidusEngine.Helpers
 {
     /// <summary>
     /// A scene is a map of the game world and can be populated by entities.
@@ -34,6 +34,8 @@ namespace InsipidusEngine.Infrastructure
         protected RenderTarget2D _ShadowMap;
         protected Effect _LightEffect;
         protected Effect _CombinedEffect;
+
+        protected Vector3 _LightPosition;
         #endregion
 
         #region Constructors
@@ -67,6 +69,9 @@ namespace InsipidusEngine.Infrastructure
             //Store the graphics device somewhere close.
             _GraphicsDevice = graphics;
 
+            //Initialize the light's position.
+            _LightPosition = Vector3.Zero;
+
             //Create acceptable presentation parameters for the graphics device.
             PresentationParameters pp = _GraphicsDevice.PresentationParameters;
             int width = pp.BackBufferWidth;
@@ -78,6 +83,7 @@ namespace InsipidusEngine.Infrastructure
             _NormalMap = new RenderTarget2D(_GraphicsDevice, width, height);
             _ShadowMap = new RenderTarget2D(_GraphicsDevice, width, height, false, format, pp.DepthStencilFormat, pp.MultiSampleCount, RenderTargetUsage.DiscardContents);
 
+            //Load the shaders.
             _LightEffect = content.Load<Effect>(@"Shaders\Lighting");
             _CombinedEffect = content.Load<Effect>(@"Shaders\DeferredCombine");
 
@@ -111,21 +117,29 @@ namespace InsipidusEngine.Infrastructure
         /// Draw the scene.
         /// </summary>
         /// <param name="spriteBatch">The sprite batch responsible for drawing the scene.</param>
-        public virtual void Draw(SpriteBatch spriteBatch)
+        /// <param name="view">The view matrix through which the game world is seen.</param>
+        public virtual void Draw(SpriteBatch spriteBatch, Matrix view)
         {
+            //Update the light's position.
+            _LightPosition = new Vector3(Vector2.Transform(Helper.GetMousePosition(), Matrix.Invert(view)), 0);
+
             //Clear the screen.
             _GraphicsDevice.Clear(Color.CornflowerBlue);
 
             //Initialize the color map and draw to it.
             _GraphicsDevice.SetRenderTarget(_ColorMap);
             _GraphicsDevice.Clear(Color.Transparent);
+            spriteBatch.Begin(SpriteSortMode.Immediate, BlendState.AlphaBlend, SamplerState.PointWrap, null, null, null, view);
             _Entities.ForEach(item => item.Draw(spriteBatch, DrawState.Color));
+            spriteBatch.End();
 
             //Initialize the normal map and draw to it.
             _GraphicsDevice.SetRenderTarget(null);
             _GraphicsDevice.SetRenderTarget(_NormalMap);
             _GraphicsDevice.Clear(Color.Transparent);
+            spriteBatch.Begin(SpriteSortMode.Immediate, BlendState.AlphaBlend, SamplerState.PointWrap, null, null, null, view);
             _Entities.ForEach(item => item.Draw(spriteBatch, DrawState.Normal));
+            spriteBatch.End();
 
             //Initialize the shadow map and draw to it.
             _GraphicsDevice.SetRenderTarget(null);
@@ -146,8 +160,8 @@ namespace InsipidusEngine.Infrastructure
 
             //Set the light data.
             _LightEffect.Parameters["_LightStrength"].SetValue(1f);
-            _LightEffect.Parameters["_LightPosition"].SetValue(new Vector3(0, 0, 0));
-            _LightEffect.Parameters["_LightColor"].SetValue(new Vector4(1.0f, 0f, 1.0f, 1.0f));
+            _LightEffect.Parameters["_LightPosition"].SetValue(_LightPosition);
+            _LightEffect.Parameters["_LightColor"].SetValue(new Vector4(1.0f, 1f, 1.0f, 1.0f));
             _LightEffect.Parameters["_LightDecay"].SetValue(200);
             _LightEffect.Parameters["_SpecularStrength"].SetValue(1f);
 
@@ -187,6 +201,9 @@ namespace InsipidusEngine.Infrastructure
             spriteBatch.Begin(SpriteSortMode.Immediate, BlendState.AlphaBlend, null, null, null, _CombinedEffect);
             spriteBatch.Draw(_ColorMap, Vector2.Zero, Color.White);
             spriteBatch.End();
+
+            //Draw the debug render targets.
+            //DrawDebugRenderTargets(spriteBatch);
         }
 
         /// <summary>
@@ -209,6 +226,21 @@ namespace InsipidusEngine.Infrastructure
         {
             _Entities.Remove(entity);
             _Physics.RemoveBody(entity.Body);
+        }
+        /// <summary>
+        /// [DEBUG] Draws the debug render targets onto the bottom of the screen.
+        /// </summary>
+        /// <param name="spriteBatch">The sprite batch.</param>
+        public void DrawDebugRenderTargets(SpriteBatch spriteBatch)
+        {
+            // Draw some debug textures.
+            spriteBatch.Begin();
+            Rectangle size = new Rectangle(0, 0, _ColorMap.Width / 3, _ColorMap.Height / 3);
+            var position = new Vector2(0, _GraphicsDevice.Viewport.Height - size.Height);
+            spriteBatch.Draw(_ColorMap, new Rectangle((int)position.X, (int)position.Y, size.Width, size.Height), Color.White);
+            spriteBatch.Draw(_NormalMap, new Rectangle((int)position.X + size.Width, (int)position.Y, size.Width, size.Height), Color.White);
+            spriteBatch.Draw(_ShadowMap, new Rectangle((int)position.X + size.Width * 2, (int)position.Y, size.Width, size.Height), Color.White);
+            spriteBatch.End();
         }
         #endregion
 

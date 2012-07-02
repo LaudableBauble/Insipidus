@@ -12,7 +12,7 @@ using System;
 using System.Collections.Generic;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using InsipidusEngine.Infrastructure;
+using InsipidusEngine.Helpers;
 #endregion
 
 namespace InsipidusEngine.Screens

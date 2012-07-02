@@ -11,6 +11,8 @@ using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework.Net;
 using Microsoft.Xna.Framework.Storage;
 
+using InsipidusEngine.Helpers;
+
 namespace InsipidusEngine.Imagery
 {
     /// <summary>
@@ -175,14 +177,17 @@ namespace InsipidusEngine.Imagery
             //If ths sprite has no frames, stop here.
             if (_Frames.Count == 0) { return; }
 
+            //Make a local reference to the frame.
+            Frame frame = _Frames[_FrameIndex];
+
             //If a frame has a texture already stored on its premises, load that texture.
-            if (_Frames[_FrameIndex].Texture != null) { _ColorTexture = _Frames[_FrameIndex].Texture; }
+            if (frame.Texture != null) { _ColorTexture = frame.Texture; }
             else
             {
                 //Load the color, normal and depth texture if possible.
-                _ColorTexture = (_Frames[_FrameIndex].ColorPath == "") ? null : _Manager.ContentManager.Load<Texture2D>(_Frames[_FrameIndex].ColorPath);
-                _NormalTexture = (_Frames[_FrameIndex].NormalPath == "") ? null : _Manager.ContentManager.Load<Texture2D>(_Frames[_FrameIndex].NormalPath);
-                _DepthTexture = (_Frames[_FrameIndex].DepthPath == "") ? null : _Manager.ContentManager.Load<Texture2D>(_Frames[_FrameIndex].DepthPath);
+                _ColorTexture = (frame.ColorPath == "") ? null : _Manager.ContentManager.Load<Texture2D>(frame.ColorPath);
+                _NormalTexture = (frame.NormalPath == "") ? _Manager.ContentManager.Load<Texture2D>(@"Entities\DarkTiledBlock[1]_Normal"/*Helper.DummyNormalMap*/) : _Manager.ContentManager.Load<Texture2D>(frame.NormalPath);
+                _DepthTexture = (frame.DepthPath == "") ? null : _Manager.ContentManager.Load<Texture2D>(frame.DepthPath);
             }
 
             //The bounds of the sprite has changed, invoke the appropriate event.

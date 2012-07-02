@@ -13,7 +13,7 @@ using Microsoft.Xna.Framework.Net;
 using Microsoft.Xna.Framework.Storage;
 
 using InsipidusEngine.Core;
-using InsipidusEngine.Infrastructure;
+using InsipidusEngine.Helpers;
 
 namespace InsipidusEngine.Scenes
 {
@@ -483,6 +483,11 @@ namespace InsipidusEngine.Scenes
             _MarbleWall1.LoadContent(content, @"Entities\MarbleWall[1]", 22);
             _MarbleWall2.LoadContent(content, @"Entities\MarbleWall[1]", 22);
             _Floor.LoadContent(content, @"Entities\WoodTiledFloor[1]");
+
+            //Set their normal maps.
+            _DarkBlock3.Sprites[0].Frames[0].NormalPath = @"Entities\DarkTiledBlock[1]_Normal";
+            _DarkBlock4.Sprites[0].Frames[0].NormalPath = @"Entities\DarkTiledBlock[1]_Normal";
+            _DarkBlock12.Sprites[0].Frames[0].NormalPath = @"Entities\DarkTiledBlock[1]_Normal";
 
             // Set their depths.
             _Shelf1.Body.Shape.BottomDepth = 1;
