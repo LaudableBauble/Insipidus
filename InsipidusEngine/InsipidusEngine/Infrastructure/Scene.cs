@@ -25,8 +25,15 @@ namespace InsipidusEngine.Infrastructure
     {
         #region Fields
         protected String _Name;
+        protected GraphicsDevice _GraphicsDevice;
         protected PhysicsSimulator _Physics;
         protected RobustList<Entity> _Entities;
+
+        protected RenderTarget2D _ColorMap;
+        protected RenderTarget2D _NormalMap;
+        protected RenderTarget2D _ShadowMap;
+        protected Effect _LightEffect;
+        protected Effect _CombinedEffect;
         #endregion
 
         #region Constructors
@@ -53,9 +60,27 @@ namespace InsipidusEngine.Infrastructure
         /// <summary>
         /// Load all content.
         /// </summary>
+        /// <param name="graphics">The graphics device in use.</param>
         /// <param name="content">The content manager to use.</param>
-        public virtual void LoadContent(ContentManager content)
+        public virtual void LoadContent(GraphicsDevice graphics, ContentManager content)
         {
+            //Store the graphics device somewhere close.
+            _GraphicsDevice = graphics;
+
+            //Create acceptable presentation parameters for the graphics device.
+            PresentationParameters pp = _GraphicsDevice.PresentationParameters;
+            int width = pp.BackBufferWidth;
+            int height = pp.BackBufferHeight;
+            SurfaceFormat format = pp.BackBufferFormat;
+
+            //Create the render targets.
+            _ColorMap = new RenderTarget2D(_GraphicsDevice, width, height);
+            _NormalMap = new RenderTarget2D(_GraphicsDevice, width, height);
+            _ShadowMap = new RenderTarget2D(_GraphicsDevice, width, height, false, format, pp.DepthStencilFormat, pp.MultiSampleCount, RenderTargetUsage.DiscardContents);
+
+            _LightEffect = content.Load<Effect>(@"Shaders\Lighting");
+            _CombinedEffect = content.Load<Effect>(@"Shaders\DeferredCombine");
+
             // Load all entities' content.
         }
         /// <summary>
@@ -88,21 +113,80 @@ namespace InsipidusEngine.Infrastructure
         /// <param name="spriteBatch">The sprite batch responsible for drawing the scene.</param>
         public virtual void Draw(SpriteBatch spriteBatch)
         {
-            // Enable depth sorting by composite.
-            //Composite old = spriteBatch.getComposite();
-            //spriteBatch.setComposite(_Composite);
+            //Clear the screen.
+            _GraphicsDevice.Clear(Color.CornflowerBlue);
 
-            // Draw all entities.
-            foreach (Entity entity in _Entities)
-            {
-                // Prepare the graphics device for depth-sorting.
-                //((DepthComposite)spriteBatch.getComposite()).setEntity(entity);
-                entity.Draw(spriteBatch);
-            }
+            //Initialize the color map and draw to it.
+            _GraphicsDevice.SetRenderTarget(_ColorMap);
+            _GraphicsDevice.Clear(Color.Transparent);
+            _Entities.ForEach(item => item.Draw(spriteBatch, DrawState.Color));
 
-            // Notify the depth composite that the frame has ended, at least for the scene.
-            //_Composite.endFrame();
-            //spriteBatch.setComposite(old);
+            //Initialize the normal map and draw to it.
+            _GraphicsDevice.SetRenderTarget(null);
+            _GraphicsDevice.SetRenderTarget(_NormalMap);
+            _GraphicsDevice.Clear(Color.Transparent);
+            _Entities.ForEach(item => item.Draw(spriteBatch, DrawState.Normal));
+
+            //Initialize the shadow map and draw to it.
+            _GraphicsDevice.SetRenderTarget(null);
+            _GraphicsDevice.SetRenderTarget(_ShadowMap);
+            _GraphicsDevice.Clear(Color.Transparent);
+
+            //Map out the texture by assigning vertices.
+            VertexPositionColorTexture[] vertices = new VertexPositionColorTexture[4];
+            vertices[0] = new VertexPositionColorTexture(new Vector3(-1, 1, 0), Color.White, new Vector2(0, 0));
+            vertices[1] = new VertexPositionColorTexture(new Vector3(1, 1, 0), Color.White, new Vector2(1, 0));
+            vertices[2] = new VertexPositionColorTexture(new Vector3(-1, -1, 0), Color.White, new Vector2(0, 1));
+            vertices[3] = new VertexPositionColorTexture(new Vector3(1, -1, 0), Color.White, new Vector2(1, 1));
+            VertexBuffer buffer = new VertexBuffer(_GraphicsDevice, typeof(VertexPositionColorTexture), vertices.Length, BufferUsage.None);
+            buffer.SetData(vertices);
+
+            //Set the vertex buffer.
+            _GraphicsDevice.SetVertexBuffer(buffer);
+
+            //Set the light data.
+            _LightEffect.Parameters["_LightStrength"].SetValue(1f);
+            _LightEffect.Parameters["_LightPosition"].SetValue(new Vector3(0, 0, 0));
+            _LightEffect.Parameters["_LightColor"].SetValue(new Vector4(1.0f, 0f, 1.0f, 1.0f));
+            _LightEffect.Parameters["_LightDecay"].SetValue(200);
+            _LightEffect.Parameters["_SpecularStrength"].SetValue(1f);
+
+            //Set the technique.
+            _LightEffect.CurrentTechnique = _LightEffect.Techniques["DeferredLighting"];
+
+            _LightEffect.Parameters["_ScreenWidth"].SetValue(_GraphicsDevice.Viewport.Width);
+            _LightEffect.Parameters["_ScreenHeight"].SetValue(_GraphicsDevice.Viewport.Height);
+            _LightEffect.Parameters["_AmbientColor"].SetValue(new Color(.1f, .1f, .1f, 1).ToVector4());
+            _LightEffect.Parameters["_NormalMap"].SetValue(_NormalMap);
+            _LightEffect.Parameters["_ColorMap"].SetValue(_ColorMap);
+
+            //Perform a shader pass.
+            _LightEffect.CurrentTechnique.Passes[0].Apply();
+
+            //Add Belding (Black background) to the render target and draw the light map over the black background.
+            _GraphicsDevice.BlendState = Helper.BlendBlack;
+            _GraphicsDevice.DrawUserPrimitives(PrimitiveType.TriangleStrip, vertices, 0, 2);
+
+            //Initialize the deferred and combined map.
+            _GraphicsDevice.SetRenderTarget(null);
+            _GraphicsDevice.Clear(Color.Black);
+
+            //Finally draw the combined maps onto the screen.
+            _CombinedEffect.CurrentTechnique = _CombinedEffect.Techniques["DeferredCombined"];
+            _CombinedEffect.Parameters["_Ambient"].SetValue(1f);
+            _CombinedEffect.Parameters["_LightAmbient"].SetValue(4);
+            _CombinedEffect.Parameters["_AmbientColor"].SetValue(new Color(.1f, .1f, .1f, 1).ToVector4());
+            _CombinedEffect.Parameters["_ColorMap"].SetValue(_ColorMap);
+            _CombinedEffect.Parameters["_ShadingMap"].SetValue(_ShadowMap);
+            _CombinedEffect.Parameters["_NormalMap"].SetValue(_NormalMap);
+
+            //Perform the shader pass.
+            _CombinedEffect.CurrentTechnique.Passes[0].Apply();
+
+            //Draw the color map to the screen with the shadow map overlapping it.
+            spriteBatch.Begin(SpriteSortMode.Immediate, BlendState.AlphaBlend, null, null, null, _CombinedEffect);
+            spriteBatch.Draw(_ColorMap, Vector2.Zero, Color.White);
+            spriteBatch.End();
         }
 
         /// <summary>
@@ -115,7 +199,6 @@ namespace InsipidusEngine.Infrastructure
             _Entities.Add(entity);
             entity.Scene = this;
             _Physics.AddBody(entity.Body);
-            //Collections.sort(_Entities, new EntityDepthComparator());
             return entity;
         }
         /// <summary>

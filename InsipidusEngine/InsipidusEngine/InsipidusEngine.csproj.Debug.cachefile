@@ -90,3 +90,5 @@ Content\Entities\StoneStairsRight[4].xnb
 Content\Entities\StoneStairsTop[1].xnb
 Content\Entities\StoneStairsTop[2].xnb
 Content\Entities\WoodTiledFloor[1].xnb
+Content\Shaders\DeferredCombine.xnb
+Content\Shaders\Lighting.xnb

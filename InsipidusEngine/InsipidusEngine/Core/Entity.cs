@@ -84,13 +84,16 @@ namespace InsipidusEngine.Core
             // Load all sprites' content.
             _Sprites.LoadContent(contentManager);
 
+            //Update the frame's origin.
+            sprite.Frames[0].Origin = new Vector2(sprite.Frames[0].Width / 2, sprite.Frames[0].Height / 2);
+
             // Set the shape of the body.
-            _Body.Shape.Width = sprite[sprite.CurrentFrameIndex].Width;
-            _Body.Shape.Height = (height == -1) ? sprite[sprite.CurrentFrameIndex].Height : height;
-            _Body.Shape.Depth = (height == -1) ? 1 : sprite[sprite.CurrentFrameIndex].Height - height;
+            _Body.Shape.Width = sprite.CurrentFrame.Width;
+            _Body.Shape.Height = (height == -1) ? sprite.CurrentFrame.Height : height;
+            _Body.Shape.Depth = (height == -1) ? 1 : sprite.CurrentFrame.Height - height;
 
             // Update the sprite's position offset.
-            _Sprites[0].PositionOffset = new Vector2(0, -sprite[sprite.CurrentFrameIndex].Origin.Y + (_Body.Shape.Height / 2));
+            _Sprites[0].PositionOffset = new Vector2(0, -sprite.CurrentFrame.Origin.Y + (_Body.Shape.Height / 2));
         }
         /// <summary>
         /// Handle input.
@@ -113,10 +116,11 @@ namespace InsipidusEngine.Core
         /// Draw the entity.
         /// </summary>
         /// <param name="spriteBatch">The sprite batch to use.</param>
-        public virtual void Draw(SpriteBatch spriteBatch)
+        /// <param name="state">The type of drawing to perform.</param>
+        public void Draw(SpriteBatch spriteBatch, DrawState state)
         {
             // Draw the sprite.
-            _Sprites.Draw(spriteBatch);
+            _Sprites.Draw(spriteBatch, state);
         }
         #endregion
 

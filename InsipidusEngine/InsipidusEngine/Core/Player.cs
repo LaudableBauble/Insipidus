@@ -92,11 +92,23 @@ namespace InsipidusEngine.Core
             right.Visibility = Visibility.Invisible;
             left.Visibility = Visibility.Invisible;
 
+            //Set the frame-rate.
+            front.TimePerFrame = .1f;
+            back.TimePerFrame = .1f;
+            right.TimePerFrame = .1f;
+            left.TimePerFrame = .1f;
+
             // Current sprite is facing up.
             _CurrentSprite = front;
 
             // Load all sprites' content.
             _Sprites.LoadContent(content);
+
+            //Update the frames' origin.
+            front.Frames.ForEach(item => item.Origin = new Vector2(item.Width / 2, item.Height / 2));
+            back.Frames.ForEach(item => item.Origin = new Vector2(item.Width / 2, item.Height / 2));
+            right.Frames.ForEach(item => item.Origin = new Vector2(item.Width / 2, item.Height / 2));
+            left.Frames.ForEach(item => item.Origin = new Vector2(item.Width / 2, item.Height / 2));
 
             // Set the shape of the body.
             _Body.Shape.Width = 15;
@@ -121,33 +133,12 @@ namespace InsipidusEngine.Core
             // If the player can't be controlled, end here.
             if (!_CanBeControlled) { return; }
 
-            // If an arrow key is pressed.
-            if (input.IsKeyDown(Keys.Left) && (_Body.Velocity.X > -_MaxSpeed))
-            {
-                // Left.
-                _Body.AddForce(new Vector3(-_Body.AccelerationValue, 0, 0));
-            }
-            if (input.IsKeyDown(Keys.Right) && (_Body.Velocity.X < _MaxSpeed))
-            {
-                // Right.
-                _Body.AddForce(new Vector3(_Body.AccelerationValue, 0, 0));
-            }
-            if (input.IsKeyDown(Keys.Up) && (_Body.Velocity.Y > -_MaxSpeed))
-            {
-                // Up.
-                _Body.AddForce(new Vector3(0, -_Body.AccelerationValue, 0));
-            }
-            if (input.IsKeyDown(Keys.Down) && (_Body.Velocity.Y < _MaxSpeed))
-            {
-                // Down.
-                _Body.AddForce(new Vector3(0, _Body.AccelerationValue, 0));
-            }
-            // If the space key is pressed.
-            if (input.IsKeyDown(Keys.Space) && Math.Abs(_Body.Velocity.Z) < 1)
-            {
-                // Up in the air.
-                _Body.AddForce(new Vector3(0, 0, _Body.AccelerationValue));
-            }
+            // Left, right, up, down and space.
+            if (input.IsKeyDown(Keys.Left) && (_Body.Velocity.X > -_MaxSpeed)) { _Body.AddForce(new Vector3(-_Body.AccelerationValue, 0, 0)); }
+            if (input.IsKeyDown(Keys.Right) && (_Body.Velocity.X < _MaxSpeed)) { _Body.AddForce(new Vector3(_Body.AccelerationValue, 0, 0)); }
+            if (input.IsKeyDown(Keys.Up) && (_Body.Velocity.Y > -_MaxSpeed)) { _Body.AddForce(new Vector3(0, -_Body.AccelerationValue, 0)); }
+            if (input.IsKeyDown(Keys.Down) && (_Body.Velocity.Y < _MaxSpeed)) { _Body.AddForce(new Vector3(0, _Body.AccelerationValue, 0)); }
+            if (input.IsKeyDown(Keys.Space) && Math.Abs(_Body.Velocity.Z) < 1) { _Body.AddForce(new Vector3(0, 0, _Body.AccelerationValue)); }
         }
         /// <summary>
         /// Update the player.
@@ -199,23 +190,23 @@ namespace InsipidusEngine.Core
         /// <returns>The current sprite.</returns>
         private Sprite GetCurrentSprite(float dir)
         {
-            // If facing down.
-            if (dir >= 60 && dir <= 120)
-            {
-                return _Sprites[0];
-            }
-            // If facing up.
-            else if (dir >= -120 && dir <= -30)
-            {
-                return _Sprites[1];
-            }
             // If facing right.
-            else if (dir >= -30 && dir <= 30)
+            if (dir >= 60 && dir <= 120)
             {
                 return _Sprites[2];
             }
             // If facing left.
-            else if ((dir >= 150 && dir <= 180) || (dir >= -180 && dir <= -120)) { return _Sprites[3]; }
+            else if (dir >= -120 && dir <= -30)
+            {
+                return _Sprites[3];
+            }
+            // If facing down.
+            else if (dir >= -30 && dir <= 30)
+            {
+                return _Sprites[0];
+            }
+            // If facing up.
+            else if ((dir >= 150 && dir <= 180) || (dir >= -180 && dir <= -120)) { return _Sprites[1]; }
 
             // No sprite matched.
             return _CurrentSprite;

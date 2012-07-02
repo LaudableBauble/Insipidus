@@ -81,7 +81,7 @@ namespace InsipidusEngine.Battle.Projectiles
         public virtual void Draw(SpriteBatch spritebatch)
         {
             //Draw the sprites.
-            _Sprite.Draw(spritebatch);
+            _Sprite.Draw(spritebatch, DrawState.Color);
         }
 
         /// <summary>

@@ -455,8 +455,8 @@ namespace InsipidusEngine.Physics
         /// </summary>
         public float BottomDepth
         {
-            get { return _Position.Z - (_Depth / 2); }
-            set { _Position.Z = value + (_Depth / 2); }
+            get { return _Position.Z - _Depth / 2; }
+            set { _Position.Z = value + _Depth / 2; }
         }
         /// <summary>
         /// The shape's depth distribution.

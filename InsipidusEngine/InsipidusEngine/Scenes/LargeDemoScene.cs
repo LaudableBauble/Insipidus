@@ -327,7 +327,8 @@ namespace InsipidusEngine.Scenes
             _Floor.Body.IsStatic = true;
 
             // Add all entities to the scene.
-            AddEntity(_Player);
+            //AddEntity(_Player);
+            AddEntity(_Floor);
             AddEntity(_Shelf1);
             AddEntity(_Shelf2);
             AddEntity(_Shelf3);
@@ -373,7 +374,8 @@ namespace InsipidusEngine.Scenes
             AddEntity(_MarbleArch);
             AddEntity(_MarbleWall1);
             AddEntity(_MarbleWall2);
-            AddEntity(_Floor);
+            //AddEntity(_Floor);
+            AddEntity(_Player);
 
             // Give a name to all entities.
             _Player.Name = "Character";
@@ -426,11 +428,12 @@ namespace InsipidusEngine.Scenes
         /// <summary>
         /// Load all content.
         /// </summary>
+        /// <param name="graphics">The graphics device in use.</param>
         /// <param name="content">The content manager to use.</param>
-        public override void LoadContent(ContentManager content)
+        public override void LoadContent(GraphicsDevice graphics, ContentManager content)
         {
             //Call the base method.
-            base.LoadContent(content);
+            base.LoadContent(graphics, content);
 
             // Load all entities' content.
             _Player.LoadContent(content);

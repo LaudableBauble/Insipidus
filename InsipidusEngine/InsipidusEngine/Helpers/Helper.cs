@@ -27,6 +27,19 @@ namespace InsipidusEngine.Infrastructure
         /// The ratio between height (Y-coordinate) and depth (Z-coordinate). Used to simulate depth. Positive depth is 'upwards'.
         /// </summary>
         public static float HeightPerDepthRatio = 1 / 1;
+        /// <summary>
+        /// A blend state called belding, ie. a black background.
+        /// </summary>
+        public static BlendState BlendBlack = new BlendState()
+        {
+            ColorBlendFunction = BlendFunction.Add,
+            ColorSourceBlend = Blend.One,
+            ColorDestinationBlend = Blend.One,
+
+            AlphaBlendFunction = BlendFunction.Add,
+            AlphaSourceBlend = Blend.SourceAlpha,
+            AlphaDestinationBlend = Blend.One
+        };
         #endregion
 
         #region Methods
@@ -380,7 +393,7 @@ namespace InsipidusEngine.Infrastructure
         public static bool IsPointWithinImage(Vector2 point, Sprite sprite)
         {
             //Return the result.
-            return (IsPointWithinImage(point, sprite.Position, sprite.Rotation, new Vector2(sprite.Scale, sprite.Scale), sprite[0].Origin, sprite.Texture));
+            return (IsPointWithinImage(point, sprite.Position, sprite.Rotation, new Vector2(sprite.Scale, sprite.Scale), sprite[0].Origin, sprite.ColorTexture));
         }
         /// <summary>
         /// If the point is within the bounds of an image, return true. An alpha value of zero does not count as being part of the image.

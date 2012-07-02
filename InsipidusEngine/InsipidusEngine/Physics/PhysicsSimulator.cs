@@ -58,14 +58,15 @@ namespace InsipidusEngine.Physics
         /// </summary>
         public void Update()
         {
+            //Update the list of bodies and forces.
+            _Bodies.Update();
+            _Forces.Update();
+
             // Check if the array isn't empty.
             try
             {
                 // Clear all bodies' record of collision.
-                foreach (Body b in _Bodies)
-                {
-                    b.ClearCollisions();
-                }
+                foreach (Body b in _Bodies) { b.ClearCollisions(); }
 
                 // Loop through all bodies.
                 foreach (Body b1 in _Bodies)
@@ -77,10 +78,7 @@ namespace InsipidusEngine.Physics
                     foreach (Body b2 in _Bodies)
                     {
                         // Check so it's not the same body, or if both bodies are set to static.
-                        if (b1 == b2 || (b1.IsStatic && b2.IsStatic))
-                        {
-                            continue;
-                        }
+                        if (b1 == b2 || (b1.IsStatic && b2.IsStatic)) { continue; }
 
                         // Check if the bodies are within range. If so, continue to the narrow phase part.
                         if (BroadPhase(b1, b2))
@@ -95,18 +93,12 @@ namespace InsipidusEngine.Physics
                                 b1.AddCollision(b2);
                                 b2.AddCollision(b1);
 
-                                if (b1.IsStatic || b1.IsImmaterial || b2.IsImmaterial)
-                                {
-                                    continue;
-                                }
+                                if (b1.IsStatic || b1.IsImmaterial || b2.IsImmaterial) { continue; }
 
                                 // Move body1 above body2 and null the movement on the z-axis (otherwise the body gets stuck).
                                 b1.Shape.BottomDepth = b2.Shape.GetTopDepth(b1.LayeredPosition) + _Gravity / 2;
                                 b1.Velocity = new Vector3(b1.Velocity.X, b1.Velocity.Y, 0);
-                                if (b2.Shape.DepthDistribution != DepthDistribution.Uniform)
-                                {
-                                    b1.Velocity = Vector3.Zero;
-                                }
+                                if (b2.Shape.DepthDistribution != DepthDistribution.Uniform) { b1.Velocity = Vector3.Zero; }
                                 ground = true;
                             }
                             else
@@ -117,11 +109,8 @@ namespace InsipidusEngine.Physics
                                 // Check if the bodies intersect.
                                 if (mtv.HasCollision)
                                 {
-                                    if (!b1.IsImmaterial && !b2.IsImmaterial)
-                                    {
-                                        // Move the bodies so that they don't intersect each other anymore.
-                                        ClearIntersection(b1, b2, mtv);
-                                    }
+                                    // Move the bodies so that they don't intersect each other anymore.
+                                    if (!b1.IsImmaterial && !b2.IsImmaterial) { ClearIntersection(b1, b2, mtv); }
 
                                     // Add the collision to the body.
                                     b1.AddCollision(b2);
@@ -132,10 +121,7 @@ namespace InsipidusEngine.Physics
                     }
 
                     // If the entity is dynamic and not standing on the ground, apply gravity.
-                    if (!ground && !b1.IsStatic && !b1.IsImmaterial)
-                    {
-                        b1.Velocity = new Vector3(b1.Velocity.X, b1.Velocity.Y, b1.Velocity.Z - _Gravity);
-                    }
+                    if (!ground && !b1.IsStatic && !b1.IsImmaterial) { b1.Velocity = new Vector3(b1.Velocity.X, b1.Velocity.Y, b1.Velocity.Z - _Gravity); }
 
                     // Add the friction.
                     AddFrictionForce(GetBodyFriction(b1));
@@ -149,60 +135,7 @@ namespace InsipidusEngine.Physics
                 _Forces.Clear();
             }
             // Catch the exception.
-            catch (Exception e)
-            {
-                Console.WriteLine(this + ": Update Physics Error. (" + e + ")");
-            }
-        }
-
-        /// <summary>
-        /// Add a body to the physics simulator.
-        /// </summary>
-        /// <param name="body">The body to add.</param>
-        public void AddBody(Body body)
-        {
-            // Try to add the body at the end of the array.
-            try
-            {
-                // If the body isn't already in the folds of the physics simulator.
-                if (!_Bodies.Contains(body))
-                {
-                    _Bodies.Add(body);
-                    body.PhysicsSimulator = this;
-                }
-            }
-            // Catch the exception and display relevant information.
-            catch (Exception e)
-            {
-                Console.WriteLine(this + ": Error adding body. (" + e + ")");
-            }
-        }
-
-        /// <summary>
-        /// Remove a body from the physics simulator.
-        /// </summary>
-        /// <param name="body">The body to remove.</param>
-        public void RemoveBody(Body body)
-        {
-            _Bodies.Remove(body);
-        }
-
-        /// <summary>
-        /// Add a force to the physics simulator.
-        /// </summary>
-        /// <param name="force">The force to add.</param>
-        public void AddForce(Force force)
-        {
-            // Try to add the Force at the end of the list.
-            try
-            {
-                _Forces.Add(force);
-            }
-            // Catch the exception and display relevant information.
-            catch (Exception e)
-            {
-                Console.WriteLine(this + ": Error adding force. (" + e + ")");
-            }
+            catch (Exception e) { Console.WriteLine(this + ": Update Physics Error. (" + e + ")"); }
         }
 
         /// <summary>
@@ -229,7 +162,6 @@ namespace InsipidusEngine.Physics
             // Something went wrong.
             return false;
         }
-
         /// <summary>
         /// Do a narrow phase collision check between two shapes by using SAT (Separating Axis Theorem).
         /// If a collision has occurred, get the MTV (Minimum Translation Vector) of the two intersecting shapes.
@@ -358,7 +290,6 @@ namespace InsipidusEngine.Physics
             // There must be a ground collision after all.
             return true;
         }
-
         /// <summary>
         /// Pull two bodies that are intersecting apart by using the MTV.
         /// </summary>
@@ -467,6 +398,53 @@ namespace InsipidusEngine.Physics
             return force;
         }
         /// <summary>
+        /// Add a body to the physics simulator.
+        /// </summary>
+        /// <param name="body">The body to add.</param>
+        public void AddBody(Body body)
+        {
+            // Try to add the body at the end of the array.
+            try
+            {
+                // If the body isn't already in the folds of the physics simulator.
+                if (!_Bodies.Contains(body))
+                {
+                    _Bodies.Add(body);
+                    body.PhysicsSimulator = this;
+                }
+            }
+            // Catch the exception and display relevant information.
+            catch (Exception e)
+            {
+                Console.WriteLine(this + ": Error adding body. (" + e + ")");
+            }
+        }
+        /// <summary>
+        /// Remove a body from the physics simulator.
+        /// </summary>
+        /// <param name="body">The body to remove.</param>
+        public void RemoveBody(Body body)
+        {
+            _Bodies.Remove(body);
+        }
+        /// <summary>
+        /// Add a force to the physics simulator.
+        /// </summary>
+        /// <param name="force">The force to add.</param>
+        public void AddForce(Force force)
+        {
+            // Try to add the Force at the end of the list.
+            try
+            {
+                _Forces.Add(force);
+            }
+            // Catch the exception and display relevant information.
+            catch (Exception e)
+            {
+                Console.WriteLine(this + ": Error adding force. (" + e + ")");
+            }
+        }
+        /// <summary>
         /// Check if the physics simulator contains a body.
         /// </summary>
         /// <param name="body">The body to look for.</param>
@@ -492,7 +470,6 @@ namespace InsipidusEngine.Physics
             // Return the result.
             return exists;
         }
-
         /// <summary>
         /// Add forces to their respective bodies.
         /// </summary>
@@ -515,7 +492,6 @@ namespace InsipidusEngine.Physics
                 catch (Exception e) { Console.WriteLine(this + ": Adding Force to Body Error. (" + e + ")"); }
             }
         }
-
         /// <summary>
         /// Calculate the friction force and its direction for a body.
         /// </summary>

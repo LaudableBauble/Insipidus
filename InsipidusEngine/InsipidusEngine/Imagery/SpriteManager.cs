@@ -98,7 +98,7 @@ namespace InsipidusEngine.Imagery
         /// <summary>
         /// Update all sprites.
         /// </summary>
-        /// <param name="gameTime">The Game Time.</param>
+        /// <param name="gameTime">The game time.</param>
         /// <param name="position">The position of the sprite.</param>
         /// <param name="rotation">The rotation of the sprite.</param>
         public void Update(GameTime gameTime, Vector2 position, float rotation)
@@ -116,10 +116,11 @@ namespace InsipidusEngine.Imagery
         /// Draw all sprites to the screen.
         /// </summary>
         /// <param name="spriteBatch">The sprite batch to use.</param>
-        public void Draw(SpriteBatch spriteBatch)
+        /// <param name="state">The type of drawing to perform.</param>
+        public void Draw(SpriteBatch spriteBatch, DrawState state)
         {
             //Draw all sprites.
-            _Sprites.ForEach(item => item.Draw(spriteBatch));
+            _Sprites.ForEach(item => item.Draw(spriteBatch, state));
         }
 
         /// <summary>
@@ -291,10 +292,10 @@ namespace InsipidusEngine.Imagery
                 foreach (Frame frame in sprite.Frames)
                 {
                     //Create the cloned frame.
-                    Frame fClone = new Frame(frame.Path, frame.Width, frame.Height);
+                    Frame fClone = new Frame(frame.ColorPath, frame.Width, frame.Height);
 
                     //Clone the properties.
-                    fClone.Path = frame.Path;
+                    fClone.ColorPath = frame.ColorPath;
                     fClone.Width = frame.Width;
                     fClone.Height = frame.Height;
                     fClone.Origin = frame.Origin;

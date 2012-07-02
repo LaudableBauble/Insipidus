@@ -74,7 +74,7 @@ namespace InsipidusEngine.Screens
 
             #region LoadContent
             //Load the scene's content.
-            _Scene.LoadContent(content);
+            _Scene.LoadContent(ScreenManager.GraphicsDevice, content);
             #endregion
 
             // Once the load has finished, we use ResetElapsedTime to tell the game's
@@ -140,13 +140,13 @@ namespace InsipidusEngine.Screens
             //device.RasterizerState = new RasterizerState() { FillMode = FillMode.WireFrame };
             device.DepthStencilState = new DepthStencilState();
 
-            device.Clear(ClearOptions.Target | ClearOptions.DepthBuffer, Color.Black, 1, 0);
+            device.Clear(ClearOptions.Target | ClearOptions.DepthBuffer, Color.CornflowerBlue, 1, 0);
 
             //The sprite batch to use.
             SpriteBatch spriteBatch = new SpriteBatch(device);
 
             //Begin drawing.
-            spriteBatch.Begin(SpriteSortMode.Immediate, BlendState.AlphaBlend, null, null, null, null, _Camera.Transform);
+            spriteBatch.Begin(SpriteSortMode.Immediate, BlendState.AlphaBlend, SamplerState.PointWrap, null, null, null, _Camera.Transform);
 
             //Draw the scene.
             _Scene.Draw(spriteBatch);

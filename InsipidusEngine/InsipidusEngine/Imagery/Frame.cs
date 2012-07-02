@@ -14,12 +14,15 @@ using Microsoft.Xna.Framework.Storage;
 namespace InsipidusEngine.Imagery
 {
     /// <summary>
-    /// The frame of a sprite.
+    /// The frame of a sprite, ie. the closest you can get to an individual image. Does not store textures directly but paths to them.
+    /// This is v1.1 and extended to include normal and depth maps.
     /// </summary>
     public class Frame
     {
         #region Fields
-        private string _Path;
+        private string _ColorPath;
+        private string _NormalPath;
+        private string _DepthPath;
         private float _Width;
         private float _Height;
         private Vector2 _Origin;
@@ -30,23 +33,23 @@ namespace InsipidusEngine.Imagery
         /// <summary>
         /// Constructor for a frame.
         /// </summary>
-        /// <param name="path">The path of the frame.</param>
+        /// <param name="path">The path of the color map.</param>
         /// <param name="width">The width of the frame.</param>
         /// <param name="height">The height of the frame.</param>
         public Frame(string path, float width, float height)
         {
-            Intialize(path, null, width, height, Vector2.Zero);
+            Initialize(path, null, width, height, Vector2.Zero);
         }
         /// <summary>
         /// Constructor for a frame.
         /// </summary>
-        /// <param name="path">The path of the frame.</param>
+        /// <param name="path">The path of the color map.</param>
         /// <param name="width">The width of the frame.</param>
         /// <param name="height">The height of the frame.</param>
         /// <param name="origin">The origin of the frame.</param>
         public Frame(string path, float width, float height, Vector2 origin)
         {
-            Intialize(path, null, width, height, origin);
+            Initialize(path, null, width, height, origin);
         }
         /// <summary>
         /// Constructor for a frame.
@@ -56,7 +59,7 @@ namespace InsipidusEngine.Imagery
         /// <param name="height">The height of the frame.</param>
         public Frame(Texture2D texture, float width, float height)
         {
-            Intialize("", texture, width, height, Vector2.Zero);
+            Initialize("", texture, width, height, Vector2.Zero);
         }
         /// <summary>
         /// Constructor for a frame.
@@ -67,7 +70,7 @@ namespace InsipidusEngine.Imagery
         /// <param name="origin">The origin of the frame.</param>
         public Frame(Texture2D texture, float width, float height, Vector2 origin)
         {
-            Intialize("", texture, width, height, origin);
+            Initialize("", texture, width, height, origin);
         }
         #endregion
 
@@ -80,10 +83,12 @@ namespace InsipidusEngine.Imagery
         /// <param name="width">The width of the frame.</param>
         /// <param name="height">The height of the frame.</param>
         /// <param name="origin">The origin of the frame texture.</param>
-        public void Intialize(string path, Texture2D texture, float width, float height, Vector2 origin)
+        protected void Initialize(string path, Texture2D texture, float width, float height, Vector2 origin)
         {
             //Intialize a few variables.
-            _Path = path;
+            _ColorPath = path;
+            _NormalPath = "";
+            _DepthPath = "";
             _Texture = texture;
             _Height = height;
             _Width = width;
@@ -93,15 +98,31 @@ namespace InsipidusEngine.Imagery
 
         #region Properties
         /// <summary>
-        /// The path of the frame.
+        /// The path of the color map.
         /// </summary>
-        public string Path
+        public string ColorPath
         {
-            get { return _Path; }
-            set { _Path = value; }
+            get { return _ColorPath; }
+            set { _ColorPath = value; }
         }
         /// <summary>
-        /// The texture of the frame.
+        /// The path of the normal map.
+        /// </summary>
+        public string NormalPath
+        {
+            get { return _NormalPath; }
+            set { _NormalPath = value; }
+        }
+        /// <summary>
+        /// The path of the depth map.
+        /// </summary>
+        public string DepthPath
+        {
+            get { return _DepthPath; }
+            set { _DepthPath = value; }
+        }
+        /// <summary>
+        /// The texture of the frame. Use only with dynamically generated textures that cannot be loaded of memory.
         /// </summary>
         public Texture2D Texture
         {
@@ -115,22 +136,6 @@ namespace InsipidusEngine.Imagery
         {
             get { return _Origin; }
             set { _Origin = value; }
-        }
-        /// <summary>
-        /// The x-coordinate of the origin of the frame.
-        /// </summary>
-        public float OriginX
-        {
-            get { return _Origin.X; }
-            set { _Origin.X = value; }
-        }
-        /// <summary>
-        /// The y-coordinate of the origin of the frame.
-        /// </summary>
-        public float OriginY
-        {
-            get { return _Origin.Y; }
-            set { _Origin.Y = value; }
         }
         /// <summary>
         /// The frame height.

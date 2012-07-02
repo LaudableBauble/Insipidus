@@ -137,7 +137,7 @@ namespace InsipidusEngine
         public void Draw(SpriteBatch spritebatch)
         {
             //Draw the sprite and moves.
-            _Sprite.Draw(spritebatch);
+            _Sprite.Draw(spritebatch, DrawState.Color);
             _Moves.ForEach(item => item.Draw(spritebatch));
         }
 

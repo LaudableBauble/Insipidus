@@ -15,12 +15,15 @@ namespace InsipidusEngine.Imagery
 {
     /// <summary>
     /// A sprite is a collection of frames grouped together to form an animation.
+    /// This is v1.1 and extended to include normal and depth maps.
     /// </summary>
     public class Sprite
     {
         #region Fields
         private SpriteManager _Manager;
-        private Texture2D _Texture;
+        private Texture2D _ColorTexture;
+        private Texture2D _NormalTexture;
+        private Texture2D _DepthTexture;
         private Vector2 _Position;
         private string _Name;
         private string _Tag;
@@ -116,8 +119,8 @@ namespace InsipidusEngine.Imagery
             foreach (Frame frame in _Frames)
             {
                 //The width and the height.
-                frame.Width = _Manager.GetTextureBounds(frame.Path).Width;
-                frame.Height = _Manager.GetTextureBounds(frame.Path).Height;
+                frame.Width = _Manager.GetTextureBounds(frame.ColorPath).Width;
+                frame.Height = _Manager.GetTextureBounds(frame.ColorPath).Height;
             }
 
             //Load the first frame.
@@ -136,20 +139,32 @@ namespace InsipidusEngine.Imagery
         /// Draw the sprite and its current frame to the screen.
         /// </summary>
         /// <param name="spriteBatch">The sprite batch to use.</param>
-        public void Draw(SpriteBatch spriteBatch)
+        /// <param name="state">The type of drawing to perform.</param>
+        public void Draw(SpriteBatch spriteBatch, DrawState state)
         {
-            //If there is no texture loaded or if the sprite is invisible, stop here.
-            if (_Texture == null || _Visibility == Visibility.Invisible) { return; }
+            //If the sprite is invisible, stop here.
+            if (_Visibility == Visibility.Invisible) { return; }
 
-            //The Sprite Effect, facing right.
-            SpriteEffects spriteEffects = SpriteEffects.None;
+            //The texture to render.
+            Texture2D texture = null;
 
-            //The sprite faces left.
-            if (_Orientation == Orientation.Left) { spriteEffects = SpriteEffects.FlipHorizontally; }
+            //Decide which type of texture map to use.
+            switch (state)
+            {
+                case DrawState.Color: { texture = _ColorTexture; break; }
+                case DrawState.Normal: { texture = _NormalTexture; break; }
+                case DrawState.Depth: { texture = _DepthTexture; break; }
+            }
+
+            //If there is no texture loaded, stop here.
+            if (texture == null) { return; }
+
+            //Whether to mirror the sprite.
+            SpriteEffects mirror = (_Orientation == Orientation.Right) ? SpriteEffects.None : SpriteEffects.FlipHorizontally;
 
             //Draw the sprite.
-            spriteBatch.Draw(_Texture, _Position, null, Color.White * _Transparence, Calculator.AddAngles(_Rotation, _RotationOffset), _Frames[_FrameIndex].Origin,
-                _Scale, spriteEffects, 0);
+            spriteBatch.Draw(texture, _Position + _PositionOffset, null, Color.White * _Transparence, Calculator.AddAngles(_Rotation, _RotationOffset),
+                _Frames[_FrameIndex].Origin, _Scale, mirror, 0);
         }
 
         /// <summary>
@@ -161,9 +176,14 @@ namespace InsipidusEngine.Imagery
             if (_Frames.Count == 0) { return; }
 
             //If a frame has a texture already stored on its premises, load that texture.
-            if (_Frames[_FrameIndex].Texture != null) { _Texture = _Frames[_FrameIndex].Texture; }
-            //Otherwise load one by using the name of the frame.
-            else { _Texture = _Manager.ContentManager.Load<Texture2D>(_Frames[_FrameIndex].Path); }
+            if (_Frames[_FrameIndex].Texture != null) { _ColorTexture = _Frames[_FrameIndex].Texture; }
+            else
+            {
+                //Load the color, normal and depth texture if possible.
+                _ColorTexture = (_Frames[_FrameIndex].ColorPath == "") ? null : _Manager.ContentManager.Load<Texture2D>(_Frames[_FrameIndex].ColorPath);
+                _NormalTexture = (_Frames[_FrameIndex].NormalPath == "") ? null : _Manager.ContentManager.Load<Texture2D>(_Frames[_FrameIndex].NormalPath);
+                _DepthTexture = (_Frames[_FrameIndex].DepthPath == "") ? null : _Manager.ContentManager.Load<Texture2D>(_Frames[_FrameIndex].DepthPath);
+            }
 
             //The bounds of the sprite has changed, invoke the appropriate event.
             BoundsChangedInvoke();
@@ -209,8 +229,10 @@ namespace InsipidusEngine.Imagery
         public void UpdateSprite(Vector2 position, float rotation)
         {
             //Update the sprite's position and rotation
-            _Position = Calculator.CalculateOrbitPosition(position, Calculator.AddAngles(rotation, _OrbitOffset), _PositionOffset);
-            _Rotation = Calculator.AddAngles(rotation, _RotationOffset);
+            //_Position = Calculator.CalculateOrbitPosition(position, Calculator.AddAngles(rotation, _OrbitOffset), _PositionOffset);
+            //_Rotation = Calculator.AddAngles(rotation, _RotationOffset);
+            _Position = position;
+            _Rotation = rotation;
         }
 
         /// <summary>
@@ -302,7 +324,7 @@ namespace InsipidusEngine.Imagery
             Frame frame = null;
 
             //Loop through the list of frames and find the one with the right name.
-            _Frames.ForEach(item => { if (item.Path == frameName) { frame = item; } });
+            _Frames.ForEach(item => { if (item.ColorPath == frameName) { frame = item; } });
 
             //Return it.
             return _Frames.IndexOf(frame);
@@ -371,12 +393,12 @@ namespace InsipidusEngine.Imagery
             set { _Manager.ContentManager = value; }
         }
         /// <summary>
-        /// The sprite texture.
+        /// The sprite's color texture.
         /// </summary>
-        public Texture2D Texture
+        public Texture2D ColorTexture
         {
-            get { return _Texture; }
-            set { _Texture = value; }
+            get { return _ColorTexture; }
+            set { _ColorTexture = value; }
         }
         /// <summary>
         /// The sprite position.
@@ -424,6 +446,13 @@ namespace InsipidusEngine.Imagery
         {
             get { return _FrameIndex; }
             set { FrameChangedInvoke(value); }
+        }
+        /// <summary>
+        /// The current frame.
+        /// </summary>
+        public Frame CurrentFrame
+        {
+            get { return _Frames[_FrameIndex]; }
         }
         /// <summary>
         /// The time every frame has on screen before the next appears.

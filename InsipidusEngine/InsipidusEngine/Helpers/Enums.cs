@@ -20,6 +20,13 @@ namespace InsipidusEngine
         Uniform, Right, Left, Top, Bottom
     }
     /// <summary>
+    /// The type of drawing to perform.
+    /// </summary>
+    public enum DrawState
+    {
+        Color, Normal, Depth
+    }
+    /// <summary>
     /// Enum describes the screen transition state.
     /// </summary>
     public enum ScreenState
