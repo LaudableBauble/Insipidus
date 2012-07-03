@@ -63,6 +63,8 @@ namespace InsipidusEngine.Screens
             //Store the device.
             device = ScreenManager.GraphicsDevice;
 
+            Mouse.WindowHandle = ScreenManager.Game.Window.Handle;
+
             //Create the scene.
             _Scene = new LargeDemoScene();
 
@@ -112,6 +114,10 @@ namespace InsipidusEngine.Screens
                 else if (input.IsKeyDown(Keys.S)) { _Camera.Move(new Vector2(0, 1)); }
                 else if (input.IsKeyDown(Keys.D)) { _Camera.Move(new Vector2(1, 0)); }
                 else if (input.IsKeyDown(Keys.W)) { _Camera.Move(new Vector2(0, -1)); }
+
+                //Zoom the camera.
+                if (input.IsKeyDown(Keys.Z)) { _Camera.Zoom(.1f); }
+                else if (input.IsKeyDown(Keys.X)) { _Camera.Zoom(-.1f); }
             }
         }
         /// <summary>

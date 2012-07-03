@@ -94,3 +94,5 @@ Content\Shaders\DeferredCombine.xnb
 Content\Shaders\Lighting.xnb
 Content\Misc\Dummy_NormalMap.xnb
 Content\Entities\DarkTiledBlock[1]_Normal.xnb
+Content\Entities\WoodTiledFloor[1]_Normal.xnb
+Content\Entities\StoneStairsRight[3]_Normal.xnb

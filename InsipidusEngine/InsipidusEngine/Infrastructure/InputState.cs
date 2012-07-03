@@ -90,8 +90,7 @@ namespace InsipidusEngine.Helpers
                     LastKeyboardStates[(int)playerIndex].IsKeyUp(key));
         }
         /// <summary>
-        /// Helper for checking if a button was newly pressed during this update,
-        /// by any player.
+        /// Helper for checking if a button was newly pressed during this update, by any player.
         /// </summary>
         public bool IsNewButtonPress(Buttons button)
         {
@@ -104,8 +103,7 @@ namespace InsipidusEngine.Helpers
             return false;
         }
         /// <summary>
-        /// Helper for checking if a button was newly pressed during this update,
-        /// by the specified player.
+        /// Helper for checking if a button was newly pressed during this update, by the specified player.
         /// </summary>
         public bool IsNewButtonPress(Buttons button, PlayerIndex playerIndex)
         {
@@ -189,7 +187,7 @@ namespace InsipidusEngine.Helpers
         ///<returns>Whether the the mouse wheel scrolled up.</returns> 
         public bool IsNewMouseScrollUp()
         {
-            return (CurrentMouseState.ScrollWheelValue > LastMouseState.ScrollWheelValue);
+            return CurrentMouseState.ScrollWheelValue > LastMouseState.ScrollWheelValue;
         }
         ///<summary> 
         ///Checks if the mouse has been scrolled down.
@@ -197,18 +195,14 @@ namespace InsipidusEngine.Helpers
         ///<returns>Whether the mouse wheel scrolled down.</returns> 
         public bool IsNewMouseScrollDown()
         {
-            return (CurrentMouseState.ScrollWheelValue < LastMouseState.ScrollWheelValue);
+            return CurrentMouseState.ScrollWheelValue < LastMouseState.ScrollWheelValue;
         }
         /// <summary>
         /// Helper for checking if any key was pressed during this update, by any player.
         /// </summary>
         public bool IsAnyKeyPress()
         {
-            for (int i = 0; i < MaxInputs; i++)
-            {
-                if (CurrentKeyboardStates[i].GetPressedKeys().Length != 0) { return true; }
-            }
-
+            for (int i = 0; i < MaxInputs; i++) { if (CurrentKeyboardStates[i].GetPressedKeys().Length != 0) { return true; } }
             return false;
         }
         /// <summary>
@@ -216,11 +210,7 @@ namespace InsipidusEngine.Helpers
         /// </summary>
         public bool IsKeyDown(Keys key)
         {
-            for (int i = 0; i < MaxInputs; i++)
-            {
-                if (CurrentKeyboardStates[i].IsKeyDown(key)) { return true; }
-            }
-
+            for (int i = 0; i < MaxInputs; i++) { if (CurrentKeyboardStates[i].IsKeyDown(key)) { return true; } }
             return false;
         }
         /// <summary>

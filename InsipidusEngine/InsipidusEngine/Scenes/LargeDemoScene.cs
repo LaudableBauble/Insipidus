@@ -488,6 +488,15 @@ namespace InsipidusEngine.Scenes
             _DarkBlock3.Sprites[0].Frames[0].NormalPath = @"Entities\DarkTiledBlock[1]_Normal";
             _DarkBlock4.Sprites[0].Frames[0].NormalPath = @"Entities\DarkTiledBlock[1]_Normal";
             _DarkBlock12.Sprites[0].Frames[0].NormalPath = @"Entities\DarkTiledBlock[1]_Normal";
+            _Stairs1.Sprites[0].Frames[0].NormalPath = @"Entities\StoneStairsRight[3]_Normal";
+            _Stairs2.Sprites[0].Frames[0].NormalPath = @"Entities\StoneStairsRight[3]_Normal";
+            _Stairs5.Sprites[0].Frames[0].NormalPath = @"Entities\StoneStairsRight[3]_Normal";
+            _Stairs8.Sprites[0].Frames[0].NormalPath = @"Entities\StoneStairsRight[3]_Normal";
+            _Floor.Sprites[0].Frames[0].NormalPath = @"Entities\WoodTiledFloor[1]_Normal";
+
+            //Reload their textures.
+            _Entities.Update();
+            _Entities.ForEach(entity => entity.Sprites.Sprites.ForEach(sprite => sprite.LoadFrame()));
 
             // Set their depths.
             _Shelf1.Body.Shape.BottomDepth = 1;

@@ -97,6 +97,10 @@ namespace InsipidusEngine.Helpers
         {
             // Let all entities respond to input.
             _Entities.ForEach(item => item.HandleInput(input));
+
+            //If to change the height of the light.
+            if (input.IsNewMouseScrollUp()) { _LightPosition.Z += 5f; }
+            else if (input.IsNewMouseScrollDown()) { _LightPosition.Z -= 5f; }
         }
         /// <summary>
         /// Update the scene.
@@ -121,7 +125,7 @@ namespace InsipidusEngine.Helpers
         public virtual void Draw(SpriteBatch spriteBatch, Matrix view)
         {
             //Update the light's position.
-            _LightPosition = new Vector3(Vector2.Transform(Helper.GetMousePosition(), Matrix.Invert(view)), 0);
+            _LightPosition = new Vector3(Helper.GetMousePosition(), _LightPosition.Z);
 
             //Clear the screen.
             _GraphicsDevice.Clear(Color.CornflowerBlue);
@@ -203,7 +207,7 @@ namespace InsipidusEngine.Helpers
             spriteBatch.End();
 
             //Draw the debug render targets.
-            //DrawDebugRenderTargets(spriteBatch);
+            DrawDebugRenderTargets(spriteBatch);
         }
 
         /// <summary>

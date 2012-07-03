@@ -182,13 +182,11 @@ namespace InsipidusEngine.Imagery
 
             //If a frame has a texture already stored on its premises, load that texture.
             if (frame.Texture != null) { _ColorTexture = frame.Texture; }
-            else
-            {
-                //Load the color, normal and depth texture if possible.
-                _ColorTexture = (frame.ColorPath == "") ? null : _Manager.ContentManager.Load<Texture2D>(frame.ColorPath);
-                _NormalTexture = (frame.NormalPath == "") ? _Manager.ContentManager.Load<Texture2D>(@"Entities\DarkTiledBlock[1]_Normal"/*Helper.DummyNormalMap*/) : _Manager.ContentManager.Load<Texture2D>(frame.NormalPath);
-                _DepthTexture = (frame.DepthPath == "") ? null : _Manager.ContentManager.Load<Texture2D>(frame.DepthPath);
-            }
+            else { _ColorTexture = (frame.ColorPath == "") ? null : _Manager.ContentManager.Load<Texture2D>(frame.ColorPath); }
+
+            //Load the normal and depth texture if possible.
+            _NormalTexture = (frame.NormalPath == "") ? _Manager.ContentManager.Load<Texture2D>(Helper.DummyNormalMap) : _Manager.ContentManager.Load<Texture2D>(frame.NormalPath);
+            _DepthTexture = (frame.DepthPath == "") ? null : _Manager.ContentManager.Load<Texture2D>(frame.DepthPath);
 
             //The bounds of the sprite has changed, invoke the appropriate event.
             BoundsChangedInvoke();

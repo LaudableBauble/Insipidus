@@ -94,8 +94,8 @@ namespace InsipidusEngine.Helpers
             _Position = new Vector2(0, 0);
             _Origin = new Vector2(_Viewport.Width / 2, _Viewport.Height / 2);
             _MaxZoom = .6f;
-            _MinZoom = 2;
-            _Projection = Matrix.CreateOrthographicOffCenter(0, _Viewport.Width,_Viewport.Height, 0, 0, 1);
+            _MinZoom = 4;
+            _Projection = Matrix.CreateOrthographicOffCenter(0, _Viewport.Width, _Viewport.Height, 0, 0, 1);
 
             //Set the camera's zoom.
             Zoom(1f);
