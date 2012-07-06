@@ -117,10 +117,11 @@ namespace InsipidusEngine.Imagery
         /// </summary>
         /// <param name="spriteBatch">The sprite batch to use.</param>
         /// <param name="state">The type of drawing to perform.</param>
-        public void Draw(SpriteBatch spriteBatch, DrawState state)
+        /// <param name="effect">The shader effect to use. NOTE: Currently assumes it is a depth buffer.</param>
+        public void Draw(SpriteBatch spriteBatch, DrawState state, Effect effect)
         {
             //Draw all sprites.
-            _Sprites.ForEach(item => item.Draw(spriteBatch, state));
+            _Sprites.ForEach(item => item.Draw(spriteBatch, state, effect));
         }
 
         /// <summary>

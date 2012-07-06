@@ -74,7 +74,7 @@ PixelToFrame PointLightShader(VertexToPixel PSIn) : COLOR0
 	float coneAttenuation = saturate(1.0f - length(lightDirection) / _LightDecay); 
 				
 	float3 reflect = normalize(2 * amount * normal - lightDirNorm);
-	float specular = min(pow(saturate(dot(reflect, halfVec)), 10), amount);
+	float specular = min(pow(saturate(dot(reflect, halfVec)), 5), amount);
 				
 	Output.Color = colorMap * coneAttenuation * _LightColor * _LightStrength + (specular * coneAttenuation * _SpecularStrength);
 

@@ -485,14 +485,39 @@ namespace InsipidusEngine.Scenes
             _Floor.LoadContent(content, @"Entities\WoodTiledFloor[1]");
 
             //Set their normal maps.
-            _DarkBlock3.Sprites[0].Frames[0].NormalPath = @"Entities\DarkTiledBlock[1]_Normal";
-            _DarkBlock4.Sprites[0].Frames[0].NormalPath = @"Entities\DarkTiledBlock[1]_Normal";
-            _DarkBlock12.Sprites[0].Frames[0].NormalPath = @"Entities\DarkTiledBlock[1]_Normal";
-            _Stairs1.Sprites[0].Frames[0].NormalPath = @"Entities\StoneStairsRight[3]_Normal";
-            _Stairs2.Sprites[0].Frames[0].NormalPath = @"Entities\StoneStairsRight[3]_Normal";
-            _Stairs5.Sprites[0].Frames[0].NormalPath = @"Entities\StoneStairsRight[3]_Normal";
-            _Stairs8.Sprites[0].Frames[0].NormalPath = @"Entities\StoneStairsRight[3]_Normal";
-            _Floor.Sprites[0].Frames[0].NormalPath = @"Entities\WoodTiledFloor[1]_Normal";
+            _Shelf1.Sprites[0].Frames[0].NormalPath = @"Entities\Bookshelf[1](Normal)";
+            _Shelf2.Sprites[0].Frames[0].NormalPath = @"Entities\Bookshelf[1](Normal)";
+            _Shelf3.Sprites[0].Frames[0].NormalPath = @"Entities\Bookshelf[1](Normal)";
+            _Shelf4.Sprites[0].Frames[0].NormalPath = @"Entities\Bookshelf[1](Normal)";
+            _Shelf5.Sprites[0].Frames[0].NormalPath = @"Entities\Bookshelf[1](Normal)";
+            _Block2.Sprites[0].Frames[0].NormalPath = @"Entities\ElevatedBlock[2](Normal)";
+            _Block4.Sprites[0].Frames[0].NormalPath = @"Entities\ElevatedBlock[2](Normal)";
+            _Block6.Sprites[0].Frames[0].NormalPath = @"Entities\ElevatedBlock[2](Normal)";
+            _DarkBlock3.Sprites[0].Frames[0].NormalPath = @"Entities\DarkTiledBlock[1](Normal)";
+            _DarkBlock4.Sprites[0].Frames[0].NormalPath = @"Entities\DarkTiledBlock[1](Normal)";
+            _DarkBlock12.Sprites[0].Frames[0].NormalPath = @"Entities\DarkTiledBlock[1](Normal)";
+            _DarkBlock1.Sprites[0].Frames[0].NormalPath = @"Entities\DarkTiledBlock[2](Normal)";
+            _DarkBlock2.Sprites[0].Frames[0].NormalPath = @"Entities\DarkTiledBlock[2](Normal)";
+            _DarkBlock6.Sprites[0].Frames[0].NormalPath = @"Entities\DarkTiledBlock[2](Normal)";
+            _DarkBlock7.Sprites[0].Frames[0].NormalPath = @"Entities\DarkTiledBlock[2](Normal)";
+            _DarkBlock9.Sprites[0].Frames[0].NormalPath = @"Entities\DarkTiledBlock[2](Normal)";
+            _DarkBlock10.Sprites[0].Frames[0].NormalPath = @"Entities\DarkTiledBlock[2](Normal)";
+            _DarkBlock11.Sprites[0].Frames[0].NormalPath = @"Entities\DarkTiledBlock[2](Normal)";
+            _DarkBlock5.Sprites[0].Frames[0].NormalPath = @"Entities\DarkTiledBlock[3](Normal)";
+            _DarkBlock8.Sprites[0].Frames[0].NormalPath = @"Entities\DarkTiledBlock[3](Normal)";
+            _DarkBlock13.Sprites[0].Frames[0].NormalPath = @"Entities\DarkTiledBlock[3](Normal)";
+            _Stairs1.Sprites[0].Frames[0].NormalPath = @"Entities\StoneStairsRight[3](Normal)";
+            _Stairs2.Sprites[0].Frames[0].NormalPath = @"Entities\StoneStairsRight[3](Normal)";
+            _Stairs5.Sprites[0].Frames[0].NormalPath = @"Entities\StoneStairsRight[3](Normal)";
+            _Stairs8.Sprites[0].Frames[0].NormalPath = @"Entities\StoneStairsRight[3](Normal)";
+            _MarbleWall1.Sprites[0].Frames[0].NormalPath = @"Entities\MarbleWall[1](Normal)";
+            _MarbleWall2.Sprites[0].Frames[0].NormalPath = @"Entities\MarbleWall[1](Normal)";
+            _Floor.Sprites[0].Frames[0].NormalPath = @"Entities\WoodTiledFloor[1](Normal)";
+
+            //Set their depth maps.
+            _DarkBlock3.Sprites[0].Frames[0].DepthPath = @"Entities\DarkTiledBlock[1](Depth)";
+            _DarkBlock4.Sprites[0].Frames[0].DepthPath = @"Entities\DarkTiledBlock[1](Depth)";
+            _DarkBlock12.Sprites[0].Frames[0].DepthPath = @"Entities\DarkTiledBlock[1](Depth)";
 
             //Reload their textures.
             _Entities.Update();
@@ -547,7 +572,7 @@ namespace InsipidusEngine.Scenes
             _MarbleArch.Body.Shape.BottomDepth = 184;
             _MarbleWall1.Body.Shape.BottomDepth = 144;
             _MarbleWall2.Body.Shape.BottomDepth = 144;
-            _Floor.Body.Shape.BottomDepth = 0;
+            _Floor.Body.Shape.BottomDepth = 100;
         }
         #endregion
     }

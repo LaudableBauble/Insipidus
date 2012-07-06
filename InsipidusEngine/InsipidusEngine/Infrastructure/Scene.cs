@@ -32,10 +32,12 @@ namespace InsipidusEngine.Helpers
         protected RenderTarget2D _ColorMap;
         protected RenderTarget2D _NormalMap;
         protected RenderTarget2D _ShadowMap;
+        protected Effect _DepthEffect;
         protected Effect _LightEffect;
         protected Effect _CombinedEffect;
 
         protected Vector3 _LightPosition;
+        protected Matrix _View;
         #endregion
 
         #region Constructors
@@ -84,6 +86,7 @@ namespace InsipidusEngine.Helpers
             _ShadowMap = new RenderTarget2D(_GraphicsDevice, width, height, false, format, pp.DepthStencilFormat, pp.MultiSampleCount, RenderTargetUsage.DiscardContents);
 
             //Load the shaders.
+            _DepthEffect = content.Load<Effect>(@"Shaders\Depth");
             _LightEffect = content.Load<Effect>(@"Shaders\Lighting");
             _CombinedEffect = content.Load<Effect>(@"Shaders\DeferredCombine");
 
@@ -127,26 +130,105 @@ namespace InsipidusEngine.Helpers
             //Update the light's position.
             _LightPosition = new Vector3(Helper.GetMousePosition(), _LightPosition.Z);
 
+            //Update the view matrix.
+            _View = view;
+
             //Clear the screen.
-            _GraphicsDevice.Clear(Color.CornflowerBlue);
+            _GraphicsDevice.Clear(ClearOptions.Target | ClearOptions.DepthBuffer, Color.CornflowerBlue, 0, 0);
 
             //Initialize the color map and draw to it.
-            _GraphicsDevice.SetRenderTarget(_ColorMap);
-            _GraphicsDevice.Clear(Color.Transparent);
-            spriteBatch.Begin(SpriteSortMode.Immediate, BlendState.AlphaBlend, SamplerState.PointWrap, null, null, null, view);
-            _Entities.ForEach(item => item.Draw(spriteBatch, DrawState.Color));
-            spriteBatch.End();
+            RenderColorMap(spriteBatch);
 
             //Initialize the normal map and draw to it.
             _GraphicsDevice.SetRenderTarget(null);
-            _GraphicsDevice.SetRenderTarget(_NormalMap);
-            _GraphicsDevice.Clear(Color.Transparent);
-            spriteBatch.Begin(SpriteSortMode.Immediate, BlendState.AlphaBlend, SamplerState.PointWrap, null, null, null, view);
-            _Entities.ForEach(item => item.Draw(spriteBatch, DrawState.Normal));
-            spriteBatch.End();
+            RenderNormalMap(spriteBatch);
 
             //Initialize the shadow map and draw to it.
             _GraphicsDevice.SetRenderTarget(null);
+            RenderShadowMap(spriteBatch);
+
+            //Initialize the deferred and combined map.
+            _GraphicsDevice.SetRenderTarget(null);
+            RenderCombinedMap(spriteBatch);
+
+            //Draw the debug render targets.
+            DrawDebugRenderTargets(spriteBatch);
+        }
+
+        /// <summary>
+        /// Add an entity to the scene.
+        /// </summary>
+        /// <param name="entity">The entity to add.</param>
+        /// <returns>The added entity.</returns>
+        public Entity AddEntity(Entity entity)
+        {
+            _Entities.Add(entity);
+            entity.Scene = this;
+            _Physics.AddBody(entity.Body);
+            return entity;
+        }
+        /// <summary>
+        /// Remove an entity from the scene.
+        /// </summary>
+        /// <param name="entity">The entity to remove.</param>
+        public void RemoveEntity(Entity entity)
+        {
+            _Entities.Remove(entity);
+            _Physics.RemoveBody(entity.Body);
+        }
+        /// <summary>
+        /// Render all entities' color maps to the appropriate render target.
+        /// </summary>
+        /// <param name="spriteBatch">The sprite batch to use.</param>
+        private void RenderColorMap(SpriteBatch spriteBatch)
+        {
+            //Set the correct render target and clear it.
+            _GraphicsDevice.SetRenderTarget(_ColorMap);
+            _GraphicsDevice.Clear(Color.Transparent);
+
+            //Initialize the depth shader.
+            _DepthEffect.CurrentTechnique = _DepthEffect.Techniques["DepthBuffer"];
+            _DepthEffect.CurrentTechnique.Passes[0].Apply();
+
+            //Begin drawing the scene.
+            spriteBatch.Begin(SpriteSortMode.Immediate, BlendState.AlphaBlend, SamplerState.PointWrap, null, null, _DepthEffect, _View);
+
+            //Enable the depth buffer. NOTE: The order is important due to that the sprite batch disables the depth buffer in the begin() call.
+            DepthStencilState depth = new DepthStencilState() { DepthBufferEnable = true, DepthBufferWriteEnable = true, DepthBufferFunction = CompareFunction.GreaterEqual };
+            _GraphicsDevice.DepthStencilState = depth;
+
+            //Draw all entities to the screen.
+            _Entities.ForEach(item => item.Draw(spriteBatch, DrawState.Color, _DepthEffect));
+
+            //End the drawing.
+            spriteBatch.End();
+        }
+        /// <summary>
+        /// Render all entities' normal maps to the appropriate render target.
+        /// </summary>
+        /// <param name="spriteBatch">The sprite batch to use.</param>
+        private void RenderNormalMap(SpriteBatch spriteBatch)
+        {
+            //Set the correct render target and clear it.
+            _GraphicsDevice.SetRenderTarget(_NormalMap);
+            _GraphicsDevice.Clear(Color.Transparent);
+
+            //Initialize the depth shader.
+            _DepthEffect.CurrentTechnique = _DepthEffect.Techniques["DepthBuffer"];
+            _DepthEffect.CurrentTechnique.Passes[0].Apply();
+
+            //Draw all entities to the screen.
+            spriteBatch.Begin(SpriteSortMode.Immediate, BlendState.AlphaBlend, SamplerState.PointWrap, null, null, _DepthEffect, _View);
+            _Entities.ForEach(item => item.Draw(spriteBatch, DrawState.Normal, _DepthEffect));
+            spriteBatch.End();
+        }
+        /// <summary>
+        /// Render a shadow map from a color map and normal map.
+        /// </summary>
+        /// <param name="spriteBatch">The sprite batch to use.</param>
+        private void RenderShadowMap(SpriteBatch spriteBatch)
+        {
+            //Set the correct render target and clear it.
             _GraphicsDevice.SetRenderTarget(_ShadowMap);
             _GraphicsDevice.Clear(Color.Transparent);
 
@@ -184,9 +266,14 @@ namespace InsipidusEngine.Helpers
             //Add Belding (Black background) to the render target and draw the light map over the black background.
             _GraphicsDevice.BlendState = Helper.BlendBlack;
             _GraphicsDevice.DrawUserPrimitives(PrimitiveType.TriangleStrip, vertices, 0, 2);
-
-            //Initialize the deferred and combined map.
-            _GraphicsDevice.SetRenderTarget(null);
+        }
+        /// <summary>
+        /// Render the final color map that will be displayed to the screen.
+        /// </summary>
+        /// <param name="spriteBatch">The sprite batch to use.</param>
+        private void RenderCombinedMap(SpriteBatch spriteBatch)
+        {
+            //Set the correct render target and clear it.
             _GraphicsDevice.Clear(Color.Black);
 
             //Finally draw the combined maps onto the screen.
@@ -205,37 +292,12 @@ namespace InsipidusEngine.Helpers
             spriteBatch.Begin(SpriteSortMode.Immediate, BlendState.AlphaBlend, null, null, null, _CombinedEffect);
             spriteBatch.Draw(_ColorMap, Vector2.Zero, Color.White);
             spriteBatch.End();
-
-            //Draw the debug render targets.
-            DrawDebugRenderTargets(spriteBatch);
-        }
-
-        /// <summary>
-        /// Add an entity to the scene.
-        /// </summary>
-        /// <param name="entity">The entity to add.</param>
-        /// <returns>The added entity.</returns>
-        public Entity AddEntity(Entity entity)
-        {
-            _Entities.Add(entity);
-            entity.Scene = this;
-            _Physics.AddBody(entity.Body);
-            return entity;
-        }
-        /// <summary>
-        /// Remove an entity from the scene.
-        /// </summary>
-        /// <param name="entity">The entity to remove.</param>
-        public void RemoveEntity(Entity entity)
-        {
-            _Entities.Remove(entity);
-            _Physics.RemoveBody(entity.Body);
         }
         /// <summary>
         /// [DEBUG] Draws the debug render targets onto the bottom of the screen.
         /// </summary>
         /// <param name="spriteBatch">The sprite batch.</param>
-        public void DrawDebugRenderTargets(SpriteBatch spriteBatch)
+        private void DrawDebugRenderTargets(SpriteBatch spriteBatch)
         {
             // Draw some debug textures.
             spriteBatch.Begin();

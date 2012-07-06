@@ -582,22 +582,72 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Entities\DarkTiledBlock[1]_Normal.png">
-      <Name>DarkTiledBlock[1]_Normal</Name>
+    <Compile Include="Shaders\Depth.fx">
+      <Name>Depth</Name>
+      <Importer>EffectImporter</Importer>
+      <Processor>EffectProcessor</Processor>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Entities\DarkTiledBlock[2]%28Normal%29.png">
+      <Name>DarkTiledBlock[2]%28Normal%29</Name>
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Entities\WoodTiledFloor[1]_Normal.png">
-      <Name>WoodTiledFloor[1]_Normal</Name>
+    <Compile Include="Entities\DarkTiledBlock[1]%28Normal%29.png">
+      <Name>DarkTiledBlock[1]%28Normal%29</Name>
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Entities\StoneStairsRight[3]_Normal.png">
-      <Name>StoneStairsRight[3]_Normal</Name>
+    <Compile Include="Entities\Bookshelf[1]%28Normal%29.png">
+      <Name>Bookshelf[1]%28Normal%29</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Entities\WoodTiledFloor[1]%28Normal%29.png">
+      <Name>WoodTiledFloor[1]%28Normal%29</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Entities\StoneStairsRight[3]%28Normal%29.png">
+      <Name>StoneStairsRight[3]%28Normal%29</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Entities\DarkTiledBlock[1]%28Depth%29.png">
+      <Name>DarkTiledBlock[1]%28Depth%29</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Entities\DarkTiledBlock[3]%28Normal%29.png">
+      <Name>DarkTiledBlock[3]%28Normal%29</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="Entities\ElevatedBlock[1]%28Normal%29.png">
+      <Name>ElevatedBlock[1]%28Normal%29</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="Entities\ElevatedBlock[2]%28Normal%29.png">
+      <Name>ElevatedBlock[2]%28Normal%29</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="Entities\MarbleWall[1]%28Normal%29.png">
+      <Name>MarbleWall[1]%28Normal%29</Name>
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
     </Compile>

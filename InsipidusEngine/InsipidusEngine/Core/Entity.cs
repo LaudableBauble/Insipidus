@@ -117,10 +117,14 @@ namespace InsipidusEngine.Core
         /// </summary>
         /// <param name="spriteBatch">The sprite batch to use.</param>
         /// <param name="state">The type of drawing to perform.</param>
-        public void Draw(SpriteBatch spriteBatch, DrawState state)
+        /// <param name="effect">The shader effect to use. NOTE: Currently assumes it is a depth buffer.</param>
+        public void Draw(SpriteBatch spriteBatch, DrawState state, Effect effect)
         {
+            //Prepare the depth-buffer by setting the entity's position.
+            if (effect != null) { effect.Parameters["_Position"].SetValue(Position); }
+
             // Draw the sprite.
-            _Sprites.Draw(spriteBatch, state);
+            _Sprites.Draw(spriteBatch, state, effect);
         }
         #endregion
 

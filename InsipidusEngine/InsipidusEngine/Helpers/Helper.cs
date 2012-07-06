@@ -30,7 +30,7 @@ namespace InsipidusEngine.Helpers
         /// <summary>
         /// The path to the dummy normal map. This is to be used when no other normal map is present for a sprite.
         /// </summary>
-        public static string DummyNormalMap = @"Entities\DarkTiledBlock[1]_Normal";//@"Misc\Dummy_NormalMap";
+        public static string DummyNormalMap = @"Misc\Dummy_NormalMap";
         /// <summary>
         /// A blend state called belding, ie. a black background.
         /// </summary>

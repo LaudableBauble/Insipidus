@@ -93,6 +93,14 @@ Content\Entities\WoodTiledFloor[1].xnb
 Content\Shaders\DeferredCombine.xnb
 Content\Shaders\Lighting.xnb
 Content\Misc\Dummy_NormalMap.xnb
-Content\Entities\DarkTiledBlock[1]_Normal.xnb
-Content\Entities\WoodTiledFloor[1]_Normal.xnb
-Content\Entities\StoneStairsRight[3]_Normal.xnb
+Content\Shaders\Depth.xnb
+Content\Entities\DarkTiledBlock[2](Normal).xnb
+Content\Entities\DarkTiledBlock[1](Normal).xnb
+Content\Entities\Bookshelf[1](Normal).xnb
+Content\Entities\WoodTiledFloor[1](Normal).xnb
+Content\Entities\StoneStairsRight[3](Normal).xnb
+Content\Entities\DarkTiledBlock[1](Depth).xnb
+Content\Entities\DarkTiledBlock[3](Normal).xnb
+Content\Entities\ElevatedBlock[1](Normal).xnb
+Content\Entities\ElevatedBlock[2](Normal).xnb
+Content\Entities\MarbleWall[1](Normal).xnb

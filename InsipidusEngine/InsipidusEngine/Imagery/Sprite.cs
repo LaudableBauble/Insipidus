@@ -142,7 +142,8 @@ namespace InsipidusEngine.Imagery
         /// </summary>
         /// <param name="spriteBatch">The sprite batch to use.</param>
         /// <param name="state">The type of drawing to perform.</param>
-        public void Draw(SpriteBatch spriteBatch, DrawState state)
+        /// <param name="effect">The shader effect to use. NOTE: Currently assumes it is a depth buffer.</param>
+        public void Draw(SpriteBatch spriteBatch, DrawState state, Effect effect)
         {
             //If the sprite is invisible, stop here.
             if (_Visibility == Visibility.Invisible) { return; }
@@ -155,7 +156,6 @@ namespace InsipidusEngine.Imagery
             {
                 case DrawState.Color: { texture = _ColorTexture; break; }
                 case DrawState.Normal: { texture = _NormalTexture; break; }
-                case DrawState.Depth: { texture = _DepthTexture; break; }
             }
 
             //If there is no texture loaded, stop here.
@@ -163,6 +163,9 @@ namespace InsipidusEngine.Imagery
 
             //Whether to mirror the sprite.
             SpriteEffects mirror = (_Orientation == Orientation.Right) ? SpriteEffects.None : SpriteEffects.FlipHorizontally;
+
+            //Prepare the depth-buffer.
+            if (effect != null) { effect.Parameters["_DepthMap"].SetValue(_DepthTexture); }
 
             //Draw the sprite.
             spriteBatch.Draw(texture, _Position + _PositionOffset, null, Color.White * _Transparence, Calculator.AddAngles(_Rotation, _RotationOffset),
