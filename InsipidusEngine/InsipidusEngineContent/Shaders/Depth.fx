@@ -25,8 +25,8 @@ float4 DepthShader(float4 color : COLOR0, float2 texCoords : TEXCOORD0, out floa
 	float4 depthMap = tex2D(DepthMapSampler, texCoords);
 
 	//Fiddle with the depth buffer.
-    depth = _Position.z + tex2D(DepthMapSampler, texCoords).b;
-	//depth = .3f;
+    depth = (_Position.z + tex2D(DepthMapSampler, texCoords).b) / 10;
+	//depth = _Position.z / 100;
 
 	//Return the color data for the texture.
 	//colorMap.rgb = depth;

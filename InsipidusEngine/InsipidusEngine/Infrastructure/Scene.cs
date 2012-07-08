@@ -81,7 +81,7 @@ namespace InsipidusEngine.Helpers
             SurfaceFormat format = pp.BackBufferFormat;
 
             //Create the render targets.
-            _ColorMap = new RenderTarget2D(_GraphicsDevice, width, height);
+            _ColorMap = new RenderTarget2D(_GraphicsDevice, width, height, false, format, pp.DepthStencilFormat);
             _NormalMap = new RenderTarget2D(_GraphicsDevice, width, height);
             _ShadowMap = new RenderTarget2D(_GraphicsDevice, width, height, false, format, pp.DepthStencilFormat, pp.MultiSampleCount, RenderTargetUsage.DiscardContents);
 

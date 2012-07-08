@@ -572,7 +572,7 @@ namespace InsipidusEngine.Scenes
             _MarbleArch.Body.Shape.BottomDepth = 184;
             _MarbleWall1.Body.Shape.BottomDepth = 144;
             _MarbleWall2.Body.Shape.BottomDepth = 144;
-            _Floor.Body.Shape.BottomDepth = 10;
+            _Floor.Body.Shape.BottomDepth = 0;
         }
         #endregion
     }
