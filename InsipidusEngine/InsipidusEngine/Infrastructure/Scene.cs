@@ -31,6 +31,7 @@ namespace InsipidusEngine.Helpers
 
         protected RenderTarget2D _ColorMap;
         protected RenderTarget2D _NormalMap;
+        protected RenderTarget2D _DepthMap;
         protected RenderTarget2D _ShadowMap;
         protected Effect _DepthEffect;
         protected Effect _LightEffect;
@@ -82,7 +83,8 @@ namespace InsipidusEngine.Helpers
 
             //Create the render targets.
             _ColorMap = new RenderTarget2D(_GraphicsDevice, width, height, false, format, pp.DepthStencilFormat);
-            _NormalMap = new RenderTarget2D(_GraphicsDevice, width, height);
+            _NormalMap = new RenderTarget2D(_GraphicsDevice, width, height, false, format, pp.DepthStencilFormat);
+            _DepthMap = new RenderTarget2D(_GraphicsDevice, width, height, false, format, pp.DepthStencilFormat);
             _ShadowMap = new RenderTarget2D(_GraphicsDevice, width, height, false, format, pp.DepthStencilFormat, pp.MultiSampleCount, RenderTargetUsage.DiscardContents);
 
             //Load the shaders.
@@ -143,6 +145,10 @@ namespace InsipidusEngine.Helpers
             _GraphicsDevice.SetRenderTarget(null);
             RenderNormalMap(spriteBatch);
 
+            //Initialize the depth map and draw to it.
+            _GraphicsDevice.SetRenderTarget(null);
+            RenderDepthMap(spriteBatch);
+
             //Initialize the shadow map and draw to it.
             _GraphicsDevice.SetRenderTarget(null);
             RenderShadowMap(spriteBatch);
@@ -184,7 +190,7 @@ namespace InsipidusEngine.Helpers
         {
             //Set the correct render target and clear it.
             _GraphicsDevice.SetRenderTarget(_ColorMap);
-            _GraphicsDevice.Clear(Color.Transparent);
+            _GraphicsDevice.Clear(ClearOptions.Target | ClearOptions.DepthBuffer, Color.Transparent, 0, 0);
 
             //Initialize the depth shader.
             _DepthEffect.CurrentTechnique = _DepthEffect.Techniques["DepthBuffer"];
@@ -211,15 +217,50 @@ namespace InsipidusEngine.Helpers
         {
             //Set the correct render target and clear it.
             _GraphicsDevice.SetRenderTarget(_NormalMap);
-            _GraphicsDevice.Clear(Color.Transparent);
+            _GraphicsDevice.Clear(ClearOptions.Target | ClearOptions.DepthBuffer, Color.Transparent, 0, 0);
 
             //Initialize the depth shader.
             _DepthEffect.CurrentTechnique = _DepthEffect.Techniques["DepthBuffer"];
             _DepthEffect.CurrentTechnique.Passes[0].Apply();
 
-            //Draw all entities to the screen.
+            //Begin drawing the scene.
             spriteBatch.Begin(SpriteSortMode.Immediate, BlendState.AlphaBlend, SamplerState.PointWrap, null, null, _DepthEffect, _View);
+
+            //Enable the depth buffer. NOTE: The order is important due to that the sprite batch disables the depth buffer in the begin() call.
+            DepthStencilState depth = new DepthStencilState() { DepthBufferEnable = true, DepthBufferWriteEnable = true, DepthBufferFunction = CompareFunction.GreaterEqual };
+            _GraphicsDevice.DepthStencilState = depth;
+
+            //Draw all entities to the screen.
             _Entities.ForEach(item => item.Draw(spriteBatch, DrawState.Normal, _DepthEffect));
+
+            //End the drawing.
+            spriteBatch.End();
+        }
+        /// <summary>
+        /// Render all entities' depth maps to the appropriate render target.
+        /// </summary>
+        /// <param name="spriteBatch">The sprite batch to use.</param>
+        private void RenderDepthMap(SpriteBatch spriteBatch)
+        {
+            //Set the correct render target and clear it.
+            _GraphicsDevice.SetRenderTarget(_DepthMap);
+            _GraphicsDevice.Clear(ClearOptions.Target | ClearOptions.DepthBuffer, Color.Transparent, 0, 0);
+
+            //Initialize the depth shader.
+            _DepthEffect.CurrentTechnique = _DepthEffect.Techniques["DepthBuffer"];
+            _DepthEffect.CurrentTechnique.Passes[0].Apply();
+
+            //Begin drawing the scene.
+            spriteBatch.Begin(SpriteSortMode.Immediate, BlendState.AlphaBlend, SamplerState.PointWrap, null, null, _DepthEffect, _View);
+
+            //Enable the depth buffer. NOTE: The order is important due to that the sprite batch disables the depth buffer in the begin() call.
+            DepthStencilState depth = new DepthStencilState() { DepthBufferEnable = true, DepthBufferWriteEnable = true, DepthBufferFunction = CompareFunction.GreaterEqual };
+            _GraphicsDevice.DepthStencilState = depth;
+
+            //Draw all entities to the screen.
+            _Entities.ForEach(item => item.Draw(spriteBatch, DrawState.Depth, _DepthEffect));
+
+            //End the drawing.
             spriteBatch.End();
         }
         /// <summary>
@@ -230,7 +271,7 @@ namespace InsipidusEngine.Helpers
         {
             //Set the correct render target and clear it.
             _GraphicsDevice.SetRenderTarget(_ShadowMap);
-            _GraphicsDevice.Clear(Color.Transparent);
+            _GraphicsDevice.Clear(ClearOptions.Target | ClearOptions.DepthBuffer, Color.Transparent, 0, 0);
 
             //Map out the texture by assigning vertices.
             VertexPositionColorTexture[] vertices = new VertexPositionColorTexture[4];
@@ -245,20 +286,20 @@ namespace InsipidusEngine.Helpers
             _GraphicsDevice.SetVertexBuffer(buffer);
 
             //Set the light data.
-            _LightEffect.Parameters["_LightStrength"].SetValue(1f);
-            _LightEffect.Parameters["_LightPosition"].SetValue(_LightPosition);
-            _LightEffect.Parameters["_LightColor"].SetValue(new Vector4(1.0f, 1f, 1.0f, 1.0f));
-            _LightEffect.Parameters["_LightDecay"].SetValue(200);
-            _LightEffect.Parameters["_SpecularStrength"].SetValue(1f);
+            _LightEffect.Parameters["LightStrength"].SetValue(1f);
+            _LightEffect.Parameters["LightPosition"].SetValue(_LightPosition);
+            _LightEffect.Parameters["LightColor"].SetValue(new Vector4(1.0f, 1f, 1.0f, 1.0f));
+            _LightEffect.Parameters["LightDecay"].SetValue(200);
+            _LightEffect.Parameters["SpecularStrength"].SetValue(1f);
+            _LightEffect.Parameters["ScreenWidth"].SetValue(_GraphicsDevice.Viewport.Width);
+            _LightEffect.Parameters["ScreenHeight"].SetValue(_GraphicsDevice.Viewport.Height);
+            _LightEffect.Parameters["AmbientColor"].SetValue(new Color(.1f, .1f, .1f, 1).ToVector4());
+            _LightEffect.Parameters["NormalMap"].SetValue(_NormalMap);
+            _LightEffect.Parameters["ColorMap"].SetValue(_ColorMap);
+            _LightEffect.Parameters["DepthMap"].SetValue(_DepthMap);
 
             //Set the technique.
             _LightEffect.CurrentTechnique = _LightEffect.Techniques["DeferredLighting"];
-
-            _LightEffect.Parameters["_ScreenWidth"].SetValue(_GraphicsDevice.Viewport.Width);
-            _LightEffect.Parameters["_ScreenHeight"].SetValue(_GraphicsDevice.Viewport.Height);
-            _LightEffect.Parameters["_AmbientColor"].SetValue(new Color(.1f, .1f, .1f, 1).ToVector4());
-            _LightEffect.Parameters["_NormalMap"].SetValue(_NormalMap);
-            _LightEffect.Parameters["_ColorMap"].SetValue(_ColorMap);
 
             //Perform a shader pass.
             _LightEffect.CurrentTechnique.Passes[0].Apply();
@@ -278,12 +319,12 @@ namespace InsipidusEngine.Helpers
 
             //Finally draw the combined maps onto the screen.
             _CombinedEffect.CurrentTechnique = _CombinedEffect.Techniques["DeferredCombined"];
-            _CombinedEffect.Parameters["_Ambient"].SetValue(1f);
-            _CombinedEffect.Parameters["_LightAmbient"].SetValue(4);
-            _CombinedEffect.Parameters["_AmbientColor"].SetValue(new Color(.1f, .1f, .1f, 1).ToVector4());
-            _CombinedEffect.Parameters["_ColorMap"].SetValue(_ColorMap);
-            _CombinedEffect.Parameters["_ShadingMap"].SetValue(_ShadowMap);
-            _CombinedEffect.Parameters["_NormalMap"].SetValue(_NormalMap);
+            _CombinedEffect.Parameters["Ambient"].SetValue(1f);
+            _CombinedEffect.Parameters["LightAmbient"].SetValue(4);
+            _CombinedEffect.Parameters["AmbientColor"].SetValue(new Color(.1f, .1f, .1f, 1).ToVector4());
+            _CombinedEffect.Parameters["ColorMap"].SetValue(_ColorMap);
+            _CombinedEffect.Parameters["ShadingMap"].SetValue(_ShadowMap);
+            _CombinedEffect.Parameters["NormalMap"].SetValue(_NormalMap);
 
             //Perform the shader pass.
             _CombinedEffect.CurrentTechnique.Passes[0].Apply();
@@ -301,11 +342,12 @@ namespace InsipidusEngine.Helpers
         {
             // Draw some debug textures.
             spriteBatch.Begin();
-            Rectangle size = new Rectangle(0, 0, _ColorMap.Width / 3, _ColorMap.Height / 3);
+            Rectangle size = new Rectangle(0, 0, _ColorMap.Width / 4, _ColorMap.Height / 4);
             var position = new Vector2(0, _GraphicsDevice.Viewport.Height - size.Height);
             spriteBatch.Draw(_ColorMap, new Rectangle((int)position.X, (int)position.Y, size.Width, size.Height), Color.White);
             spriteBatch.Draw(_NormalMap, new Rectangle((int)position.X + size.Width, (int)position.Y, size.Width, size.Height), Color.White);
-            spriteBatch.Draw(_ShadowMap, new Rectangle((int)position.X + size.Width * 2, (int)position.Y, size.Width, size.Height), Color.White);
+            spriteBatch.Draw(_DepthMap, new Rectangle((int)position.X + size.Width * 2, (int)position.Y, size.Width, size.Height), Color.White);
+            spriteBatch.Draw(_ShadowMap, new Rectangle((int)position.X + size.Width * 3, (int)position.Y, size.Width, size.Height), Color.White);
             spriteBatch.End();
         }
         #endregion

@@ -121,7 +121,7 @@ namespace InsipidusEngine.Core
         public void Draw(SpriteBatch spriteBatch, DrawState state, Effect effect)
         {
             //Prepare the depth-buffer by setting the entity's position.
-            if (effect != null) { effect.Parameters["_Position"].SetValue(Position); }
+            if (effect != null) { effect.Parameters["BottomDepth"].SetValue(_Body.Shape.BottomDepth); }
 
             // Draw the sprite.
             _Sprites.Draw(spriteBatch, state, effect);

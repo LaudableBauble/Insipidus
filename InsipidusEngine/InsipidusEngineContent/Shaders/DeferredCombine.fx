@@ -1,11 +1,11 @@
-float _Ambient;
-float4 _AmbientColor;
-float _LightAmbient;
+float Ambient;
+float4 AmbientColor;
+float LightAmbient;
 
-Texture _ColorMap;
+Texture ColorMap;
 sampler ColorMapSampler = sampler_state
 {
-	texture = <_ColorMap>;
+	texture = <ColorMap>;
 	magfilter = LINEAR;
 	minfilter = LINEAR;
 	mipfilter = LINEAR;
@@ -13,10 +13,10 @@ sampler ColorMapSampler = sampler_state
 	AddressV = mirror;
 };
 
-Texture _ShadingMap;
+Texture ShadingMap;
 sampler ShadingMapSampler = sampler_state
 {
-	texture = <_ShadingMap>;
+	texture = <ShadingMap>;
 	magfilter = LINEAR;
 	minfilter = LINEAR;
 	mipfilter = LINEAR;
@@ -24,10 +24,10 @@ sampler ShadingMapSampler = sampler_state
 	AddressV = mirror;
 };
 
-Texture _NormalMap;
+Texture NormalMap;
 sampler NormalMapSampler = sampler_state
 {
-	texture = <_NormalMap>;
+	texture = <NormalMap>;
 	magfilter = LINEAR;
 	minfilter = LINEAR;
 	mipfilter = LINEAR;
@@ -43,13 +43,13 @@ float4 CombinedPixelShader(float4 color : COLOR0, float2 texCoords : TEXCOORD0) 
 		
 	//if (normal > 0.0f)
 	{
-		//float4 finalColor = color2 * _AmbientColor;
+		//float4 finalColor = color2 * AmbientColor;
 		//finalColor += shading;
 		//return finalColor;
 
 		// Darker
-		float4 finalColor = color2 * _AmbientColor * _Ambient;
-		finalColor += (shading * color2) * _LightAmbient;
+		float4 finalColor = color2 * AmbientColor * Ambient;
+		finalColor += (shading * color2) * LightAmbient;
 		
 		return finalColor;
 	}

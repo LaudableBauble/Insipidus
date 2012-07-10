@@ -1,18 +1,18 @@
-float _ScreenWidth;
-float _ScreenHeight;
-float4 _AmbientColor;
+float ScreenWidth;
+float ScreenHeight;
+float4 AmbientColor;
 
-float _LightStrength;
-float _LightDecay;
-float3 _LightPosition;
-float4 _LightColor;
-float _LightRadius;
-float _SpecularStrength;
+float LightStrength;
+float LightDecay;
+float3 LightPosition;
+float4 LightColor;
+float LightRadius;
+float SpecularStrength;
 
-Texture _NormalMap;
+Texture NormalMap;
 sampler NormalMapSampler = sampler_state
 {
-	texture = <_NormalMap>;
+	texture = <NormalMap>;
 	magfilter = LINEAR;
 	minfilter = LINEAR;
 	mipfilter = LINEAR;
@@ -20,10 +20,21 @@ sampler NormalMapSampler = sampler_state
 	AddressV = mirror;
 };
 
-Texture _ColorMap;
+Texture ColorMap;
 sampler ColorMapSampler = sampler_state
 {
-	texture = <_ColorMap>;
+	texture = <ColorMap>;
+	magfilter = LINEAR;
+	minfilter = LINEAR;
+	mipfilter = LINEAR;
+	AddressU = mirror;
+	AddressV = mirror;
+};
+
+Texture DepthMap;
+sampler DepthMapSampler = sampler_state
+{
+	texture = <DepthMap>;
 	magfilter = LINEAR;
 	minfilter = LINEAR;
 	mipfilter = LINEAR;
@@ -60,23 +71,33 @@ PixelToFrame PointLightShader(VertexToPixel PSIn) : COLOR0
 	
 	float4 colorMap = tex2D(ColorMapSampler, PSIn.TexCoord);
 	float3 normal = (2.0f * (tex2D(NormalMapSampler, PSIn.TexCoord))) - 1.0f;
+	float3 depth = tex2D(DepthMapSampler, PSIn.TexCoord);
 		
 	float3 pixelPosition;
-	pixelPosition.x = _ScreenWidth * PSIn.TexCoord.x;
-	pixelPosition.y = _ScreenHeight * PSIn.TexCoord.y;
-	pixelPosition.z = 0;
+	pixelPosition.x = ScreenWidth * PSIn.TexCoord.x;
+	pixelPosition.y = ScreenHeight * PSIn.TexCoord.y;
+	pixelPosition.z = depth;
 
-	float3 lightDirection = _LightPosition - pixelPosition;
+	/*float3 lightDirection = LightPosition - pixelPosition;
 	float3 lightDirNorm = normalize(lightDirection);
 	float3 halfVec = float3(0, 0, 1);
-		
+
 	float amount = max(dot(normal, lightDirNorm), 0);
-	float coneAttenuation = saturate(1.0f - length(lightDirection) / _LightDecay); 
-				
+	float coneAttenuation = saturate(1.0f - length(lightDirection) / LightDecay);		
 	float3 reflect = normalize(2 * amount * normal - lightDirNorm);
+	float specular = min(pow(saturate(dot(reflect, halfVec)), 5), amount);*/
+
+	float3 direction = LightPosition - pixelPosition;
+	float distance = 1 / length(direction) * LightStrength;
+	float3 dirNorm = normalize(distance);
+	float3 halfVec = float3(0, 0, 1);		
+
+	float amount = max(dot(normal + depth, dirNorm), 0);
+	float coneAttenuation = saturate(1.0f - length(direction) / LightDecay); 			
+	float3 reflect = normalize(2 * amount * normal - dirNorm);
 	float specular = min(pow(saturate(dot(reflect, halfVec)), 5), amount);
 				
-	Output.Color = colorMap * coneAttenuation * _LightColor * _LightStrength + (specular * coneAttenuation * _SpecularStrength);
+	Output.Color = colorMap * coneAttenuation * LightColor * LightStrength + (specular * coneAttenuation * SpecularStrength);
 
 	return Output;
 }

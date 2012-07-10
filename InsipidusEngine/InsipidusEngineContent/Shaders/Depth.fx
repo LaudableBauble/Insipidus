@@ -1,16 +1,16 @@
-float3 _Position;
+float BottomDepth;
 
 //Is filled automatically by sprite batch.
-Texture _TextureMap;
+Texture TextureMap;
 sampler TextureMapSampler = sampler_state
 {
-	texture = <_TextureMap>;
+	texture = <TextureMap>;
 };
 
-Texture _DepthMap;
+Texture DepthMap;
 sampler DepthMapSampler = sampler_state
 {
-	texture = <_DepthMap>;
+	texture = <DepthMap>;
 	magfilter = LINEAR;
 	minfilter = LINEAR;
 	mipfilter = LINEAR;
@@ -25,11 +25,10 @@ float4 DepthShader(float4 color : COLOR0, float2 texCoords : TEXCOORD0, out floa
 	float4 depthMap = tex2D(DepthMapSampler, texCoords);
 
 	//Fiddle with the depth buffer.
-    depth = (_Position.z + tex2D(DepthMapSampler, texCoords).b) / 10;
-	//depth = _Position.z / 100;
+	if (colorMap.a == 0) { depth = 0; }
+	else { depth = (BottomDepth + depthMap.b * 255) / 200; }
 
 	//Return the color data for the texture.
-	//colorMap.rgb = depth;
 	return colorMap;
 }
 

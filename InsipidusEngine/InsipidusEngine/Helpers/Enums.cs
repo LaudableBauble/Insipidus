@@ -24,7 +24,7 @@ namespace InsipidusEngine
     /// </summary>
     public enum DrawState
     {
-        Color, Normal
+        Color, Normal, Depth
     }
     /// <summary>
     /// Enum describes the screen transition state.

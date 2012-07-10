@@ -156,6 +156,7 @@ namespace InsipidusEngine.Imagery
             {
                 case DrawState.Color: { texture = _ColorTexture; break; }
                 case DrawState.Normal: { texture = _NormalTexture; break; }
+                case DrawState.Depth: { texture = _DepthTexture; break; }
             }
 
             //If there is no texture loaded, stop here.
@@ -165,7 +166,7 @@ namespace InsipidusEngine.Imagery
             SpriteEffects mirror = (_Orientation == Orientation.Right) ? SpriteEffects.None : SpriteEffects.FlipHorizontally;
 
             //Prepare the depth-buffer.
-            if (effect != null) { effect.Parameters["_DepthMap"].SetValue(_DepthTexture); }
+            if (effect != null) { effect.Parameters["DepthMap"].SetValue(_DepthTexture); }
 
             //Draw the sprite.
             spriteBatch.Draw(texture, _Position + _PositionOffset, null, Color.White * _Transparence, Calculator.AddAngles(_Rotation, _RotationOffset),
