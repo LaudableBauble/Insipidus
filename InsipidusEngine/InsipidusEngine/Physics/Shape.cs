@@ -385,12 +385,19 @@ namespace InsipidusEngine.Physics
             set { _Position = new Vector3(value.X, value.Y, _Position.Z); }
         }
         /// <summary>
-        /// The bottom position of the shape.
+        /// The bottom position of the shape, ie. the origin of the shape's bottom layer.
         /// </summary>
         public Vector3 BottomPosition
         {
             get { return new Vector3(_Position.X, _Position.Y, _Position.Z - Depth + 2); }
             set { _Position = new Vector3(value.X, value.Y, value.Z + Depth / 2); }
+        }
+        /// <summary>
+        /// The minimum position of the shape. Only works if the shape is not rotated. Used to map out a depth texture correctly.
+        /// </summary>
+        public Vector3 MinPosition
+        {
+            get { return new Vector3(_Position.X - _Width / 2, _Position.Y - _Height / 2, _Position.Z - _Depth / 2); }
         }
         /// <summary>
         /// The center of the shape.

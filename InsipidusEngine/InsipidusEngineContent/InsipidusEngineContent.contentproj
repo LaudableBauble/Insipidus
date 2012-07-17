@@ -582,8 +582,8 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Shaders\Depth.fx">
-      <Name>Depth</Name>
+    <Compile Include="Shaders\DepthBuffer.fx">
+      <Name>DepthBuffer</Name>
       <Importer>EffectImporter</Importer>
       <Processor>EffectProcessor</Processor>
     </Compile>
@@ -648,6 +648,23 @@
     </Compile>
     <Compile Include="Entities\MarbleWall[1]%28Normal%29.png">
       <Name>MarbleWall[1]%28Normal%29</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Entities\ElevatedBlock[3]%28Normal%29.png">
+      <Name>ElevatedBlock[3]%28Normal%29</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="Entities\ElevatedBlock[4]%28Normal%29.png">
+      <Name>ElevatedBlock[4]%28Normal%29</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="Entities\MarblePillar[1]%28Normal%29.png">
+      <Name>MarblePillar[1]%28Normal%29</Name>
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
     </Compile>

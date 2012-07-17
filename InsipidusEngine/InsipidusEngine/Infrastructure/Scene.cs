@@ -88,7 +88,7 @@ namespace InsipidusEngine.Helpers
             _ShadowMap = new RenderTarget2D(_GraphicsDevice, width, height, false, format, pp.DepthStencilFormat, pp.MultiSampleCount, RenderTargetUsage.DiscardContents);
 
             //Load the shaders.
-            _DepthEffect = content.Load<Effect>(@"Shaders\Depth");
+            _DepthEffect = content.Load<Effect>(@"Shaders\DepthBuffer");
             _LightEffect = content.Load<Effect>(@"Shaders\Lighting");
             _CombinedEffect = content.Load<Effect>(@"Shaders\DeferredCombine");
 
@@ -194,6 +194,7 @@ namespace InsipidusEngine.Helpers
 
             //Initialize the depth shader.
             _DepthEffect.CurrentTechnique = _DepthEffect.Techniques["DepthBuffer"];
+            _DepthEffect.Parameters["DrawToDepthMap"].SetValue(false);
             _DepthEffect.CurrentTechnique.Passes[0].Apply();
 
             //Begin drawing the scene.
@@ -221,6 +222,7 @@ namespace InsipidusEngine.Helpers
 
             //Initialize the depth shader.
             _DepthEffect.CurrentTechnique = _DepthEffect.Techniques["DepthBuffer"];
+            _DepthEffect.Parameters["DrawToDepthMap"].SetValue(false);
             _DepthEffect.CurrentTechnique.Passes[0].Apply();
 
             //Begin drawing the scene.
@@ -248,6 +250,7 @@ namespace InsipidusEngine.Helpers
 
             //Initialize the depth shader.
             _DepthEffect.CurrentTechnique = _DepthEffect.Techniques["DepthBuffer"];
+            _DepthEffect.Parameters["DrawToDepthMap"].SetValue(true);
             _DepthEffect.CurrentTechnique.Passes[0].Apply();
 
             //Begin drawing the scene.

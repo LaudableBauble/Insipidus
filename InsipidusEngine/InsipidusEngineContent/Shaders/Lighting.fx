@@ -1,7 +1,6 @@
 float ScreenWidth;
 float ScreenHeight;
 float4 AmbientColor;
-
 float LightStrength;
 float LightDecay;
 float3 LightPosition;
@@ -69,23 +68,13 @@ PixelToFrame PointLightShader(VertexToPixel PSIn) : COLOR0
 {	
 	PixelToFrame Output = (PixelToFrame)0;
 	
+	//Get the texture data.
 	float4 colorMap = tex2D(ColorMapSampler, PSIn.TexCoord);
 	float3 normal = (2.0f * (tex2D(NormalMapSampler, PSIn.TexCoord))) - 1.0f;
 	float3 depth = tex2D(DepthMapSampler, PSIn.TexCoord);
-		
-	float3 pixelPosition;
-	pixelPosition.x = ScreenWidth * PSIn.TexCoord.x;
-	pixelPosition.y = ScreenHeight * PSIn.TexCoord.y;
-	pixelPosition.z = depth;
-
-	/*float3 lightDirection = LightPosition - pixelPosition;
-	float3 lightDirNorm = normalize(lightDirection);
-	float3 halfVec = float3(0, 0, 1);
-
-	float amount = max(dot(normal, lightDirNorm), 0);
-	float coneAttenuation = saturate(1.0f - length(lightDirection) / LightDecay);		
-	float3 reflect = normalize(2 * amount * normal - lightDirNorm);
-	float specular = min(pow(saturate(dot(reflect, halfVec)), 5), amount);*/
+	
+	//Transform the pixel from screen space into world space using the depth map.
+	float3 pixelPosition = depth;
 
 	float3 direction = LightPosition - pixelPosition;
 	float distance = 1 / length(direction) * LightStrength;

@@ -493,6 +493,9 @@ namespace InsipidusEngine.Scenes
             _Block2.Sprites[0].Frames[0].NormalPath = @"Entities\ElevatedBlock[2](Normal)";
             _Block4.Sprites[0].Frames[0].NormalPath = @"Entities\ElevatedBlock[2](Normal)";
             _Block6.Sprites[0].Frames[0].NormalPath = @"Entities\ElevatedBlock[2](Normal)";
+            _Block1.Sprites[0].Frames[0].NormalPath = @"Entities\ElevatedBlock[3](Normal)";
+            _Block3.Sprites[0].Frames[0].NormalPath = @"Entities\ElevatedBlock[3](Normal)";
+            _Block5.Sprites[0].Frames[0].NormalPath = @"Entities\ElevatedBlock[4](Normal)";
             _DarkBlock3.Sprites[0].Frames[0].NormalPath = @"Entities\DarkTiledBlock[1](Normal)";
             _DarkBlock4.Sprites[0].Frames[0].NormalPath = @"Entities\DarkTiledBlock[1](Normal)";
             _DarkBlock12.Sprites[0].Frames[0].NormalPath = @"Entities\DarkTiledBlock[1](Normal)";
@@ -510,6 +513,8 @@ namespace InsipidusEngine.Scenes
             _Stairs2.Sprites[0].Frames[0].NormalPath = @"Entities\StoneStairsRight[3](Normal)";
             _Stairs5.Sprites[0].Frames[0].NormalPath = @"Entities\StoneStairsRight[3](Normal)";
             _Stairs8.Sprites[0].Frames[0].NormalPath = @"Entities\StoneStairsRight[3](Normal)";
+            _Pillar1.Sprites[0].Frames[0].NormalPath = @"Entities\MarblePillar[1](Normal)";
+            _Pillar2.Sprites[0].Frames[0].NormalPath = @"Entities\MarblePillar[1](Normal)";
             _MarbleWall1.Sprites[0].Frames[0].NormalPath = @"Entities\MarbleWall[1](Normal)";
             _MarbleWall2.Sprites[0].Frames[0].NormalPath = @"Entities\MarbleWall[1](Normal)";
             _Floor.Sprites[0].Frames[0].NormalPath = @"Entities\WoodTiledFloor[1](Normal)";
