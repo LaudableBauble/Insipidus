@@ -10,16 +10,10 @@ sampler TextureMapSampler = sampler_state
 {
 	texture = <TextureMap>;
 };
-
 Texture DepthMap;
 sampler DepthMapSampler = sampler_state
 {
 	texture = <DepthMap>;
-	magfilter = LINEAR;
-	minfilter = LINEAR;
-	mipfilter = LINEAR;
-	AddressU = mirror;
-	AddressV = mirror;
 };
 
 float4 DepthShader(float4 color : COLOR0, float2 texCoords : TEXCOORD0, out float depth : DEPTH0) : COLOR0
@@ -32,13 +26,11 @@ float4 DepthShader(float4 color : COLOR0, float2 texCoords : TEXCOORD0, out floa
 	if (colorMap.a == 0) { depth = 0; }
 	else { depth = (MinPosition.z + depthMap.b * 255) / 200; }
 
-	float4 result = colorMap;
-
 	//If the target map is a depth map, add the entity's bottom depth to the return color.
-	if (DrawToDepthMap) { colorMap.rgb += (MinPosition / 255); result.rgb = colorMap.rgb + (MinPosition / 255); }
+	if (DrawToDepthMap) { colorMap.rgb += ((MinPosition / 20) / 255); }
 
 	//Return the color data for the texture.
-	return result;
+	return colorMap;
 }
 
 technique DepthBuffer

@@ -33,12 +33,15 @@ namespace InsipidusEngine.Helpers
         protected RenderTarget2D _NormalMap;
         protected RenderTarget2D _DepthMap;
         protected RenderTarget2D _ShadowMap;
+        protected RenderTarget2D _CombinedMap;
         protected Effect _DepthEffect;
         protected Effect _LightEffect;
         protected Effect _CombinedEffect;
 
         protected Vector3 _LightPosition;
         protected Matrix _View;
+
+        protected RenderMap _MapToDraw;
         #endregion
 
         #region Constructors
@@ -61,6 +64,7 @@ namespace InsipidusEngine.Helpers
             _Name = "Scene";
             _Entities = new RobustList<Entity>();
             _Physics = new PhysicsSimulator();
+            _MapToDraw = RenderMap.Combined;
         }
         /// <summary>
         /// Load all content.
@@ -86,6 +90,7 @@ namespace InsipidusEngine.Helpers
             _NormalMap = new RenderTarget2D(_GraphicsDevice, width, height, false, format, pp.DepthStencilFormat);
             _DepthMap = new RenderTarget2D(_GraphicsDevice, width, height, false, format, pp.DepthStencilFormat);
             _ShadowMap = new RenderTarget2D(_GraphicsDevice, width, height, false, format, pp.DepthStencilFormat, pp.MultiSampleCount, RenderTargetUsage.DiscardContents);
+            _CombinedMap = new RenderTarget2D(_GraphicsDevice, width, height, false, format, pp.DepthStencilFormat);
 
             //Load the shaders.
             _DepthEffect = content.Load<Effect>(@"Shaders\DepthBuffer");
@@ -103,9 +108,13 @@ namespace InsipidusEngine.Helpers
             // Let all entities respond to input.
             _Entities.ForEach(item => item.HandleInput(input));
 
-            //If to change the height of the light.
-            if (input.IsNewMouseScrollUp()) { _LightPosition.Z += 5f; }
-            else if (input.IsNewMouseScrollDown()) { _LightPosition.Z -= 5f; }
+            //Change the height of the light.
+            if (input.IsNewMouseScrollUp() || input.IsKeyDown(Keys.Q)) { _LightPosition.Z += 5f; }
+            else if (input.IsNewMouseScrollDown() || input.IsKeyDown(Keys.E)) { _LightPosition.Z -= 5f; }
+
+            //Change which render map to be displayed.
+            if (input.IsNewKeyPress(Keys.R)) { _MapToDraw = Enum.IsDefined(typeof(RenderMap), _MapToDraw - 1) ? _MapToDraw - 1 : RenderMap.Combined; }
+            else if (input.IsNewKeyPress(Keys.T)) { _MapToDraw = Enum.IsDefined(typeof(RenderMap), _MapToDraw + 1) ? _MapToDraw + 1 : RenderMap.Color; }
         }
         /// <summary>
         /// Update the scene.
@@ -138,27 +147,28 @@ namespace InsipidusEngine.Helpers
             //Clear the screen.
             _GraphicsDevice.Clear(ClearOptions.Target | ClearOptions.DepthBuffer, Color.CornflowerBlue, 0, 0);
 
-            //Initialize the color map and draw to it.
+            //Initialize the maps and draw to them in order.
             RenderColorMap(spriteBatch);
-
-            //Initialize the normal map and draw to it.
-            _GraphicsDevice.SetRenderTarget(null);
             RenderNormalMap(spriteBatch);
-
-            //Initialize the depth map and draw to it.
-            _GraphicsDevice.SetRenderTarget(null);
             RenderDepthMap(spriteBatch);
-
-            //Initialize the shadow map and draw to it.
-            _GraphicsDevice.SetRenderTarget(null);
             RenderShadowMap(spriteBatch);
-
-            //Initialize the deferred and combined map.
-            _GraphicsDevice.SetRenderTarget(null);
             RenderCombinedMap(spriteBatch);
 
+            //Decide which rendering to display.
+            _GraphicsDevice.SetRenderTarget(null);
+            spriteBatch.Begin();
+            switch (_MapToDraw)
+            {
+                case RenderMap.Color: { spriteBatch.Draw(_ColorMap, Vector2.Zero, Color.White); break; }
+                case RenderMap.Normal: { spriteBatch.Draw(_NormalMap, Vector2.Zero, Color.White); break; }
+                case RenderMap.Depth: { spriteBatch.Draw(_DepthMap, Vector2.Zero, Color.White); break; }
+                case RenderMap.Shadow: { spriteBatch.Draw(_ShadowMap, Vector2.Zero, Color.White); break; }
+                case RenderMap.Combined: { spriteBatch.Draw(_CombinedMap, Vector2.Zero, Color.White); break; }
+            }
+            spriteBatch.End();
+
             //Draw the debug render targets.
-            DrawDebugRenderTargets(spriteBatch);
+            //DrawDebugRenderTargets(spriteBatch);
         }
 
         /// <summary>
@@ -217,6 +227,7 @@ namespace InsipidusEngine.Helpers
         private void RenderNormalMap(SpriteBatch spriteBatch)
         {
             //Set the correct render target and clear it.
+            _GraphicsDevice.SetRenderTarget(null);
             _GraphicsDevice.SetRenderTarget(_NormalMap);
             _GraphicsDevice.Clear(ClearOptions.Target | ClearOptions.DepthBuffer, Color.Transparent, 0, 0);
 
@@ -245,6 +256,7 @@ namespace InsipidusEngine.Helpers
         private void RenderDepthMap(SpriteBatch spriteBatch)
         {
             //Set the correct render target and clear it.
+            _GraphicsDevice.SetRenderTarget(null);
             _GraphicsDevice.SetRenderTarget(_DepthMap);
             _GraphicsDevice.Clear(ClearOptions.Target | ClearOptions.DepthBuffer, Color.Transparent, 0, 0);
 
@@ -273,6 +285,7 @@ namespace InsipidusEngine.Helpers
         private void RenderShadowMap(SpriteBatch spriteBatch)
         {
             //Set the correct render target and clear it.
+            _GraphicsDevice.SetRenderTarget(null);
             _GraphicsDevice.SetRenderTarget(_ShadowMap);
             _GraphicsDevice.Clear(ClearOptions.Target | ClearOptions.DepthBuffer, Color.Transparent, 0, 0);
 
@@ -292,10 +305,12 @@ namespace InsipidusEngine.Helpers
             _LightEffect.Parameters["LightStrength"].SetValue(1f);
             _LightEffect.Parameters["LightPosition"].SetValue(_LightPosition);
             _LightEffect.Parameters["LightColor"].SetValue(new Vector4(1.0f, 1f, 1.0f, 1.0f));
+            _LightEffect.Parameters["LightRadius"].SetValue(200);
             _LightEffect.Parameters["LightDecay"].SetValue(200);
             _LightEffect.Parameters["SpecularStrength"].SetValue(1f);
             _LightEffect.Parameters["ScreenWidth"].SetValue(_GraphicsDevice.Viewport.Width);
             _LightEffect.Parameters["ScreenHeight"].SetValue(_GraphicsDevice.Viewport.Height);
+            _LightEffect.Parameters["CameraPosition"].SetValue(new Vector3(_GraphicsDevice.Viewport.Width / 2, _GraphicsDevice.Viewport.Height / 2, 1));
             _LightEffect.Parameters["AmbientColor"].SetValue(new Color(.1f, .1f, .1f, 1).ToVector4());
             _LightEffect.Parameters["NormalMap"].SetValue(_NormalMap);
             _LightEffect.Parameters["ColorMap"].SetValue(_ColorMap);
@@ -317,7 +332,9 @@ namespace InsipidusEngine.Helpers
         /// <param name="spriteBatch">The sprite batch to use.</param>
         private void RenderCombinedMap(SpriteBatch spriteBatch)
         {
-            //Set the correct render target and clear it.
+            //Clear the render target.
+            _GraphicsDevice.SetRenderTarget(null);
+            _GraphicsDevice.SetRenderTarget(_CombinedMap);
             _GraphicsDevice.Clear(Color.Black);
 
             //Finally draw the combined maps onto the screen.

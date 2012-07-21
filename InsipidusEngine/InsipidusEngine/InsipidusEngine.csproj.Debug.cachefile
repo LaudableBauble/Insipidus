@@ -39,14 +39,14 @@ Content\Characters\Charizard\Charizard_Right[1].xnb
 Content\Characters\Charizard\Charizard_Right[2].xnb
 Content\Characters\Charizard\Charizard_Right[3].xnb
 Content\Misc\heightmap.xnb
-Content\Misc\grass.xnb
-Content\Misc\Grass_Summer[1].xnb
 Content\TextBox\Speech.xnb
 Content\GameScreen\gamefont.xnb
 Content\GameScreen\Halo.xnb
 Content\GameScreen\HaloOutline.xnb
 Content\GameScreen\menufont.xnb
 Content\Misc\Effect.xnb
+Content\Misc\Grass_Summer[1].xnb
+Content\Misc\grass.xnb
 Content\Characters\ZombieGuy\ZombieGuy1_Back[0].xnb
 Content\Characters\ZombieGuy\ZombieGuy1_Back[1].xnb
 Content\Characters\ZombieGuy\ZombieGuy1_Back[2].xnb
@@ -90,8 +90,6 @@ Content\Entities\StoneStairsRight[4].xnb
 Content\Entities\StoneStairsTop[1].xnb
 Content\Entities\StoneStairsTop[2].xnb
 Content\Entities\WoodTiledFloor[1].xnb
-Content\Shaders\DeferredCombine.xnb
-Content\Shaders\Lighting.xnb
 Content\Misc\Dummy_NormalMap.xnb
 Content\Entities\DarkTiledBlock[2](Normal).xnb
 Content\Entities\DarkTiledBlock[1](Normal).xnb
@@ -103,7 +101,10 @@ Content\Entities\DarkTiledBlock[3](Normal).xnb
 Content\Entities\ElevatedBlock[1](Normal).xnb
 Content\Entities\ElevatedBlock[2](Normal).xnb
 Content\Entities\MarbleWall[1](Normal).xnb
-Content\Shaders\DepthBuffer.xnb
 Content\Entities\ElevatedBlock[3](Normal).xnb
 Content\Entities\ElevatedBlock[4](Normal).xnb
 Content\Entities\MarblePillar[1](Normal).xnb
+Content\Shaders\DeferredCombine.xnb
+Content\Shaders\Lighting.xnb
+Content\Shaders\DepthBuffer.xnb
+Content\Entities\DepthDefault.xnb

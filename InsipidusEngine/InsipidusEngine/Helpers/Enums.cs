@@ -27,6 +27,13 @@ namespace InsipidusEngine
         Color, Normal, Depth
     }
     /// <summary>
+    /// The type of map to render to screen. Used mainly for debug purposes.
+    /// </summary>
+    public enum RenderMap
+    {
+        Color, Normal, Depth, Shadow, Combined
+    }
+    /// <summary>
     /// Enum describes the screen transition state.
     /// </summary>
     public enum ScreenState
