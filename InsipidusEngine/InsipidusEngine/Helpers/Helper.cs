@@ -327,6 +327,16 @@ namespace InsipidusEngine.Helpers
             return new Vector2(Mouse.GetState().X, Mouse.GetState().Y);
         }
         /// <summary>
+        /// Convert screen coordinates to world coordinates.
+        /// </summary>
+        /// <param name="location">The location on screen.</param>
+        /// <param name="transform">The view transform matrix, ie. the camera matrix.</param>
+        /// <returns>The location in world coordinates.</returns>
+        public static Vector2 ConvertScreenToWorld(Vector2 location, Matrix transform)
+        {
+            return Vector2.Transform(location, Matrix.Invert(transform));
+        }
+        /// <summary>
         /// Round a vector.
         /// </summary>
         /// <param name="vector">The vector to round.</param>

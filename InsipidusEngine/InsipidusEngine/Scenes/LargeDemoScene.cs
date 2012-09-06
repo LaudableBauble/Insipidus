@@ -566,7 +566,7 @@ namespace InsipidusEngine.Scenes
             _MarbleArch.Sprites[0].Frames[0].DepthPath = @"Entities\DepthDefault";
             _MarbleWall1.Sprites[0].Frames[0].DepthPath = @"Entities\DepthDefault";
             _MarbleWall2.Sprites[0].Frames[0].DepthPath = @"Entities\DepthDefault";
-            _Floor.Sprites[0].Frames[0].DepthPath = @"Entities\DepthDefault";
+            _Floor.Sprites[0].Frames[0].DepthPath = @"Entities\WoodTiledFloor[1](Depth)";
 
             //Reload their textures.
             _Entities.Update();

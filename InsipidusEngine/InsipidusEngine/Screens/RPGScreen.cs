@@ -62,7 +62,7 @@ namespace InsipidusEngine.Screens
             #region Initialize
             //Store the device.
             device = ScreenManager.GraphicsDevice;
-
+            ScreenManager.Game.IsMouseVisible = false;
             Mouse.WindowHandle = ScreenManager.Game.Window.Handle;
 
             //Create the scene.
@@ -75,7 +75,7 @@ namespace InsipidusEngine.Screens
             #endregion
 
             #region LoadContent
-            //Load the scene's content.
+            //Load content.
             _Scene.LoadContent(ScreenManager.GraphicsDevice, content);
             #endregion
 

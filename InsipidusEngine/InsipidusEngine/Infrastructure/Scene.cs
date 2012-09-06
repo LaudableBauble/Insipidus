@@ -15,6 +15,7 @@ using Microsoft.Xna.Framework.Storage;
 using InsipidusEngine.Core;
 using InsipidusEngine.Physics;
 using InsipidusEngine.Tools;
+using InsipidusEngine.Imagery;
 
 namespace InsipidusEngine.Helpers
 {
@@ -38,7 +39,7 @@ namespace InsipidusEngine.Helpers
         protected Effect _LightEffect;
         protected Effect _CombinedEffect;
 
-        protected Vector3 _LightPosition;
+        protected Entity _Light;
         protected Matrix _View;
 
         protected RenderMap _MapToDraw;
@@ -65,6 +66,7 @@ namespace InsipidusEngine.Helpers
             _Entities = new RobustList<Entity>();
             _Physics = new PhysicsSimulator();
             _MapToDraw = RenderMap.Combined;
+            _Light = new Entity(this);
         }
         /// <summary>
         /// Load all content.
@@ -76,8 +78,11 @@ namespace InsipidusEngine.Helpers
             //Store the graphics device somewhere close.
             _GraphicsDevice = graphics;
 
-            //Initialize the light's position.
-            _LightPosition = Vector3.Zero;
+            //Setup the light.
+            _Light.Body.IsImmaterial = true;
+            _Light.Name = "Light";
+            AddEntity(_Light);
+            _Light.LoadContent(content, @"Misc\LightBulb[1]");
 
             //Create acceptable presentation parameters for the graphics device.
             PresentationParameters pp = _GraphicsDevice.PresentationParameters;
@@ -109,8 +114,8 @@ namespace InsipidusEngine.Helpers
             _Entities.ForEach(item => item.HandleInput(input));
 
             //Change the height of the light.
-            if (input.IsNewMouseScrollUp() || input.IsKeyDown(Keys.Q)) { _LightPosition.Z += 5f; }
-            else if (input.IsNewMouseScrollDown() || input.IsKeyDown(Keys.E)) { _LightPosition.Z -= 5f; }
+            if (input.IsNewMouseScrollUp() || input.IsKeyDown(Keys.Q)) { _Light.Position += new Vector3(0, 0, 5f); }
+            else if (input.IsNewMouseScrollDown() || input.IsKeyDown(Keys.E)) { _Light.Position -= new Vector3(0, 0, 5f); }
 
             //Change which render map to be displayed.
             if (input.IsNewKeyPress(Keys.R)) { _MapToDraw = Enum.IsDefined(typeof(RenderMap), _MapToDraw - 1) ? _MapToDraw - 1 : RenderMap.Combined; }
@@ -128,6 +133,9 @@ namespace InsipidusEngine.Helpers
             //Update the list of entities.
             _Entities.Update();
 
+            //Update the position of the light.
+            _Light.Position = new Vector3(Helper.ConvertScreenToWorld(Helper.GetMousePosition(), _View), _Light.Position.Z);
+
             // Update all entities.
             _Entities.ForEach(item => item.Update(gametime));
         }
@@ -138,9 +146,6 @@ namespace InsipidusEngine.Helpers
         /// <param name="view">The view matrix through which the game world is seen.</param>
         public virtual void Draw(SpriteBatch spriteBatch, Matrix view)
         {
-            //Update the light's position.
-            _LightPosition = new Vector3(Helper.GetMousePosition(), _LightPosition.Z);
-
             //Update the view matrix.
             _View = view;
 
@@ -216,6 +221,9 @@ namespace InsipidusEngine.Helpers
 
             //Draw all entities to the screen.
             _Entities.ForEach(item => item.Draw(spriteBatch, DrawState.Color, _DepthEffect));
+
+            //DEBUG!
+            _Light.Draw(spriteBatch, DrawState.Color, null);
 
             //End the drawing.
             spriteBatch.End();
@@ -303,7 +311,7 @@ namespace InsipidusEngine.Helpers
 
             //Set the light data.
             _LightEffect.Parameters["LightStrength"].SetValue(1f);
-            _LightEffect.Parameters["LightPosition"].SetValue(_LightPosition);
+            _LightEffect.Parameters["LightPosition"].SetValue(_Light.Position);
             _LightEffect.Parameters["LightColor"].SetValue(new Vector4(1.0f, 1f, 1.0f, 1.0f));
             _LightEffect.Parameters["LightRadius"].SetValue(200);
             _LightEffect.Parameters["LightDecay"].SetValue(200);
