@@ -75,8 +75,8 @@ PixelToFrame PointLightShader(VertexToPixel PSIn) : COLOR0
 	
 	//Transform the pixel from screen space into world space using the depth map.
 	float3 pixelPosition = depth * 20 * 255;
-	pixelPosition.x = ScreenWidth * PSIn.TexCoord.x;
-	pixelPosition.y = ScreenHeight * PSIn.TexCoord.y;
+	//pixelPosition.x = ScreenWidth * PSIn.TexCoord.x;
+	//pixelPosition.y = ScreenHeight * PSIn.TexCoord.y;
 	//pixelPosition.z = 0;
 
 	float3 direction = pixelPosition - LightPosition;
@@ -89,8 +89,9 @@ PixelToFrame PointLightShader(VertexToPixel PSIn) : COLOR0
 	float3 cameraDir = normalize(CameraPosition - pixelPosition);
 	float specular = pow(saturate(dot(reflection, cameraDir)), SpecularStrength);
 
+	Output.Color = float4(saturate(AmbientColor + color * LightColor * diffuse), 1);
 	//Output.Color = attenuation * float4(diffuse.rgb, specular);
-	Output.Color = float4(saturate(AmbientColor + (color * LightColor * diffuse * 0.6) + (LightColor * SpecularStrength * specular * 0.5 * 0)), 1);
+	//Output.Color = float4(saturate(AmbientColor + (color * LightColor * diffuse * 0.6) + (LightColor * SpecularStrength * specular * 0.5 * 0)), 1);
 	//Output.Color = color * attenuation * LightColor * LightStrength + (specular * attenuation * SpecularStrength);
 
 	return Output;
@@ -128,11 +129,34 @@ PixelToFrame PointLightShaderOld(VertexToPixel PSIn) : COLOR0
 	return Output;
 }
 
+PixelToFrame SimplePointLightShader(VertexToPixel PSIn) : COLOR0
+{	
+	//Create the output struct.
+	PixelToFrame Output = (PixelToFrame)0;
+	
+	//Get the texture data.
+	float4 color = tex2D(ColorMapSampler, PSIn.TexCoord);
+	float3 normal = (2.0f * (tex2D(NormalMapSampler, PSIn.TexCoord))) - 1.0f;
+	float3 depth = tex2D(DepthMapSampler, PSIn.TexCoord);
+	
+	//Transform the pixel from screen space into world space using the depth map.
+	float3 pixelPosition = depth * 20 * 255;
+
+	float3 direction = pixelPosition - LightPosition;
+	float3 dirNorm = normalize(direction);
+	float attenuation = saturate(LightRadius / length(direction));
+	float3 diffuse = saturate(dot(normal, dirNorm));
+
+	Output.Color = float4(saturate(AmbientColor + color * LightColor * diffuse * attenuation), 1);
+
+	return Output;
+}
+
 technique DeferredLighting
 {
     pass Pass1
     {
 		VertexShader = compile vs_2_0 MyVertexShader();
-        PixelShader = compile ps_2_0 PointLightShader();
+        PixelShader = compile ps_2_0 SimplePointLightShader();
     }
 }

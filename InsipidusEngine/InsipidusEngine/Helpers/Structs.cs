@@ -29,4 +29,23 @@ namespace InsipidusEngine
 
         VertexDeclaration IVertexType.VertexDeclaration { get { return VertexDeclaration; } }
     }
+
+    /// <summary>
+    /// The data needed to display a light is stored in a light struct.
+    /// </summary>
+    public struct Light
+    {
+        public Vector3 Position;
+        public Color Color;
+        public float Strength;
+        public float Radius;
+
+        public Light(Vector3 position, Color color, float strength, float radius)
+        {
+            Position = position;
+            Color = color;
+            Strength = strength;
+            Radius = radius;
+        }
+    }
 }

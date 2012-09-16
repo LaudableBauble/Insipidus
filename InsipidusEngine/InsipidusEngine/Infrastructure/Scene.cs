@@ -39,6 +39,7 @@ namespace InsipidusEngine.Helpers
         protected Effect _LightEffect;
         protected Effect _CombinedEffect;
 
+        protected Light _LightData;
         protected Entity _Light;
         protected Matrix _View;
 
@@ -67,6 +68,7 @@ namespace InsipidusEngine.Helpers
             _Physics = new PhysicsSimulator();
             _MapToDraw = RenderMap.Combined;
             _Light = new Entity(this);
+            _LightData = new Light(Vector3.Zero, Color.White, 1, 50);
         }
         /// <summary>
         /// Load all content.
@@ -310,10 +312,10 @@ namespace InsipidusEngine.Helpers
             _GraphicsDevice.SetVertexBuffer(buffer);
 
             //Set the light data.
-            _LightEffect.Parameters["LightStrength"].SetValue(1f);
+            _LightEffect.Parameters["LightStrength"].SetValue(_LightData.Strength);
             _LightEffect.Parameters["LightPosition"].SetValue(_Light.Position);
-            _LightEffect.Parameters["LightColor"].SetValue(new Vector4(1.0f, 1f, 1.0f, 1.0f));
-            _LightEffect.Parameters["LightRadius"].SetValue(200);
+            _LightEffect.Parameters["LightColor"].SetValue(_LightData.Color.ToVector4());
+            _LightEffect.Parameters["LightRadius"].SetValue(_LightData.Radius);
             _LightEffect.Parameters["LightDecay"].SetValue(200);
             _LightEffect.Parameters["SpecularStrength"].SetValue(1f);
             _LightEffect.Parameters["ScreenWidth"].SetValue(_GraphicsDevice.Viewport.Width);
