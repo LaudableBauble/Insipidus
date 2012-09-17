@@ -140,12 +140,13 @@ PixelToFrame SimplePointLightShader(VertexToPixel PSIn) : COLOR0
 	float3 depth = tex2D(DepthMapSampler, PSIn.TexCoord);
 	
 	//Transform the pixel from screen space into world space using the depth map.
-	float3 pixelPosition = depth * 20 * 255;
+	float3 pixelPosition = depth * 1 * 255;
+	pixelPosition.x = (CameraPosition.x - ScreenWidth / 2) + ScreenWidth * PSIn.TexCoord.x;
+	pixelPosition.y = (CameraPosition.y - ScreenHeight / 2) + ScreenHeight * PSIn.TexCoord.y;
 
-	float3 direction = pixelPosition - LightPosition;
-	float3 dirNorm = normalize(direction);
+	float3 direction = LightPosition - pixelPosition;
+	float3 diffuse = saturate(dot(normal, -normalize(direction)));
 	float attenuation = saturate(LightRadius / length(direction));
-	float3 diffuse = saturate(dot(normal, dirNorm));
 
 	Output.Color = float4(saturate(AmbientColor + color * LightColor * diffuse * attenuation), 1);
 

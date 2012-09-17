@@ -15,6 +15,7 @@ using Microsoft.Xna.Framework.Storage;
 using InsipidusEngine.Physics;
 using InsipidusEngine.Helpers;
 using InsipidusEngine.Imagery;
+using System.IO;
 
 namespace InsipidusEngine.Core
 {
@@ -74,25 +75,33 @@ namespace InsipidusEngine.Core
         /// -1 results in the use of the full height of the sprite and a depth of 1.</param>
         public virtual void LoadContent(ContentManager contentManager, String spritePath, float height)
         {
-            // Clear all sprites.
+            //Clear all sprites.
             _Sprites = new SpriteManager();
 
-            // Add a sprite.
+            //Add the color texture.
             Sprite sprite = _Sprites.Add(new Sprite(_Sprites, "Entity"));
             sprite.AddFrame(spritePath);
 
-            // Load all sprites' content.
+            //Load all sprites' content.
             _Sprites.LoadContent(contentManager);
 
             //Update the frame's origin.
             sprite.Frames[0].Origin = new Vector2(sprite.Frames[0].Width / 2, sprite.Frames[0].Height / 2);
+
+            //Check if the normal and depth maps exist.
+            bool n = File.Exists(Path.Combine(contentManager.RootDirectory, spritePath + "(Normal)" + ".xnb"));
+            bool d = File.Exists(Path.Combine(contentManager.RootDirectory, spritePath + "(Depth)" + ".xnb"));
+
+            //Set the normal and depth maps.
+            _Sprites[0].Frames[0].NormalPath = n ? spritePath + "(Normal)" : @"Entities\DepthDefault";
+            _Sprites[0].Frames[0].DepthPath = d ? spritePath + "(Depth)" : @"Entities\DepthDefault";
 
             // Set the shape of the body.
             _Body.Shape.Width = sprite.CurrentFrame.Width;
             _Body.Shape.Height = (height == -1) ? sprite.CurrentFrame.Height : height;
             _Body.Shape.Depth = (height == -1) ? 1 : sprite.CurrentFrame.Height - height;
 
-            // Update the sprite's position offset.
+            //Update the sprite's position offset.
             _Sprites[0].PositionOffset = new Vector2(0, -sprite.CurrentFrame.Origin.Y + (_Body.Shape.Height / 2));
         }
         /// <summary>

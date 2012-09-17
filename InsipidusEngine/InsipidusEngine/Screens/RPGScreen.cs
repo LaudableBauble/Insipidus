@@ -66,7 +66,7 @@ namespace InsipidusEngine.Screens
             Mouse.WindowHandle = ScreenManager.Game.Window.Handle;
 
             //Create the scene.
-            _Scene = new LargeDemoScene();
+            _Scene = new SmallDemoScene();
 
             //Create the camera.
             _Camera = new Camera2D(new Rectangle(0, 0, ScreenManager.Game.Window.ClientBounds.Width, ScreenManager.Game.Window.ClientBounds.Height),

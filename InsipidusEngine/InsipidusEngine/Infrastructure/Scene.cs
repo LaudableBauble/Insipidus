@@ -42,8 +42,10 @@ namespace InsipidusEngine.Helpers
         protected Light _LightData;
         protected Entity _Light;
         protected Matrix _View;
+        protected Vector3 _CameraPosition;
 
         protected RenderMap _MapToDraw;
+        protected SpriteFont _Font;
         #endregion
 
         #region Constructors
@@ -68,7 +70,8 @@ namespace InsipidusEngine.Helpers
             _Physics = new PhysicsSimulator();
             _MapToDraw = RenderMap.Combined;
             _Light = new Entity(this);
-            _LightData = new Light(Vector3.Zero, Color.White, 1, 50);
+            _LightData = new Light(Vector3.Zero, Color.White, 1, 25);
+            _CameraPosition = Vector3.Zero;
         }
         /// <summary>
         /// Load all content.
@@ -85,6 +88,9 @@ namespace InsipidusEngine.Helpers
             _Light.Name = "Light";
             AddEntity(_Light);
             _Light.LoadContent(content, @"Misc\LightBulb[1]");
+
+            //Load font.
+            _Font = content.Load<SpriteFont>("GameScreen/gamefont");
 
             //Create acceptable presentation parameters for the graphics device.
             PresentationParameters pp = _GraphicsDevice.PresentationParameters;
@@ -135,8 +141,9 @@ namespace InsipidusEngine.Helpers
             //Update the list of entities.
             _Entities.Update();
 
-            //Update the position of the light.
+            //Update the position of the light and get the camera world position.
             _Light.Position = new Vector3(Helper.ConvertScreenToWorld(Helper.GetMousePosition(), _View), _Light.Position.Z);
+            _CameraPosition = new Vector3(Helper.ConvertScreenToWorld(new Vector2(_GraphicsDevice.Viewport.Width / 2, _GraphicsDevice.Viewport.Height / 2), _View), 1);
 
             // Update all entities.
             _Entities.ForEach(item => item.Update(gametime));
@@ -174,7 +181,8 @@ namespace InsipidusEngine.Helpers
             }
             spriteBatch.End();
 
-            //Draw the debug render targets.
+            //Draw the debug information.
+            DrawDebugInformation(spriteBatch);
             //DrawDebugRenderTargets(spriteBatch);
         }
 
@@ -320,7 +328,7 @@ namespace InsipidusEngine.Helpers
             _LightEffect.Parameters["SpecularStrength"].SetValue(1f);
             _LightEffect.Parameters["ScreenWidth"].SetValue(_GraphicsDevice.Viewport.Width);
             _LightEffect.Parameters["ScreenHeight"].SetValue(_GraphicsDevice.Viewport.Height);
-            _LightEffect.Parameters["CameraPosition"].SetValue(new Vector3(_GraphicsDevice.Viewport.Width / 2, _GraphicsDevice.Viewport.Height / 2, 1));
+            _LightEffect.Parameters["CameraPosition"].SetValue(_CameraPosition);
             _LightEffect.Parameters["AmbientColor"].SetValue(new Color(.1f, .1f, .1f, 1).ToVector4());
             _LightEffect.Parameters["NormalMap"].SetValue(_NormalMap);
             _LightEffect.Parameters["ColorMap"].SetValue(_ColorMap);
@@ -362,6 +370,17 @@ namespace InsipidusEngine.Helpers
             //Draw the color map to the screen with the shadow map overlapping it.
             spriteBatch.Begin(SpriteSortMode.Immediate, BlendState.AlphaBlend, null, null, null, _CombinedEffect);
             spriteBatch.Draw(_ColorMap, Vector2.Zero, Color.White);
+            spriteBatch.End();
+        }
+        /// <summary>
+        /// [DEBUG] Draws the debug information.
+        /// </summary>
+        /// <param name="spriteBatch">The sprite batch.</param>
+        private void DrawDebugInformation(SpriteBatch spriteBatch)
+        {
+            // Draw some debug information.
+            spriteBatch.Begin();
+            spriteBatch.DrawString(_Font, "Light: " + _Light.Position.ToString(), new Vector2(5, 15), Color.White);
             spriteBatch.End();
         }
         /// <summary>

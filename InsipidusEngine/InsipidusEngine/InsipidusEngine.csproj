@@ -152,6 +152,7 @@
     <Compile Include="Physics\PhysicsSimulator.cs" />
     <Compile Include="Physics\Shape.cs" />
     <Compile Include="Scenes\LargeDemoScene.cs" />
+    <Compile Include="Scenes\SmallDemoScene.cs" />
     <Compile Include="Screens\BackgroundScreen.cs" />
     <Compile Include="Screens\BattleScreen.cs" />
     <Compile Include="Screens\RPGScreen.cs" />

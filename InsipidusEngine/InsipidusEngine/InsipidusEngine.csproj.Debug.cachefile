@@ -110,3 +110,7 @@ Content\Entities\MarblePillar[1](Normal).xnb
 Content\Entities\DepthDefault.xnb
 Content\Entities\WoodTiledFloor[1](Depth).xnb
 Content\Misc\LightBulb[1].xnb
+Content\Entities\Bookshelf[1](Depth).xnb
+Content\Entities\StonePathwayBlock[2](Depth).xnb
+Content\Misc\LightBulb[1](Depth).xnb
+Content\Misc\LightBulb[1](Normal).xnb
